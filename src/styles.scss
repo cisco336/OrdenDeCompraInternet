@@ -79,6 +79,9 @@ $sodimac-app-theme: mat-light-theme(
 // Alternatively, you can import and @include the theme mixins for each component
 // that you are using.
 @include angular-material-theme($sodimac-app-theme);
+@import '~saturn-datepicker/bundle.css';
+@import '~saturn-datepicker/theming';
+@include sat-datepicker-theme($sodimac-app-theme);
 
 body {
   &,
@@ -100,12 +103,3 @@ body {
   }
 }
 
-.the-wrapper {
-  padding: 2rem;
-  background: #efefef;
-}
-
-.mat-dialog-container {
-  border-radius: 0 !important;
-  border-top: 3px solid #1565c0;
-}

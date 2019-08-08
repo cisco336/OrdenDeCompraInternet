@@ -1,0 +1,56 @@
+.the-wrapper {
+  padding: 2rem;
+  background: #efefef;
+  & h1:first-child {
+    margin: 0 0 2rem 0;
+    font-weight: 300;
+    & span:first-child {
+      margin-right: 10px;
+    }
+    & span:nth-child(2) {
+      color: #5c5c5c;
+    }
+  }
+  & mat-card {
+      border-radius: 0;
+      margin: 1rem 0;
+    & div {
+      &:first-child {
+        display: grid;
+        grid-template-columns: 1fr min-content;
+        & div {
+          &:first-child {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            & div {
+              &:first-child,
+              &:nth-child(2) {
+                padding: 1rem;
+                align-self: center;
+              }
+              &:first-child {
+                display: flex;
+                flex-flow: column nowrap;
+              }
+            }
+            & button {
+                grid-column: 1 / -1;
+                grid-row: 2;
+                justify-self: right;
+            }
+          }
+        }
+      }
+    }
+    &.second {
+        & > div {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            grid-gap: 1rem;
+            & button span {
+                font-size: 60%;
+            }
+        }
+    }
+  }
+}
