@@ -12,16 +12,20 @@ import {
   MatSelectModule,
   MatAutocompleteModule,
   MatCheckboxModule,
-  MatTableModule
+  MatTableModule,
+  MatDialogModule,
+  MatPaginatorModule
 } from "@angular/material";
 import { SatDatepickerModule, SatNativeDateModule } from "saturn-datepicker";
 
 import { AppComponent } from "./app.component";
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { OrdenesCompraComponent } from './pages/ordenes-compra/ordenes-compra.component';
+import { DialogComponent } from './components/dialog/dialog.component';
 
 @NgModule({
-  declarations: [AppComponent, OrdenesCompraComponent],
+  declarations: [AppComponent, OrdenesCompraComponent, DialogComponent],
+  entryComponents: [DialogComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
@@ -38,6 +42,8 @@ import { OrdenesCompraComponent } from './pages/ordenes-compra/ordenes-compra.co
     MatOptionModule,
     MatSelectModule,
     MatAutocompleteModule,
+    MatDialogModule,
+    MatPaginatorModule,
 
     // DatePicker Range
     SatDatepickerModule,
