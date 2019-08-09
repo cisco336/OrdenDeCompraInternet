@@ -99,6 +99,11 @@ body {
     }
     & span {
       font-size: 21px;
+      display: flex;
+      align-items: center;
+      & mat-icon {
+        margin-right: 10px;
+      }
     }
   }
 }
