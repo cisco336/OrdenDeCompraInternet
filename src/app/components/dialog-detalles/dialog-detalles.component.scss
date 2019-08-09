@@ -1,17 +1,69 @@
+@import "../../../assets/css/vars";
+.toolbar {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  justify-content: space-between;
+  & button span mat-icon {
+    margin-right: 0!important;
+  }
+}
+.the-wrapper {
+  padding: 2rem 1rem 1rem 1rem;
+}
 .card {
-    &-first, &-second, &-third, &-fourth {
-        padding: 0;
+  &-first,
+  &-second,
+  &-third,
+  &-fourth {
+    padding: 0;
+  }
+  &-first .card-title span {
+    background: $primary-gradient;
+  }
+  &-second .card-title span {
+    background: $success-gradient;
+  }
+  &-third .card-title span {
+    background: $warning-gradient;
+  }
+  &-fourth .card-title span {
+    background: $danger-gradient;
+  }
+  &-wrapper {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, auto));
+    grid-gap: 2rem;
+  }
+  &-title {
+    padding: 1rem;
+    padding-bottom: 0;
+    font-size: 21px;
+    border-bottom: 1px solid $HC-light-gray;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    @include custom-media-query-1 {
+        font-size: 16px;
     }
-    &-wrapper {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, auto));
-        grid-gap: 1rem;
+    & span {
+      padding: 1rem;
+      margin: -2rem 1rem 1rem 0rem;
+      border-radius: 3px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      & mat-icon {
+        color: $HC-white;
+      }
     }
-    &-title {
-        padding: 1rem;
-    }
-    &-body {
-        padding: 1rem;
+  }
+  &-body {
+    padding: 1rem;
+    & ul {
+      & li {
         list-style: none;
+      }
     }
+  }
 }
