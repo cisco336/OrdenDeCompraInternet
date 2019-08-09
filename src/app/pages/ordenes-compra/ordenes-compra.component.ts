@@ -118,7 +118,7 @@ export class OrdenesCompraComponent implements OnInit {
 
   openDialog(data): Observable<any> {
     const dialogRef = this._dialog.open(DialogDetallesComponent, {
-      width: '90vw',data: { data: { data: "data" } }, panelClass: "custom-dialog", disableClose: true
+      width: '90vw',data: { data: { data: "data" } }, panelClass: "dialog-detalles", disableClose: true
     });
 
     return dialogRef.afterClosed();

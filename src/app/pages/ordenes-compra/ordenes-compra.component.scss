@@ -1,3 +1,4 @@
+@import '../../../assets/css/vars';
 .the-wrapper {
   padding: 2rem;
   background: #efefef;
@@ -51,8 +52,10 @@
       & table {
         width: 100%;
         & .position-label {
+          color: $HC-primary;
           transition: all .2s ease-out;
           &:hover {
+            text-decoration: underline;
             cursor: pointer;
           }
         }
