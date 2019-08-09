@@ -6,6 +6,7 @@ import { Observable } from "rxjs";
 import { map, startWith } from "rxjs/operators";
 import { MatDialogRef, MatDialog, MatDialogConfig } from "@angular/material";
 import { DialogDetallesComponent } from '../../components/dialog-detalles/dialog-detalles.component';
+import { DialogCambioEstadoComponent } from '../../components/dialog-cambio-estado/dialog-cambio-estado.component';
 import { MatPaginator } from "@angular/material/paginator";
 
 export interface PeriodicElement {
@@ -116,9 +117,16 @@ export class OrdenesCompraComponent implements OnInit {
     );
   }
 
-  openDialog(data): Observable<any> {
+  openDialogDetalles(data): Observable<any> {
     const dialogRef = this._dialog.open(DialogDetallesComponent, {
-      width: '90vw',data: { data: { data: "data" } }, panelClass: "dialog-detalles", disableClose: true
+      width: '90vw',data: { data: { data: data } }, panelClass: "dialog-detalles", disableClose: true
+    });
+
+    return dialogRef.afterClosed();
+  }
+  openDialogCambioEstado(data): Observable<any> {
+    const dialogRef = this._dialog.open(DialogCambioEstadoComponent, {
+      width: '90vw',data: { data: { data: data } }, panelClass: "dialog-detalles", disableClose: true
     });
 
     return dialogRef.afterClosed();

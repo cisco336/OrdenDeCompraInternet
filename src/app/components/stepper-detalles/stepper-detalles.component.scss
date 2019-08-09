@@ -1,0 +1,19 @@
+@import "../../../assets/css/vars";
+mat-horizontal-stepper {
+    margin-top: 1rem;
+  & div:first-child {
+      margin-bottom: 1rem;
+  }
+  & .mat-horizontal-content-container {
+      padding: 1rem;
+  }
+}
+.stepper-buttons {
+  margin-top: 1rem;
+  display: grid;
+  grid-gap: 1rem;
+  grid-template-columns: max-content max-content;
+  & button {
+    max-width: 200px;
+  }
+}

@@ -109,8 +109,10 @@ body {
     }
   }
   .dialog-detalles {
+    overflow-y: overlay;
     mat-dialog-container {
       padding: 0;
+      border-radius: 0;
     }
   }
 }

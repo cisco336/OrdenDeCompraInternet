@@ -1,0 +1,11 @@
+@import "../../../assets/css/vars";
+.toolbar {
+    margin-bottom: 1rem;
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    justify-content: space-between;
+    & button span mat-icon {
+      margin-right: 0!important;
+    }
+  }

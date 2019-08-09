@@ -8,9 +8,8 @@
         aut aliquam hic voluptates, illo earum? At libero excepturi quis, odio
         laboriosam aperiam.
       </p>
-      <div>
-        <button mat-button matStepperPrevious>Atras</button>
-        <button mat-button matStepperNext>Siguiente</button>
+      <div class="stepper-buttons">
+        <button mat-raised-button color="primary" matStepperNext><mat-icon>navigate_next</mat-icon>Siguiente</button>
       </div>
     </form>
   </mat-step>
@@ -23,9 +22,9 @@
         aut aliquam hic voluptates, illo earum? At libero excepturi quis, odio
         laboriosam aperiam.
       </p>
-      <div>
-        <button mat-button matStepperPrevious>Atras</button>
-        <button mat-button matStepperNext>Siguiente</button>
+      <div class="stepper-buttons">
+        <button mat-stroked-button color="warn" matStepperPrevious><mat-icon>navigate_before</mat-icon>Volver</button>
+        <button mat-raised-button color="primary" matStepperNext><mat-icon>navigate_next</mat-icon>Siguiente</button>
       </div>
     </form>
   </mat-step>
@@ -38,18 +37,18 @@
         aut aliquam hic voluptates, illo earum? At libero excepturi quis, odio
         laboriosam aperiam.
       </p>
-      <div>
-        <button mat-button matStepperPrevious>Atras</button>
-        <button mat-button matStepperNext>Siguiente</button>
+      <div class="stepper-buttons">
+        <button mat-stroked-button color="warn" matStepperPrevious><mat-icon>navigate_before</mat-icon>Volver</button>
+        <button mat-raised-button color="primary" matStepperNext><mat-icon>navigate_next</mat-icon>Siguiente</button>
       </div>
     </form>
   </mat-step>
   <mat-step>
     <ng-template matStepLabel>Confirmar Generacion de Guia</ng-template>
     You are now done.
-    <div>
-      <button mat-button matStepperPrevious>Atras</button>
-      <button mat-button (click)="stepper.reset()">Generar Guia</button>
+    <div class="stepper-buttons">
+      <button mat-stroked-button color="warn" matStepperPrevious><mat-icon>navigate_before</mat-icon>Volver</button>
+      <button mat-raised-button color="primary" (click)="stepper.reset()"><mat-icon>description</mat-icon>Generar Guia</button>
     </div>
   </mat-step>
 </mat-horizontal-stepper>
