@@ -1,5 +1,6 @@
 @import "../../../assets/css/vars";
 .toolbar {
+  margin-bottom: 1rem;
   display: flex;
   flex-flow: row nowrap;
   align-items: center;
@@ -9,7 +10,7 @@
   }
 }
 .the-wrapper {
-  padding: 2rem 1rem 1rem 1rem;
+  padding: 0;
 }
 .card {
   &-first,
@@ -31,8 +32,9 @@
     background: $danger-gradient;
   }
   &-wrapper {
+    padding: 1rem;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, auto));
+    grid-template-columns: repeat(auto-fit, minmax(300px, auto));
     grid-gap: 2rem;
   }
   &-title {
@@ -43,9 +45,6 @@
     display: flex;
     flex-flow: row nowrap;
     justify-content: space-between;
-    @include custom-media-query-1 {
-        font-size: 16px;
-    }
     & span {
       padding: 1rem;
       margin: -2rem 1rem 1rem 0rem;

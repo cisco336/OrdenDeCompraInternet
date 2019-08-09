@@ -65,7 +65,7 @@
     <div>
       <h2>Opciones:</h2>
       <div>
-        <button mat-raised-button color="primary">
+        <button mat-raised-button color="primary" (click)="openDialogCambioEstado($event)">
           <mat-icon>category</mat-icon>Cambiar estado
         </button>
         <button mat-raised-button color="primary">
@@ -112,7 +112,7 @@
           mat-cell
           *matCellDef="let element"
           class="position-label"
-          (click)="openDialog(element)"
+          (click)="openDialogDetalles(element)"
         >
           {{ element.position }}
         </td>
