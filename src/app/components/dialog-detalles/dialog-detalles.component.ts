@@ -7,9 +7,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DialogDetallesComponent implements OnInit {
 
+  background: string;
+  color: string;
+
   constructor() { }
 
   ngOnInit() {
+    this.background = this.background ? '' : 'primary';
+    this.color = this.color ? '' : 'accent';
   }
 
 }
