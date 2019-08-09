@@ -5,7 +5,7 @@ import { FormControl } from "@angular/forms";
 import { Observable } from "rxjs";
 import { map, startWith } from "rxjs/operators";
 import { MatDialogRef, MatDialog, MatDialogConfig } from "@angular/material";
-import { DialogComponent } from "../../components/dialog/dialog.component";
+import { DialogDetallesComponent } from '../../components/dialog-detalles/dialog-detalles.component';
 import { MatPaginator } from "@angular/material/paginator";
 
 export interface PeriodicElement {
@@ -117,7 +117,7 @@ export class OrdenesCompraComponent implements OnInit {
   }
 
   openDialog(data): Observable<any> {
-    const dialogRef = this._dialog.open(DialogComponent, {
+    const dialogRef = this._dialog.open(DialogDetallesComponent, {
       width: '90vw',data: { data: { data: "data" } }, panelClass: "custom-dialog"
     });
 
