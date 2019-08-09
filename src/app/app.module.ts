@@ -21,11 +21,11 @@ import { SatDatepickerModule, SatNativeDateModule } from "saturn-datepicker";
 import { AppComponent } from "./app.component";
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { OrdenesCompraComponent } from './pages/ordenes-compra/ordenes-compra.component';
-import { DialogComponent } from './components/dialog/dialog.component';
+import { DialogDetallesComponent } from './components/dialog-detalles/dialog-detalles.component';
 
 @NgModule({
-  declarations: [AppComponent, OrdenesCompraComponent, DialogComponent],
-  entryComponents: [DialogComponent],
+  declarations: [AppComponent, OrdenesCompraComponent, DialogDetallesComponent],
+  entryComponents: [DialogDetallesComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,

@@ -1,0 +1,17 @@
+.card {
+    &-first, &-second, &-third, &-fourth {
+        padding: 0;
+    }
+    &-wrapper {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, auto));
+        grid-gap: 1rem;
+    }
+    &-title {
+        padding: 1rem;
+    }
+    &-body {
+        padding: 1rem;
+        list-style: none;
+    }
+}
