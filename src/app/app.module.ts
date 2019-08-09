@@ -8,6 +8,8 @@ import {
   MatButtonModule,
   MatIconModule,
   MatCardModule,
+  MatTabsModule,
+  MatStepperModule,
   MatOptionModule,
   MatSelectModule,
   MatAutocompleteModule,
@@ -22,9 +24,10 @@ import { AppComponent } from "./app.component";
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { OrdenesCompraComponent } from './pages/ordenes-compra/ordenes-compra.component';
 import { DialogDetallesComponent } from './components/dialog-detalles/dialog-detalles.component';
+import { StepperDetallesComponent } from './components/stepper-detalles/stepper-detalles.component';
 
 @NgModule({
-  declarations: [AppComponent, OrdenesCompraComponent, DialogDetallesComponent],
+  declarations: [AppComponent, OrdenesCompraComponent, DialogDetallesComponent, StepperDetallesComponent],
   entryComponents: [DialogDetallesComponent],
   imports: [
     BrowserModule,
@@ -37,6 +40,8 @@ import { DialogDetallesComponent } from './components/dialog-detalles/dialog-det
     MatButtonModule,
     MatIconModule,
     MatCardModule,
+    MatTabsModule,
+    MatStepperModule,
     MatTableModule,
     MatCheckboxModule,
     MatOptionModule,

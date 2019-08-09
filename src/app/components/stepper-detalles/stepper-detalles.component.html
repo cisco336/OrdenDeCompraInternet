@@ -1,0 +1,55 @@
+<mat-horizontal-stepper [linear]="false" #stepper>
+  <mat-step [stepControl]="firstFormGroup">
+    <form [formGroup]="firstFormGroup">
+      <ng-template matStepLabel>Lista de SKU</ng-template>
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Debitis error
+        alias, deleniti nulla exercitationem necessitatibus minus consectetur
+        aut aliquam hic voluptates, illo earum? At libero excepturi quis, odio
+        laboriosam aperiam.
+      </p>
+      <div>
+        <button mat-button matStepperPrevious>Atras</button>
+        <button mat-button matStepperNext>Siguiente</button>
+      </div>
+    </form>
+  </mat-step>
+  <mat-step [stepControl]="secondFormGroup">
+    <form [formGroup]="secondFormGroup">
+      <ng-template matStepLabel>Configuracion de Bultos</ng-template>
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Debitis error
+        alias, deleniti nulla exercitationem necessitatibus minus consectetur
+        aut aliquam hic voluptates, illo earum? At libero excepturi quis, odio
+        laboriosam aperiam.
+      </p>
+      <div>
+        <button mat-button matStepperPrevious>Atras</button>
+        <button mat-button matStepperNext>Siguiente</button>
+      </div>
+    </form>
+  </mat-step>
+  <mat-step [stepControl]="secondFormGroup">
+    <form [formGroup]="secondFormGroup">
+      <ng-template matStepLabel>Direccion de Origen/Entrega</ng-template>
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Debitis error
+        alias, deleniti nulla exercitationem necessitatibus minus consectetur
+        aut aliquam hic voluptates, illo earum? At libero excepturi quis, odio
+        laboriosam aperiam.
+      </p>
+      <div>
+        <button mat-button matStepperPrevious>Atras</button>
+        <button mat-button matStepperNext>Siguiente</button>
+      </div>
+    </form>
+  </mat-step>
+  <mat-step>
+    <ng-template matStepLabel>Confirmar Generacion de Guia</ng-template>
+    You are now done.
+    <div>
+      <button mat-button matStepperPrevious>Atras</button>
+      <button mat-button (click)="stepper.reset()">Generar Guia</button>
+    </div>
+  </mat-step>
+</mat-horizontal-stepper>
