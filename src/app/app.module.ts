@@ -14,7 +14,8 @@ import {
   MatCheckboxModule,
   MatTableModule,
   MatDialogModule,
-  MatPaginatorModule
+  MatPaginatorModule,
+  MatToolbarModule
 } from "@angular/material";
 import { SatDatepickerModule, SatNativeDateModule } from "saturn-datepicker";
 
@@ -44,6 +45,7 @@ import { DialogDetallesComponent } from './components/dialog-detalles/dialog-det
     MatAutocompleteModule,
     MatDialogModule,
     MatPaginatorModule,
+    MatToolbarModule,
 
     // DatePicker Range
     SatDatepickerModule,

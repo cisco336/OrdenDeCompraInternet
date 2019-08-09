@@ -1,7 +1,14 @@
+<mat-toolbar class="toolbar"
+  ><span>Detalles</span
+  ><button mat-icon-button (click)="closeDialog()">
+    <mat-icon>close</mat-icon>
+  </button></mat-toolbar
+>
 <div class="the-wrapper">
   <div class="card-wrapper">
     <mat-card class="card-first">
       <div class="card-title">
+        <span><mat-icon>person</mat-icon></span>
         Datos del Ciente:
       </div>
       <div class="card-body">
@@ -16,6 +23,7 @@
     </mat-card>
     <mat-card class="card-second">
       <div class="card-title">
+        <span><mat-icon>local_shipping</mat-icon></span>
         Datos de entrega:
       </div>
       <div class="card-body">
@@ -27,6 +35,7 @@
     </mat-card>
     <mat-card class="card-third">
       <div class="card-title">
+        <span><mat-icon>local_offer</mat-icon></span>
         Datos de la orden:
       </div>
       <div class="card-body">
@@ -39,6 +48,7 @@
     </mat-card>
     <mat-card class="card-fourth">
       <div class="card-title">
+        <span><mat-icon>insert_comment</mat-icon></span>
         Observaciones:
       </div>
       <div class="card-body">

@@ -1,3 +1,4 @@
+@import './assets/css/vars';
 /* You can add global styles to this file, and also import other style files */
 // @import "~@angular/material/prebuilt-themes/indigo-pink.css";
 
@@ -16,48 +17,48 @@
 
 html,
 body {
-  background: #efefef;
+  background: $HC-background;
   & * {
     &::-webkit-scrollbar {
       width: 6px;
-      background-color: #f5f5f5;
+      background-color: $HC-scrollbar-background;
     }
     &::-webkit-scrollbar-thumb {
-      background: #0072ce;
+      background: $HC-primary;
     }
   }
 }
 
 $sd-primary: (
-  1: #0072ce,
+  1: $HC-primary,
   contrast: (
-    1: white
+    1: $HC-white
   )
 );
 $sd-secondary: (
-  1: #858585,
-  2: #ecebeb,
+  1: $HC-dark-gray,
+  2: $HC-light-gray,
   contrast: (
-    1: white,
-    2: #333
+    1: $HC-white,
+    2: $HC-gray,
   )
 );
 $sd-success: (
-  1: #38ad6a,
+  1: $HC-success,
   contrast: (
-    1: white
+    1: $HC-white
   )
 );
 $sd-warning: (
-  1: #fbd600,
+  1: $HC-warning,
   contrast: (
-    1: black
+    1: $HC-black
   )
 );
 $sd-danger: (
-  1: #ff4646,
+  1: $HC-danger,
   contrast: (
-    1: white
+    1: $HC-white
   )
 );
 $sodimac-app-primary: mat-palette($sd-primary, 1);
@@ -93,7 +94,7 @@ body {
   & *:not(button span) {
     color: #333 !important;
   }
-  & button {
+  & button:not([mat-icon-button]) {
     &.mat-primary {
       border-radius: 0 !important;
     }
@@ -105,6 +106,11 @@ body {
       & mat-icon {
         margin-right: 10px;
       }
+    }
+  }
+  .dialog-detalles {
+    mat-dialog-container {
+      padding: 0;
     }
   }
 }
