@@ -1,11 +1,58 @@
 @import "../../../assets/css/vars";
 .toolbar {
-    margin-bottom: 1rem;
-    display: flex;
-    flex-flow: row nowrap;
-    align-items: center;
-    justify-content: space-between;
-    & button span mat-icon {
-      margin-right: 0!important;
-    }
+  margin-bottom: 1rem;
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  justify-content: space-between;
+  color: $HC-white;
+  & span:first-child {
+    margin-right: 15px;
   }
+  & button span mat-icon {
+    margin-right: 0 !important;
+  }
+}
+.the-wrapper {
+  padding: 1rem;
+  max-width: 700px;
+  display: grid;
+  grid-gap: 1rem;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto auto auto auto;
+  grid-template-areas:
+    "chips titulo"
+    "chips selector"
+    "chips ."
+    "chips boton";
+  @include custom-media-query-1 {
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(5, auto);
+    grid-template-areas:
+      "titulo"
+      "."
+      "chips"
+      "selector"
+      "boton";
+  }
+  & h5 {
+    grid-area: titulo;
+  }
+  & mat-chip-list {
+    grid-area: chips;
+  }
+  & mat-form-field {
+    grid-area: selector;
+  }
+  & button {
+    grid-area: boton;
+  }
+  & div.error {
+    display: flex;
+    grid-area: chips;
+    align-items: center;
+    justify-content: center;
+    color: red;
+    text-align: center;
+  }
+}

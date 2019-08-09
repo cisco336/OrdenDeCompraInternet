@@ -36,7 +36,7 @@ $danger-gradient: linear-gradient(
 
 // Mixins
 @mixin custom-media-query-1 {
-  @media (min-width: 590px) and (max-width: 729px) {
+  @media (max-width: 520px) {
     @content;
   }
 }

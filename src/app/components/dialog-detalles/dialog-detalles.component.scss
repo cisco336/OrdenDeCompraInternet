@@ -5,6 +5,7 @@
   flex-flow: row nowrap;
   align-items: center;
   justify-content: space-between;
+  color: $HC-white;
   & button span mat-icon {
     margin-right: 0!important;
   }
@@ -19,31 +20,33 @@
   &-fourth {
     padding: 0;
   }
-  &-first .card-title span {
+  &-first .card-title {
     background: $primary-gradient;
   }
-  &-second .card-title span {
+  &-second .card-title {
     background: $success-gradient;
   }
-  &-third .card-title span {
+  &-third .card-title {
     background: $warning-gradient;
   }
-  &-fourth .card-title span {
+  &-fourth .card-title {
     background: $danger-gradient;
   }
   &-wrapper {
     padding: 1rem;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, auto));
+    grid-template-columns: repeat(auto-fit, minmax(250px, 250px));
     grid-gap: 2rem;
   }
   &-title {
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    color: $HC-white;
     padding: 1rem;
-    padding-bottom: 0;
     font-size: 21px;
-    border-bottom: 1px solid $HC-light-gray;
     display: flex;
     flex-flow: row nowrap;
+    align-items: center;
     justify-content: space-between;
     & span {
       padding: 1rem;

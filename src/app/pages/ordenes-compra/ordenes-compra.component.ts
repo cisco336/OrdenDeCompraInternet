@@ -10,10 +10,10 @@ import { DialogCambioEstadoComponent } from '../../components/dialog-cambio-esta
 import { MatPaginator } from "@angular/material/paginator";
 
 export interface PeriodicElement {
-  name: string;
-  position: number;
-  weight: number;
-  symbol: string;
+  fechaCreacion: string;
+  orden: number;
+  fechaDespacho: number;
+  fechaEntrega: string;
 }
 
 export interface User {
@@ -21,26 +21,26 @@ export interface User {
 }
 
 const ELEMENT_DATA: PeriodicElement[] = [
-  { position: 1, name: "Hydrogen", weight: 1.0079, symbol: "H" },
-  { position: 2, name: "Helium", weight: 4.0026, symbol: "He" },
-  { position: 3, name: "Lithium", weight: 6.941, symbol: "Li" },
-  { position: 4, name: "Beryllium", weight: 9.0122, symbol: "Be" },
-  { position: 5, name: "Boron", weight: 10.811, symbol: "B" },
-  { position: 6, name: "Carbon", weight: 12.0107, symbol: "C" },
-  { position: 7, name: "Nitrogen", weight: 14.0067, symbol: "N" },
-  { position: 8, name: "Oxygen", weight: 15.9994, symbol: "O" },
-  { position: 9, name: "Fluorine", weight: 18.9984, symbol: "F" },
-  { position: 10, name: "Neon", weight: 20.1797, symbol: "Ne" },
-  { position: 11, name: "Sodium", weight: 22.9897, symbol: "Na" },
-  { position: 12, name: "Magnesium", weight: 24.305, symbol: "Mg" },
-  { position: 13, name: "Aluminum", weight: 26.9815, symbol: "Al" },
-  { position: 14, name: "Silicon", weight: 28.0855, symbol: "Si" },
-  { position: 15, name: "Phosphorus", weight: 30.9738, symbol: "P" },
-  { position: 16, name: "Sulfur", weight: 32.065, symbol: "S" },
-  { position: 17, name: "Chlorine", weight: 35.453, symbol: "Cl" },
-  { position: 18, name: "Argon", weight: 39.948, symbol: "Ar" },
-  { position: 19, name: "Potassium", weight: 39.0983, symbol: "K" },
-  { position: 20, name: "Calcium", weight: 40.078, symbol: "Ca" }
+  { orden: 1, fechaCreacion: "Hydrogen", fechaDespacho: 1.0079, fechaEntrega: "H" },
+  { orden: 2, fechaCreacion: "Helium", fechaDespacho: 4.0026, fechaEntrega: "He" },
+  { orden: 3, fechaCreacion: "Lithium", fechaDespacho: 6.941, fechaEntrega: "Li" },
+  { orden: 4, fechaCreacion: "Beryllium", fechaDespacho: 9.0122, fechaEntrega: "Be" },
+  { orden: 5, fechaCreacion: "Boron", fechaDespacho: 10.811, fechaEntrega: "B" },
+  { orden: 6, fechaCreacion: "Carbon", fechaDespacho: 12.0107, fechaEntrega: "C" },
+  { orden: 7, fechaCreacion: "Nitrogen", fechaDespacho: 14.0067, fechaEntrega: "N" },
+  { orden: 8, fechaCreacion: "Oxygen", fechaDespacho: 15.9994, fechaEntrega: "O" },
+  { orden: 9, fechaCreacion: "Fluorine", fechaDespacho: 18.9984, fechaEntrega: "F" },
+  { orden: 10, fechaCreacion: "Neon", fechaDespacho: 20.1797, fechaEntrega: "Ne" },
+  { orden: 11, fechaCreacion: "Sodium", fechaDespacho: 22.9897, fechaEntrega: "Na" },
+  { orden: 12, fechaCreacion: "Magnesium", fechaDespacho: 24.305, fechaEntrega: "Mg" },
+  { orden: 13, fechaCreacion: "Aluminum", fechaDespacho: 26.9815, fechaEntrega: "Al" },
+  { orden: 14, fechaCreacion: "Silicon", fechaDespacho: 28.0855, fechaEntrega: "Si" },
+  { orden: 15, fechaCreacion: "Phosphorus", fechaDespacho: 30.9738, fechaEntrega: "P" },
+  { orden: 16, fechaCreacion: "Sulfur", fechaDespacho: 32.065, fechaEntrega: "S" },
+  { orden: 17, fechaCreacion: "Chlorine", fechaDespacho: 35.453, fechaEntrega: "Cl" },
+  { orden: 18, fechaCreacion: "Argon", fechaDespacho: 39.948, fechaEntrega: "Ar" },
+  { orden: 19, fechaCreacion: "Potassium", fechaDespacho: 39.0983, fechaEntrega: "K" },
+  { orden: 20, fechaCreacion: "Calcium", fechaDespacho: 40.078, fechaEntrega: "Ca" }
 ];
 
 @Component({
@@ -55,10 +55,10 @@ export class OrdenesCompraComponent implements OnInit {
 
   displayedColumns: string[] = [
     "select",
-    "position",
-    "name",
-    "weight",
-    "symbol"
+    "orden",
+    "fechaCreacion",
+    "fechaDespacho",
+    "fechaEntrega"
   ];
   dataSource = new MatTableDataSource<PeriodicElement>(ELEMENT_DATA);
   selection = new SelectionModel<PeriodicElement>(true, []);
@@ -99,7 +99,7 @@ export class OrdenesCompraComponent implements OnInit {
     }
     return `${
       this.selection.isSelected(row) ? "deselect" : "select"
-    } row ${row.position + 1}`;
+    } row ${row.orden + 1}`;
   }
 
   applyFilter(filterValue: string) {
@@ -126,7 +126,7 @@ export class OrdenesCompraComponent implements OnInit {
   }
   openDialogCambioEstado(data): Observable<any> {
     const dialogRef = this._dialog.open(DialogCambioEstadoComponent, {
-      width: '90vw',data: { data: { data: data } }, panelClass: "dialog-detalles", disableClose: true
+      maxWidth: '90vw',data: { data: { data: data, selected: this.selection.selected } }, panelClass: "dialog-detalles", disableClose: true
     });
 
     return dialogRef.afterClosed();

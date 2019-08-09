@@ -17,7 +17,8 @@ import {
   MatTableModule,
   MatDialogModule,
   MatPaginatorModule,
-  MatToolbarModule
+  MatToolbarModule,
+  MatChipsModule
 } from "@angular/material";
 import { SatDatepickerModule, SatNativeDateModule } from "saturn-datepicker";
 
@@ -52,6 +53,9 @@ import { DialogCambioEstadoComponent } from './components/dialog-cambio-estado/d
     MatDialogModule,
     MatPaginatorModule,
     MatToolbarModule,
+    MatChipsModule,
+    MatSelectModule,
+    MatOptionModule,
 
     // DatePicker Range
     SatDatepickerModule,
