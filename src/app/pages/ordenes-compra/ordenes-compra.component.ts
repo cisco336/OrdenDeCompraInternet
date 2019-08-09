@@ -6,7 +6,7 @@ import { Observable } from "rxjs";
 import { map, startWith } from "rxjs/operators";
 import { MatDialogRef, MatDialog, MatDialogConfig } from "@angular/material";
 import { DialogComponent } from "../../components/dialog/dialog.component";
-import {MatPaginator} from '@angular/material/paginator';
+import { MatPaginator } from "@angular/material/paginator";
 
 export interface PeriodicElement {
   name: string;
@@ -29,7 +29,17 @@ const ELEMENT_DATA: PeriodicElement[] = [
   { position: 7, name: "Nitrogen", weight: 14.0067, symbol: "N" },
   { position: 8, name: "Oxygen", weight: 15.9994, symbol: "O" },
   { position: 9, name: "Fluorine", weight: 18.9984, symbol: "F" },
-  { position: 10, name: "Neon", weight: 20.1797, symbol: "Ne" }
+  { position: 10, name: "Neon", weight: 20.1797, symbol: "Ne" },
+  { position: 11, name: "Sodium", weight: 22.9897, symbol: "Na" },
+  { position: 12, name: "Magnesium", weight: 24.305, symbol: "Mg" },
+  { position: 13, name: "Aluminum", weight: 26.9815, symbol: "Al" },
+  { position: 14, name: "Silicon", weight: 28.0855, symbol: "Si" },
+  { position: 15, name: "Phosphorus", weight: 30.9738, symbol: "P" },
+  { position: 16, name: "Sulfur", weight: 32.065, symbol: "S" },
+  { position: 17, name: "Chlorine", weight: 35.453, symbol: "Cl" },
+  { position: 18, name: "Argon", weight: 39.948, symbol: "Ar" },
+  { position: 19, name: "Potassium", weight: 39.0983, symbol: "K" },
+  { position: 20, name: "Calcium", weight: 40.078, symbol: "Ca" }
 ];
 
 @Component({
@@ -38,7 +48,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
   styleUrls: ["./ordenes-compra.component.scss"]
 })
 export class OrdenesCompraComponent implements OnInit {
-  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   myControl = new FormControl();
   options: User[] = [{ name: "Mary" }, { name: "Shelley" }, { name: "Igor" }];
 
@@ -64,6 +74,7 @@ export class OrdenesCompraComponent implements OnInit {
       map(value => (typeof value === "string" ? value : value.name)),
       map(name => (name ? this._filter(name) : this.options.slice()))
     );
+    this.dataSource.paginator = this.paginator;
   }
 
   /** Whether the number of selected elements matches the total number of rows. */

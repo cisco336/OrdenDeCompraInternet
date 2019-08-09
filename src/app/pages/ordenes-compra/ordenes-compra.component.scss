@@ -20,11 +20,11 @@
       & > div {
         display: grid;
         grid-gap: 1rem;
-        grid-template-columns: repeat(auto-fit, minmax(180px, 200px));
+        grid-template-columns: repeat(auto-fit, minmax(180px, auto));
       }
       & button {
         align-self: flex-start;
-        max-width: 200px;
+        max-width: 250px;
       }
     }
     &.second {
@@ -33,15 +33,16 @@
         padding-bottom: 1rem;
         margin-bottom: 1rem;
         display: grid;
-        grid-template-columns: 1fr auto auto;
+        grid-template-columns: 1fr 1fr;
         grid-gap: 1rem;
         & h2 {
           font-weight: 300;
           align-self: center;
         }
-        & button {
-          justify-self: flex-end;
-          align-self: center;
+        & > div {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(180px, auto));
+          grid-gap: 1rem;
         }
       }
       & .filter {
