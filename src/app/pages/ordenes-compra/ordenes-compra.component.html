@@ -65,10 +65,15 @@
     <div>
       <h2>Opciones:</h2>
       <div>
-        <button mat-raised-button color="primary" (click)="openDialogCambioEstado($event)" [disabled]="!selection.selected.length">
+        <button
+          mat-raised-button
+          color="primary"
+          (click)="openDialogCambioEstado($event)"
+          [disabled]="!selection.selected.length"
+        >
           <mat-icon>category</mat-icon>Cambiar estado
         </button>
-        <button mat-raised-button color="primary">
+        <button mat-raised-button color="primary" #exportButton>
           <mat-icon>description</mat-icon>Generar reporte
         </button>
       </div>
@@ -82,7 +87,15 @@
       <mat-icon matSuffix>filter_list</mat-icon>
     </mat-form-field>
     <!-- Tabla de datos Principal -->
-    <table mat-table [dataSource]="dataSource">
+    <table
+      mat-table
+      [dataSource]="dataSource"
+      ngxMatTableExporter
+      [cdkTable]="table"
+      [exporterButton]="exportButton"
+      sheetName="Ordenes_de_compra"
+      fileName="Ordenes_de_compra"
+    >
       <!-- Checkbox Column -->
       <ng-container matColumnDef="select">
         <th mat-header-cell *matHeaderCellDef>
@@ -137,11 +150,7 @@
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr
-        mat-row
-        *matRowDef="let row; columns: displayedColumns"
-        
-      ></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
     </table>
 
     <mat-paginator

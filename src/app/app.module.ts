@@ -21,16 +21,23 @@ import {
   MatChipsModule
 } from "@angular/material";
 import { SatDatepickerModule, SatNativeDateModule } from "saturn-datepicker";
+import { MatTableExporterModule } from "mat-table-exporter";
 
 import { AppComponent } from "./app.component";
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { OrdenesCompraComponent } from './pages/ordenes-compra/ordenes-compra.component';
-import { DialogDetallesComponent } from './components/dialog-detalles/dialog-detalles.component';
-import { StepperDetallesComponent } from './components/stepper-detalles/stepper-detalles.component';
-import { DialogCambioEstadoComponent } from './components/dialog-cambio-estado/dialog-cambio-estado.component';
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { OrdenesCompraComponent } from "./pages/ordenes-compra/ordenes-compra.component";
+import { DialogDetallesComponent } from "./components/dialog-detalles/dialog-detalles.component";
+import { StepperDetallesComponent } from "./components/stepper-detalles/stepper-detalles.component";
+import { DialogCambioEstadoComponent } from "./components/dialog-cambio-estado/dialog-cambio-estado.component";
 
 @NgModule({
-  declarations: [AppComponent, OrdenesCompraComponent, DialogDetallesComponent, StepperDetallesComponent, DialogCambioEstadoComponent],
+  declarations: [
+    AppComponent,
+    OrdenesCompraComponent,
+    DialogDetallesComponent,
+    StepperDetallesComponent,
+    DialogCambioEstadoComponent
+  ],
   entryComponents: [DialogDetallesComponent, DialogCambioEstadoComponent],
   imports: [
     BrowserModule,
@@ -56,6 +63,7 @@ import { DialogCambioEstadoComponent } from './components/dialog-cambio-estado/d
     MatChipsModule,
     MatSelectModule,
     MatOptionModule,
+    MatTableExporterModule,
 
     // DatePicker Range
     SatDatepickerModule,
