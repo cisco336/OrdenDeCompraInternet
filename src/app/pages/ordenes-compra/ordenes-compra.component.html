@@ -1,9 +1,9 @@
 <div class="the-wrapper">
   <h1>
     <span>Proveedor:</span
-    ><span>{{ proveedor || "Nombre del proveedor" }}</span>
+    ><span>{{ proveedorControl.value || "Nombre del proveedor" }}</span>
   </h1>
-  <mat-card class="mat-elevation-z4 first">
+  <mat-card class="mat-elevation-z4 first"[formGroup]="mainFilterForm">
     <div>
       <mat-form-field class="example-full-width">
         <input
@@ -11,17 +11,19 @@
           placeholder="Proveedor"
           aria-label="Proveedor"
           matInput
-          [formControl]="myControl"
-          [matAutocomplete]="auto"
+    debugger
+    [formControl]="proveedorControl"
+          [matAutocomplete]="proveedor"
         />
-        <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+        <mat-autocomplete #proveedor="matAutocomplete" [displayWith]="displayProveedor">
           <mat-option
-            *ngFor="let option of filteredOptions | async"
+            *ngFor="let option of filteredProveedores | async"
             [value]="option"
           >
-            {{ option.name }}
+            {{ option.DESCRIPCION }}
           </mat-option>
         </mat-autocomplete>
+        <mat-hint color="warn" *ngIf="!proveedorControl.valid">Campo requerido.</mat-hint>
       </mat-form-field>
       <mat-form-field class="example-full-width">
         <input
@@ -29,15 +31,15 @@
           placeholder="Estados"
           aria-label="Estados"
           matInput
-          [formControl]="myControl"
-          [matAutocomplete]="auto"
+          [formControl]="estadosControl"
+          [matAutocomplete]="estados"
         />
-        <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+        <mat-autocomplete #estados="matAutocomplete" [displayWith]="displayEstados">
           <mat-option
-            *ngFor="let option of filteredOptions | async"
+            *ngFor="let option of filteredEstados | async"
             [value]="option"
           >
-            {{ option.name }}
+            {{ option.DESCRIPCION }}
           </mat-option>
         </mat-autocomplete>
       </mat-form-field>
