@@ -119,11 +119,12 @@
     </mat-form-field>
     <!-- Tabla de datos Principal -->
     <table
+      #table
       mat-table
       #table
       [dataSource]="dataSource"
       ngxMatTableExporter
-      [cdkTable]="table"
+      [cdkTable]="table" 
       [exporterButton]="exportButton"
       sheetName="Ordenes_de_compra"
       fileName="Ordenes_de_compra"

@@ -264,6 +264,7 @@ export class OrdenesCompraComponent implements OnInit {
   openDialogDetalles(data): Observable<any> {
     const dialogRef = this._dialog.open(DialogDetallesComponent, {
       width: "90vw",
+      maxHeight: '90vh',
       data: { data: { data: data } },
       panelClass: "dialog-detalles",
       disableClose: true
@@ -274,6 +275,7 @@ export class OrdenesCompraComponent implements OnInit {
   openDialogCambioEstado(data): Observable<any> {
     const dialogRef = this._dialog.open(DialogCambioEstadoComponent, {
       maxWidth: "90vw",
+      maxHeight: '90vh',
       data: { data: { data: data, selected: this.selection.selected } },
       panelClass: "dialog-detalles",
       disableClose: true
