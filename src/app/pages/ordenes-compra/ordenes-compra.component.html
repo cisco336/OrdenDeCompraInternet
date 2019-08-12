@@ -1,21 +1,25 @@
 <div class="the-wrapper">
   <h1>
     <span>Proveedor:</span
-    ><span>{{ proveedorControl.value || "Nombre del proveedor" }}</span>
+    ><span>{{ proveedorControl || "Nombre del proveedor" }}</span>
   </h1>
-  <mat-card class="mat-elevation-z4 first"[formGroup]="mainFilterForm">
-    <div>
+  <mat-card class="mat-elevation-z4 first" >
+    <div [formGroup]="mainFilterForm">
       <mat-form-field class="example-full-width">
         <input
           type="text"
           placeholder="Proveedor"
           aria-label="Proveedor"
           matInput
-    debugger
-    [formControl]="proveedorControl"
+          debugger
+          [formControl]="proveedorControl"
+          formControlName="proveedorControlName"
           [matAutocomplete]="proveedor"
         />
-        <mat-autocomplete #proveedor="matAutocomplete" [displayWith]="displayProveedor">
+        <mat-autocomplete
+          #proveedor="matAutocomplete"
+          [displayWith]="displayProveedor"
+        >
           <mat-option
             *ngFor="let option of filteredProveedores | async"
             [value]="option"
@@ -23,7 +27,7 @@
             {{ option.DESCRIPCION }}
           </mat-option>
         </mat-autocomplete>
-        <mat-hint color="warn" *ngIf="!proveedorControl.valid">Campo requerido.</mat-hint>
+        <mat-error *ngIf="mainFilterForm.invalid">Campo requerido.</mat-error>
       </mat-form-field>
       <mat-form-field class="example-full-width">
         <input
@@ -34,7 +38,10 @@
           [formControl]="estadosControl"
           [matAutocomplete]="estados"
         />
-        <mat-autocomplete #estados="matAutocomplete" [displayWith]="displayEstados">
+        <mat-autocomplete
+          #estados="matAutocomplete"
+          [displayWith]="displayEstados"
+        >
           <mat-option
             *ngFor="let option of filteredEstados | async"
             [value]="option"
@@ -42,11 +49,12 @@
             {{ option.DESCRIPCION }}
           </mat-option>
         </mat-autocomplete>
+        <!-- <mat-error *ngIf="proveedorControl.invalid">Campo requerido.</mat-error> -->
       </mat-form-field>
-      <mat-form-field>
+      <!-- <mat-form-field>
         <input
           matInput
-          placeholder="Choose a date"
+          placeholder="Ingrese rango de fecha"
           [satDatepicker]="picker"
           [value]="date"
         />
@@ -57,6 +65,27 @@
           [closeAfterSelection]="false"
         ></sat-datepicker>
         <sat-datepicker-toggle matSuffix [for]="picker"></sat-datepicker-toggle>
+        <mat-error *ngIf="proveedorControl.invalid">Campo requerido.</mat-error>
+      </mat-form-field> -->
+      <mat-form-field>
+        <input
+          matInput
+          [matDatepicker]="dp1"
+          placeholder="Fecha inicio"
+          disabled
+        />
+        <mat-datepicker-toggle matSuffix [for]="dp1"></mat-datepicker-toggle>
+        <mat-datepicker #dp1 disabled="false"></mat-datepicker>
+      </mat-form-field>
+      <mat-form-field>
+        <input
+          matInput
+          [matDatepicker]="dp2"
+          placeholder="Fecha fin"
+          disabled
+        />
+        <mat-datepicker-toggle matSuffix [for]="dp2"></mat-datepicker-toggle>
+        <mat-datepicker #dp2 disabled="false"></mat-datepicker>
       </mat-form-field>
     </div>
     <button mat-raised-button color="primary">
@@ -91,6 +120,7 @@
     <!-- Tabla de datos Principal -->
     <table
       mat-table
+      #table
       [dataSource]="dataSource"
       ngxMatTableExporter
       [cdkTable]="table"

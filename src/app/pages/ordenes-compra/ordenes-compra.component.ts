@@ -161,7 +161,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
 })
 export class OrdenesCompraComponent implements OnInit {
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
-  proveedorControl = new FormControl({ value: "" }, Validators.required);
+  // proveedorControl = new FormControl({ value: "" }, Validators.required);
   estadosControl = new FormControl({ value: "" }, Validators.required);
   mainFilterForm: FormGroup;
   proveedores: Proveedor[] = [
@@ -194,11 +194,13 @@ export class OrdenesCompraComponent implements OnInit {
 
   constructor(public _dialog: MatDialog, _formBuilder: FormBuilder) {
     // Validators
-    this.mainFilterForm = _formBuilder.group({});
+    this.mainFilterForm = _formBuilder.group({
+      proveedorControlName: [{value: ""}, Validators.required],
+    });
   }
 
   ngOnInit() {
-    this.filteredProveedores = this.proveedorControl.valueChanges.pipe(
+    this.filteredProveedores = this.mainFilterForm.get("proveedorControlName").valueChanges.pipe(
       startWith(""),
       map(value => (typeof value === "string" ? value : value.DESCRIPCION)),
       map(descripcion => (descripcion ? this._filterProveedor(descripcion) : this.proveedores.slice()))
@@ -239,11 +241,9 @@ export class OrdenesCompraComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
   displayProveedor(data?: Proveedor): string | undefined {
-    console.log(data, this.filteredProveedores)
     return data ? data.DESCRIPCION : undefined;
   }
   displayEstados(data?: Estado): string | undefined {
-    console.log(data, this.filteredEstados)
     return data ? data.DESCRIPCION : undefined;
   }
   private _filterProveedor(DESCRIPCION: string): Proveedor[] {

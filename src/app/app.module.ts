@@ -28,6 +28,7 @@ import { OrdenesCompraComponent } from "./pages/ordenes-compra/ordenes-compra.co
 import { DialogDetallesComponent } from "./components/dialog-detalles/dialog-detalles.component";
 import { StepperDetallesComponent } from "./components/stepper-detalles/stepper-detalles.component";
 import { DialogCambioEstadoComponent } from "./components/dialog-cambio-estado/dialog-cambio-estado.component";
+import { MatMomentDateModule } from "@angular/material-moment-adapter";
 
 @NgModule({
   declarations: [
@@ -63,6 +64,7 @@ import { DialogCambioEstadoComponent } from "./components/dialog-cambio-estado/d
     MatSelectModule,
     MatOptionModule,
     MatTableExporterModule,
+    MatMomentDateModule,
 
     // DatePicker Range
     SatDatepickerModule,
