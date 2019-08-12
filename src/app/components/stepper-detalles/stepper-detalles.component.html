@@ -1,5 +1,5 @@
 <mat-horizontal-stepper [linear]="false" #stepper>
-  <mat-step [stepControl]="firstFormGroup">
+  <mat-step [stepControl]="firstFormGroup" state="tab">
     <form [formGroup]="firstFormGroup">
       <ng-template matStepLabel>Lista de SKU</ng-template>
       <p>
@@ -13,7 +13,7 @@
       </div>
     </form>
   </mat-step>
-  <mat-step [stepControl]="secondFormGroup">
+  <mat-step [stepControl]="secondFormGroup" state="widgets">
     <form [formGroup]="secondFormGroup">
       <ng-template matStepLabel>Configuracion de Bultos</ng-template>
       <p>
@@ -28,7 +28,7 @@
       </div>
     </form>
   </mat-step>
-  <mat-step [stepControl]="secondFormGroup">
+  <mat-step [stepControl]="secondFormGroup" state="location">
     <form [formGroup]="secondFormGroup">
       <ng-template matStepLabel>Direccion de Origen/Entrega</ng-template>
       <p>
@@ -43,7 +43,7 @@
       </div>
     </form>
   </mat-step>
-  <mat-step>
+  <mat-step state="shipping">
     <ng-template matStepLabel>Confirmar Generacion de Guia</ng-template>
     You are now done.
     <div class="stepper-buttons">
@@ -51,4 +51,19 @@
       <button mat-raised-button color="primary" (click)="stepper.reset()"><mat-icon>description</mat-icon>Generar Guia</button>
     </div>
   </mat-step>
+
+
+  <!-- Template Icons -->
+  <ng-template matStepperIcon="tab">
+    <mat-icon>table_chart</mat-icon>
+  </ng-template>
+  <ng-template matStepperIcon="widgets">
+    <mat-icon>widgets</mat-icon>
+  </ng-template>
+  <ng-template matStepperIcon="location">
+    <mat-icon>location_on</mat-icon>
+  </ng-template>
+  <ng-template matStepperIcon="shipping">
+    <mat-icon>local_shipping</mat-icon>
+  </ng-template>
 </mat-horizontal-stepper>
