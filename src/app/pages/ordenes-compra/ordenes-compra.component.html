@@ -1,9 +1,12 @@
 <div class="the-wrapper">
-  <h1>
-    <span>Proveedor:</span
-    ><span>{{ proveedorControl || "Nombre del proveedor" }}</span>
-  </h1>
-  <mat-card class="mat-elevation-z4 first" >
+  <div>
+    <h1>
+      <span>Proveedor:</span
+      ><span>{{ proveedorControl || "Nombre del proveedor" }}</span>
+    </h1>
+    <button mat-mini-fab color="warn"><mat-icon>help_outline</mat-icon></button>
+  </div>
+  <mat-card class="mat-elevation-z4 first">
     <div [formGroup]="mainFilterForm">
       <mat-form-field class="example-full-width">
         <input
@@ -90,7 +93,12 @@
         <mat-datepicker #dp2></mat-datepicker>
       </mat-form-field>
     </div>
-    <button mat-raised-button color="primary" [disabled]="mainFilterForm.invalid" (click)="consultar($event)">
+    <button
+      mat-raised-button
+      color="primary"
+      [disabled]="mainFilterForm.invalid"
+      (click)="consultar($event)"
+    >
       <mat-icon>search</mat-icon> Consultar
     </button>
   </mat-card>
@@ -126,7 +134,7 @@
       #table
       [dataSource]="dataSource"
       ngxMatTableExporter
-      [cdkTable]="table" 
+      [cdkTable]="table"
       [exporterButton]="exportButton"
       sheetName="Ordenes_de_compra"
       fileName="Ordenes_de_compra"

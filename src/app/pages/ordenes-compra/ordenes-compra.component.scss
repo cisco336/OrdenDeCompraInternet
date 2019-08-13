@@ -2,14 +2,23 @@
 .the-wrapper {
   padding: 2rem;
   background: #efefef;
-  & h1:first-child {
-    margin: 0 0 2rem 0;
-    font-weight: 300;
-    & span:first-child {
-      margin-right: 10px;
+  & > div:first-child {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    & h1:first-child {
+      margin: 0;
+      font-weight: 300;
+      & span:first-child {
+        margin-right: 10px;
+      }
+      & span:nth-child(2) {
+        color: #5c5c5c;
+      }
     }
-    & span:nth-child(2) {
-      color: #5c5c5c;
+    & mat-icon {
+      vertical-align: top;
+      margin-right: 0;
     }
   }
   & mat-card {
