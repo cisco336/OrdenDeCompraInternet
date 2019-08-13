@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from "@angular/core";
+import { Component, OnInit, ViewChild, OnDestroy } from "@angular/core";
 import { SelectionModel } from "@angular/cdk/collections";
 import { MatTableDataSource } from "@angular/material/table";
 import { Observable } from "rxjs";
@@ -13,6 +13,7 @@ import {
   Validators,
   FormBuilder
 } from "@angular/forms";
+import { RequireMatch as RequireMatch } from './customValidators';
 
 export interface PeriodicElement {
   fechaCreacion: string;
@@ -159,10 +160,8 @@ const ELEMENT_DATA: PeriodicElement[] = [
   templateUrl: "./ordenes-compra.component.html",
   styleUrls: ["./ordenes-compra.component.scss"]
 })
-export class OrdenesCompraComponent implements OnInit {
+export class OrdenesCompraComponent implements OnInit, OnDestroy {
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
-  // proveedorControl = new FormControl({ value: "" }, Validators.required);
-  estadosControl = new FormControl({ value: "" }, Validators.required);
   mainFilterForm: FormGroup;
   proveedores: Proveedor[] = [
     { PROVEEDOR_ID: 1, DESCRIPCION: "Proveedor 1" },
@@ -192,25 +191,65 @@ export class OrdenesCompraComponent implements OnInit {
   filteredProveedores: Observable<Proveedor[]>;
   filteredEstados: Observable<Estado[]>;
 
+  fechaInicioSubscription;
+  fechaFinSubscription;
+
   constructor(public _dialog: MatDialog, _formBuilder: FormBuilder) {
     // Validators
     this.mainFilterForm = _formBuilder.group({
-      proveedorControlName: [{value: ""}, Validators.required],
+      proveedorControl: ["",[Validators.required, RequireMatch]],
+      estadosControl: ["", [Validators.required, RequireMatch]],
+      fechaInicioControl: ["", [Validators.required]],
+      fechaFinControl: ["", [Validators.required]]
     });
   }
 
   ngOnInit() {
-    this.filteredProveedores = this.mainFilterForm.get("proveedorControlName").valueChanges.pipe(
+    this.filteredProveedores = this.mainFilterForm
+      .get("proveedorControl")
+      .valueChanges.pipe(
+        startWith(""),
+        map(value => (typeof value === "string" ? value : value.DESCRIPCION)),
+        map(descripcion =>
+          descripcion
+            ? this._filterProveedor(descripcion)
+            : this.proveedores.slice()
+        )
+      );
+    this.filteredEstados = this.mainFilterForm.get("estadosControl").valueChanges.pipe(
       startWith(""),
       map(value => (typeof value === "string" ? value : value.DESCRIPCION)),
-      map(descripcion => (descripcion ? this._filterProveedor(descripcion) : this.proveedores.slice()))
+      map(descripcion =>
+        descripcion ? this._filterEstados(descripcion) : this.estados.slice()
+      )
     );
-    this.filteredEstados = this.estadosControl.valueChanges.pipe(
-      startWith(""),
-      map(value => (typeof value === "string" ? value : value.DESCRIPCION)),
-      map(descripcion => (descripcion ? this._filterEstados(descripcion) : this.estados.slice()))
-    );
+    this.fechaInicioSubscription = this.mainFilterForm.get("fechaInicioControl").valueChanges.subscribe(data => {
+      this.compareDates();
+    });
+    this.fechaFinSubscription = this.mainFilterForm.get("fechaFinControl").valueChanges.subscribe(data => {
+      this.compareDates();
+    })
     this.dataSource.paginator = this.paginator;
+  }
+
+  ngOnDestroy() {
+    this.fechaInicioSubscription.unsubscribe();
+    this.fechaFinSubscription.unsubscribe();
+  }
+
+  consultar(event) {
+    console.log(this.mainFilterForm);
+  }
+
+  compareDates() {
+    let form = this.mainFilterForm;
+    if ((this.mainFilterForm) && (new Date(form.get("fechaFinControl").value) <= new Date(form.get("fechaInicioControl").value))) {
+      form.get("fechaInicioControl").setErrors({ incorrect: true });
+      form.get("fechaFinControl").setErrors({ incorrect: true });
+    } else {
+      form.get("fechaInicioControl").setErrors(null);
+      form.get("fechaFinControl").setErrors(null);
+    }
   }
 
   /** Whether the number of selected elements matches the total number of rows. */
@@ -264,7 +303,7 @@ export class OrdenesCompraComponent implements OnInit {
   openDialogDetalles(data): Observable<any> {
     const dialogRef = this._dialog.open(DialogDetallesComponent, {
       width: "90vw",
-      maxHeight: '90vh',
+      maxHeight: "90vh",
       data: { data: { data: data } },
       panelClass: "dialog-detalles",
       disableClose: true
@@ -275,7 +314,7 @@ export class OrdenesCompraComponent implements OnInit {
   openDialogCambioEstado(data): Observable<any> {
     const dialogRef = this._dialog.open(DialogCambioEstadoComponent, {
       maxWidth: "90vw",
-      maxHeight: '90vh',
+      maxHeight: "90vh",
       data: { data: { data: data, selected: this.selection.selected } },
       panelClass: "dialog-detalles",
       disableClose: true

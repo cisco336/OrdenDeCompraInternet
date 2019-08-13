@@ -11,9 +11,8 @@
           placeholder="Proveedor"
           aria-label="Proveedor"
           matInput
-          debugger
-          [formControl]="proveedorControl"
-          formControlName="proveedorControlName"
+          required
+          formControlName="proveedorControl"
           [matAutocomplete]="proveedor"
         />
         <mat-autocomplete
@@ -27,7 +26,7 @@
             {{ option.DESCRIPCION }}
           </mat-option>
         </mat-autocomplete>
-        <mat-error *ngIf="mainFilterForm.invalid">Campo requerido.</mat-error>
+        <mat-error>Campo requerido.</mat-error>
       </mat-form-field>
       <mat-form-field class="example-full-width">
         <input
@@ -35,7 +34,8 @@
           placeholder="Estados"
           aria-label="Estados"
           matInput
-          [formControl]="estadosControl"
+          required
+          formControlName="estadosControl"
           [matAutocomplete]="estados"
         />
         <mat-autocomplete
@@ -49,7 +49,7 @@
             {{ option.DESCRIPCION }}
           </mat-option>
         </mat-autocomplete>
-        <!-- <mat-error *ngIf="proveedorControl.invalid">Campo requerido.</mat-error> -->
+        <mat-error>Campo requerido.</mat-error>
       </mat-form-field>
       <!-- <mat-form-field>
         <input
@@ -70,25 +70,27 @@
       <mat-form-field>
         <input
           matInput
+          required
           [matDatepicker]="dp1"
           placeholder="Fecha inicio"
-          disabled
+          formControlName="fechaInicioControl"
         />
         <mat-datepicker-toggle matSuffix [for]="dp1"></mat-datepicker-toggle>
-        <mat-datepicker #dp1 disabled="false"></mat-datepicker>
+        <mat-datepicker #dp1></mat-datepicker>
       </mat-form-field>
       <mat-form-field>
         <input
           matInput
+          required
           [matDatepicker]="dp2"
           placeholder="Fecha fin"
-          disabled
+          formControlName="fechaFinControl"
         />
         <mat-datepicker-toggle matSuffix [for]="dp2"></mat-datepicker-toggle>
-        <mat-datepicker #dp2 disabled="false"></mat-datepicker>
+        <mat-datepicker #dp2></mat-datepicker>
       </mat-form-field>
     </div>
-    <button mat-raised-button color="primary">
+    <button mat-raised-button color="primary" [disabled]="mainFilterForm.invalid" (click)="consultar($event)">
       <mat-icon>search</mat-icon> Consultar
     </button>
   </mat-card>
@@ -98,7 +100,7 @@
       <div>
         <button
           mat-raised-button
-          color="primary"
+          color="accent"
           (click)="openDialogCambioEstado($event)"
           [disabled]="!selection.selected.length"
         >
