@@ -29,6 +29,7 @@ import { DialogDetallesComponent } from "./components/dialog-detalles/dialog-det
 import { StepperDetallesComponent } from "./components/stepper-detalles/stepper-detalles.component";
 import { DialogCambioEstadoComponent } from "./components/dialog-cambio-estado/dialog-cambio-estado.component";
 import { MatMomentDateModule } from "@angular/material-moment-adapter";
+import { TablaDetallesComponent } from './components/tabla-detalles/tabla-detalles.component';
 
 @NgModule({
   declarations: [
@@ -36,7 +37,8 @@ import { MatMomentDateModule } from "@angular/material-moment-adapter";
     OrdenesCompraComponent,
     DialogDetallesComponent,
     StepperDetallesComponent,
-    DialogCambioEstadoComponent
+    DialogCambioEstadoComponent,
+    TablaDetallesComponent
   ],
   entryComponents: [DialogDetallesComponent, DialogCambioEstadoComponent],
   imports: [

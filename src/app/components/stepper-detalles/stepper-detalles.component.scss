@@ -1,12 +1,10 @@
 @import "../../../assets/css/vars";
 mat-horizontal-stepper {
-    margin-top: 1rem;
-  & div:first-child {
-      margin-bottom: 1rem;
-  }
-  & .mat-horizontal-content-container {
-      padding: 1rem;
-  }
+    // margin-top: 1rem;
+}
+::ng-deep .mat-horizontal-content-container {
+  border-top: 1px solid darken($HC-light-gray, 10);
+  padding: 0!important;
 }
 .stepper-buttons {
   margin-top: 1rem;

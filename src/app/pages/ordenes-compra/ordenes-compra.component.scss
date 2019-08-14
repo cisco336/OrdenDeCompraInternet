@@ -1,4 +1,4 @@
-@import '../../../assets/css/vars';
+@import "../../../assets/css/vars";
 .the-wrapper {
   padding: 2rem;
   background: #efefef;
@@ -25,7 +25,7 @@
     border-radius: 0;
     margin: 1rem 0;
     border-top: 2px solid $HC-white;
-    transition: all .2s ease-out;
+    transition: all 0.2s ease-out;
     &:hover {
       border-top: 2px solid $HC-success;
     }
@@ -44,9 +44,10 @@
       }
     }
     &.second {
+      padding: 0;
       & > div:first-child {
-        border-bottom: 1px solid rgba(150, 150, 150, .5);
-        padding-bottom: 1rem;
+        border-bottom: 1px solid rgba(150, 150, 150, 0.5);
+        padding: 1rem;
         margin-bottom: 1rem;
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -62,13 +63,17 @@
         }
       }
       & .filter {
-        width: 100%;
+        width: calc(100% - 32px);
+        width: -moz-available;
+        width: -webkit-fill-available;
+        width: fill-available;
+        padding: 1rem;
       }
       & table {
         width: 100%;
         & .position-label {
           color: $HC-primary;
-          transition: all .2s ease-out;
+          transition: all 0.2s ease-out;
           &:hover {
             text-decoration: underline;
             cursor: pointer;
@@ -77,24 +82,26 @@
         & tr.detail-row {
           height: 0;
         }
-        
+
         & tr.element-row:not(.expanded-row):hover {
-          background: #777;
+          cursor: pointer;
+          background: linear-gradient(to top, $HC-primary 5%, transparent 6%);
+          font-weight: bold;
         }
-        
+
         & tr.element-row:not(.expanded-row):active {
           background: #efefef;
         }
-        
+
         & .element-row td {
           border-bottom-width: 0;
         }
-        
+
         & .element-detail {
           overflow: hidden;
           display: flex;
         }
-        
+
         & .element-diagram {
           min-width: 80px;
           border: 2px solid black;
@@ -103,17 +110,17 @@
           margin: 8px 0;
           height: 104px;
         }
-        
+
         & .element-symbol {
           font-weight: bold;
           font-size: 40px;
           line-height: normal;
         }
-        
+
         & .element-description {
           padding: 16px;
         }
-        
+
         & .element-description-attribution {
           opacity: 0.5;
         }
@@ -124,6 +131,3 @@
     }
   }
 }
-
-
-
