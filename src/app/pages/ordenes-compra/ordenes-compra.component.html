@@ -210,24 +210,24 @@
           [attr.colspan]="displayedColumns.length"
         >
           <div
-            class="example-element-detail"
+            class="element-detail "
             [@detailExpand]="
               element == expandedElement ? 'expanded' : 'collapsed'
             "
           >
-            <div class="example-element-diagram">
-              <div class="example-element-position">{{ element["Orden"] }}</div>
-              <div class="example-element-symbol">
+            <div class="element-diagram">
+              <div class="element-position">{{ element["Orden"] }}</div>
+              <div class="element-symbol">
                 {{ element["Fecha creación"] }}
               </div>
-              <div class="example-element-name">{{ element["Fecha creación"] }}</div>
-              <div class="example-element-weight">
+              <div class="element-name">{{ element["Fecha creación"] }}</div>
+              <div class="element-weight">
                 {{ element["Fecha creación"] }}
               </div>
             </div>
-            <div class="example-element-description">
+            <div class="element-description">
               {{ element["Fecha creación"] }}
-              <span class="example-element-description-attribution">
+              <span class="element-description-attribution">
                 -- Wikipedia
               </span>
             </div>
@@ -238,11 +238,12 @@
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr
         mat-row
-        *matRowDef="let row; columns: displayedColumns"
-        [class.example-expanded-row]="expandedElement === element"
+        *matRowDef="let element; columns: displayedColumns;"
+        class="element-row"
+        [class.expanded-row]="expandedElement === element"
         (click)="expandedElement = expandedElement === element ? null : element"
       ></tr>
-      <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+      <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="detail-row"></tr>
     </table>
 
     <mat-paginator
