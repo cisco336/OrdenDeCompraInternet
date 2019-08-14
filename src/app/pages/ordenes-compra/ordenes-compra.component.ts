@@ -188,19 +188,9 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
   displayedColumns: string[] = [
     "Select",
     "Orden",
-    "Fecha creacion",
-    "Fecha despacho",
-    "Fecha entrega",
-    "Almacen a entregar",
-    "Fecha real de entrega",
-    "Valor",
-    "Consecutivo nota pedido",
-    "Estado orden",
-    "Estado nota pedido",
-    "Tipo de entrega",
-    "Operador (transportadora)",
-    "Estado de integración",
-    "Fecha de integración"
+    "Fecha_creacion",
+    "Fecha_despacho",
+    "Fecha_entrega"
   ];
   dataSource = new MatTableDataSource<PeriodicElement>(ELEMENT_DATA);
   selection = new SelectionModel<PeriodicElement>(true, []);

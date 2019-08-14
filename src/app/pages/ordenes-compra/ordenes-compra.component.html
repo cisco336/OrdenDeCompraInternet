@@ -56,22 +56,7 @@
         </mat-autocomplete>
         <mat-error>Campo requerido.</mat-error>
       </mat-form-field>
-      <!-- <mat-form-field>
-        <input
-          matInput
-          placeholder="Ingrese rango de fecha"
-          [satDatepicker]="picker"
-          [value]="date"
-        />
-        <sat-datepicker
-          touchUi
-          #picker
-          [rangeMode]="true"
-          [closeAfterSelection]="false"
-        ></sat-datepicker>
-        <sat-datepicker-toggle matSuffix [for]="picker"></sat-datepicker-toggle>
-        <mat-error *ngIf="proveedorControl.invalid">Campo requerido.</mat-error>
-      </mat-form-field> -->
+     
       <mat-form-field>
         <input
           matInput
@@ -142,8 +127,9 @@
       sheetName="Ordenes_de_compra"
       fileName="Ordenes_de_compra"
     >
+
       <!-- Checkbox Column -->
-      <!-- <ng-container matColumnDef="select">
+      <ng-container matColumnDef="Select">
         <th mat-header-cell *matHeaderCellDef>
           <mat-checkbox
             (change)="$event ? masterToggle() : null"
@@ -162,10 +148,10 @@
           >
           </mat-checkbox>
         </td>
-      </ng-container> -->
+      </ng-container>
 
       <!-- Orden -->
-      <!-- <ng-container matColumnDef="orden">
+      <ng-container matColumnDef="Orden">
         <th mat-header-cell *matHeaderCellDef># Orden</th>
         <td
           mat-cell
@@ -173,35 +159,28 @@
           class="position-label"
           (click)="openDialogDetalles(element)"
         >
-          {{ element.orden }}
+          {{ element.Orden }}
         </td>
-      </ng-container> -->
+      </ng-container>
 
       <!-- Fecha Creación -->
-      <!-- <ng-container matColumnDef="fechaCreacion">
+      <ng-container matColumnDef="Fecha_creacion">
         <th mat-header-cell *matHeaderCellDef>Fecha creación</th>
-        <td mat-cell *matCellDef="let element">{{ element.fechaCreacion }}</td>
-      </ng-container> -->
+        <td mat-cell *matCellDef="let element">{{ element.Fecha_creacion }}</td>
+      </ng-container>
 
       <!-- Fecha  Despacho-->
-      <!-- <ng-container matColumnDef="fechaDespacho">
+      <ng-container matColumnDef="Fecha_despacho">
         <th mat-header-cell *matHeaderCellDef>Fecha despacho</th>
-        <td mat-cell *matCellDef="let element">{{ element.fechaDespacho }}</td>
-      </ng-container> -->
+        <td mat-cell *matCellDef="let element">{{ element.Fecha_despacho }}</td>
+      </ng-container>
 
       <!-- Fecha Entrega -->
-      <!-- <ng-container matColumnDef="fechaEntrega">
+      <ng-container matColumnDef="Fecha_entrega">
         <th mat-header-cell *matHeaderCellDef>Fecha entrega</th>
-        <td mat-cell *matCellDef="let element">{{ element.fechaEntrega }}</td>
-      </ng-container> -->
-
-      <ng-container
-        matColumnDef="{{ column }}"
-        *ngFor="let column of displayedColumns"
-      >
-        <th mat-header-cell *matHeaderCellDef>{{ column }}</th>
-        <td mat-cell *matCellDef="let element">{{ element[column] }}</td>
+        <td mat-cell *matCellDef="let element">{{ element.Fecha_entrega }}</td>
       </ng-container>
+
       <!-- Detalles -->
       <ng-container matColumnDef="expandedDetail">
         <td
@@ -218,15 +197,15 @@
             <div class="element-diagram">
               <div class="element-position">{{ element["Orden"] }}</div>
               <div class="element-symbol">
-                {{ element["Fecha creación"] }}
+                {{ element["Orden"] }}
               </div>
-              <div class="element-name">{{ element["Fecha creación"] }}</div>
+              <div class="element-name">{{ element["Orden"] }}</div>
               <div class="element-weight">
-                {{ element["Fecha creación"] }}
+                {{ element["Fecha_creacion"] }}
               </div>
             </div>
             <div class="element-description">
-              {{ element["Fecha creación"] }}
+              {{ element["Fecha_entrega"] }}
               <span class="element-description-attribution">
                 -- Wikipedia
               </span>
@@ -238,12 +217,16 @@
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr
         mat-row
-        *matRowDef="let element; columns: displayedColumns;"
+        *matRowDef="let element; columns: displayedColumns"
         class="element-row"
         [class.expanded-row]="expandedElement === element"
         (click)="expandedElement = expandedElement === element ? null : element"
       ></tr>
-      <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="detail-row"></tr>
+      <tr
+        mat-row
+        *matRowDef="let row; columns: ['expandedDetail']"
+        class="detail-row"
+      ></tr>
     </table>
 
     <mat-paginator
