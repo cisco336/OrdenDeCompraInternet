@@ -2,19 +2,33 @@
 .the-wrapper {
   padding: 2rem;
   background: #efefef;
-  & h1:first-child {
-    margin: 0 0 2rem 0;
-    font-weight: 300;
-    & span:first-child {
-      margin-right: 10px;
+  & > div:first-child {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    & h1:first-child {
+      margin: 0;
+      font-weight: 300;
+      & span:first-child {
+        margin-right: 10px;
+      }
+      & span:nth-child(2) {
+        color: #5c5c5c;
+      }
     }
-    & span:nth-child(2) {
-      color: #5c5c5c;
+    & mat-icon {
+      vertical-align: top;
+      margin-right: 0;
     }
   }
   & mat-card {
     border-radius: 0;
     margin: 1rem 0;
+    border-top: 2px solid $HC-white;
+    transition: all .2s ease-out;
+    &:hover {
+      border-top: 2px solid $HC-success;
+    }
     &.first {
       display: flex;
       flex-flow: column nowrap;
@@ -60,6 +74,49 @@
             cursor: pointer;
           }
         }
+        & tr.detail-row {
+          height: 0;
+        }
+        
+        & tr.element-row:not(.expanded-row):hover {
+          background: #777;
+        }
+        
+        & tr.element-row:not(.expanded-row):active {
+          background: #efefef;
+        }
+        
+        & .element-row td {
+          border-bottom-width: 0;
+        }
+        
+        & .element-detail {
+          overflow: hidden;
+          display: flex;
+        }
+        
+        & .element-diagram {
+          min-width: 80px;
+          border: 2px solid black;
+          padding: 8px;
+          font-weight: lighter;
+          margin: 8px 0;
+          height: 104px;
+        }
+        
+        & .element-symbol {
+          font-weight: bold;
+          font-size: 40px;
+          line-height: normal;
+        }
+        
+        & .element-description {
+          padding: 16px;
+        }
+        
+        & .element-description-attribution {
+          opacity: 0.5;
+        }
       }
       & mat-form-field:first-child {
         width: 100%;
@@ -67,3 +124,6 @@
     }
   }
 }
+
+
+

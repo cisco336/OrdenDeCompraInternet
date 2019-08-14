@@ -1,6 +1,5 @@
 @import "../../../assets/css/vars";
 .toolbar {
-  margin-bottom: 1rem;
   display: flex;
   flex-flow: row nowrap;
   align-items: center;
@@ -11,7 +10,9 @@
   }
 }
 .the-wrapper {
+  width: 100%;
   padding: 0;
+  margin: 0;
 }
 .card {
   &-first,
@@ -30,7 +31,7 @@
     background: $warning-gradient;
   }
   &-fourth .card-title {
-    background: $danger-gradient;
+    background: $primary-gradient;
   }
   &-wrapper {
     justify-content: center;
