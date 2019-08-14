@@ -6,6 +6,8 @@ import {
   transition,
   trigger
 } from "@angular/animations";
+import { SelectionModel } from "@angular/cdk/collections";
+import { MatTableDataSource } from "@angular/material/table";
 
 @Component({
   selector: "app-tabla-detalles",
@@ -23,110 +25,171 @@ import {
   ]
 })
 export class TablaDetallesComponent implements OnInit {
-  dataSource = ELEMENT_DATA;
-  columnsToDisplay = ["select", "name", "weight", "symbol", "position"];
+  displayedColumns: string[] = [
+    "Select",
+    "Orden",
+    "Fecha_creacion",
+    "Fecha_despacho",
+    "Fecha_entrega"
+  ];
   expandedElement: PeriodicElement | null;
-
+  dataSource = new MatTableDataSource<PeriodicElement>(ELEMENT_DATA);
+  selection = new SelectionModel<PeriodicElement>(true, []);
   constructor() {}
 
   ngOnInit() {}
+
+  /** Whether the number of selected elements matches the total number of rows. */
+  isAllSelected() {
+    const numSelected = this.selection.selected.length;
+    const numRows = this.dataSource.data.length;
+    return numSelected === numRows;
+  }
+
+  /** Selects all rows if they are not all selected; otherwise clear selection. */
+  masterToggle() {
+    this.isAllSelected()
+      ? this.selection.clear()
+      : this.dataSource.data.forEach(row => this.selection.select(row));
+  }
+
+  /** The label for the checkbox on the passed row */
+  checkboxLabel(row?: PeriodicElement): string {
+    if (!row) {
+      return `${this.isAllSelected() ? "select" : "deselect"} all`;
+    }
+    return `${this.selection.isSelected(row) ? "deselect" : "select"} row ${row[
+      "Orden"
+    ] + 1}`;
+  }
 }
 
 export interface PeriodicElement {
-  name: string;
-  position: number;
-  weight: number;
-  symbol: string;
-  description: string;
+  Orden: number;
+  "Fecha creación": string;
+  "Fecha despacho": number;
+  "Fecha entrega": string;
 }
 
 const ELEMENT_DATA: PeriodicElement[] = [
   {
-    position: 1,
-    name: "Hydrogen",
-    weight: 1.0079,
-    symbol: "H",
-    description: `Hydrogen is a chemical element with symbol H and atomic number 1. With a standard
-        atomic weight of 1.008, hydrogen is the lightest element on the periodic table.`
+    Orden: 1,
+    "Fecha creación": "Hydrogen",
+    "Fecha despacho": 1.0079,
+    "Fecha entrega": "H"
   },
   {
-    position: 2,
-    name: "Helium",
-    weight: 4.0026,
-    symbol: "He",
-    description: `Helium is a chemical element with symbol He and atomic number 2. It is a
-        colorless, odorless, tasteless, non-toxic, inert, monatomic gas, the first in the noble gas
-        group in the periodic table. Its boiling point is the lowest among all the elements.`
+    Orden: 2,
+    "Fecha creación": "Helium",
+    "Fecha despacho": 4.0026,
+    "Fecha entrega": "He"
   },
   {
-    position: 3,
-    name: "Lithium",
-    weight: 6.941,
-    symbol: "Li",
-    description: `Lithium is a chemical element with symbol Li and atomic number 3. It is a soft,
-        silvery-white alkali metal. Under standard conditions, it is the lightest metal and the
-        lightest solid element.`
+    Orden: 3,
+    "Fecha creación": "Lithium",
+    "Fecha despacho": 6.941,
+    "Fecha entrega": "Li"
   },
   {
-    position: 4,
-    name: "Beryllium",
-    weight: 9.0122,
-    symbol: "Be",
-    description: `Beryllium is a chemical element with symbol Be and atomic number 4. It is a
-        relatively rare element in the universe, usually occurring as a product of the spallation of
-        larger atomic nuclei that have collided with cosmic rays.`
+    Orden: 4,
+    "Fecha creación": "Beryllium",
+    "Fecha despacho": 9.0122,
+    "Fecha entrega": "Be"
   },
   {
-    position: 5,
-    name: "Boron",
-    weight: 10.811,
-    symbol: "B",
-    description: `Boron is a chemical element with symbol B and atomic number 5. Produced entirely
-        by cosmic ray spallation and supernovae and not by stellar nucleosynthesis, it is a
-        low-abundance element in the Solar system and in the Earth's crust.`
+    Orden: 5,
+    "Fecha creación": "Boron",
+    "Fecha despacho": 10.811,
+    "Fecha entrega": "B"
   },
   {
-    position: 6,
-    name: "Carbon",
-    weight: 12.0107,
-    symbol: "C",
-    description: `Carbon is a chemical element with symbol C and atomic number 6. It is nonmetallic
-        and tetravalent—making four electrons available to form covalent chemical bonds. It belongs
-        to group 14 of the periodic table.`
+    Orden: 6,
+    "Fecha creación": "Carbon",
+    "Fecha despacho": 12.0107,
+    "Fecha entrega": "C"
   },
   {
-    position: 7,
-    name: "Nitrogen",
-    weight: 14.0067,
-    symbol: "N",
-    description: `Nitrogen is a chemical element with symbol N and atomic number 7. It was first
-        discovered and isolated by Scottish physician Daniel Rutherford in 1772.`
+    Orden: 7,
+    "Fecha creación": "Nitrogen",
+    "Fecha despacho": 14.0067,
+    "Fecha entrega": "N"
   },
   {
-    position: 8,
-    name: "Oxygen",
-    weight: 15.9994,
-    symbol: "O",
-    description: `Oxygen is a chemical element with symbol O and atomic number 8. It is a member of
-         the chalcogen group on the periodic table, a highly reactive nonmetal, and an oxidizing
-         agent that readily forms oxides with most elements as well as with other compounds.`
+    Orden: 8,
+    "Fecha creación": "Oxygen",
+    "Fecha despacho": 15.9994,
+    "Fecha entrega": "O"
   },
   {
-    position: 9,
-    name: "Fluorine",
-    weight: 18.9984,
-    symbol: "F",
-    description: `Fluorine is a chemical element with symbol F and atomic number 9. It is the
-        lightest halogen and exists as a highly toxic pale yellow diatomic gas at standard
-        conditions.`
+    Orden: 9,
+    "Fecha creación": "Fluorine",
+    "Fecha despacho": 18.9984,
+    "Fecha entrega": "F"
   },
   {
-    position: 10,
-    name: "Neon",
-    weight: 20.1797,
-    symbol: "Ne",
-    description: `Neon is a chemical element with symbol Ne and atomic number 10. It is a noble gas.
-        Neon is a colorless, odorless, inert monatomic gas under standard conditions, with about
-        two-thirds the density of air.`
+    Orden: 10,
+    "Fecha creación": "Neon",
+    "Fecha despacho": 20.1797,
+    "Fecha entrega": "Ne"
+  },
+  {
+    Orden: 11,
+    "Fecha creación": "Sodium",
+    "Fecha despacho": 22.9897,
+    "Fecha entrega": "Na"
+  },
+  {
+    Orden: 12,
+    "Fecha creación": "Magnesium",
+    "Fecha despacho": 24.305,
+    "Fecha entrega": "Mg"
+  },
+  {
+    Orden: 13,
+    "Fecha creación": "Aluminum",
+    "Fecha despacho": 26.9815,
+    "Fecha entrega": "Al"
+  },
+  {
+    Orden: 14,
+    "Fecha creación": "Silicon",
+    "Fecha despacho": 28.0855,
+    "Fecha entrega": "Si"
+  },
+  {
+    Orden: 15,
+    "Fecha creación": "Phosphorus",
+    "Fecha despacho": 30.9738,
+    "Fecha entrega": "P"
+  },
+  {
+    Orden: 16,
+    "Fecha creación": "Sulfur",
+    "Fecha despacho": 32.065,
+    "Fecha entrega": "S"
+  },
+  {
+    Orden: 17,
+    "Fecha creación": "Chlorine",
+    "Fecha despacho": 35.453,
+    "Fecha entrega": "Cl"
+  },
+  {
+    Orden: 18,
+    "Fecha creación": "Argon",
+    "Fecha despacho": 39.948,
+    "Fecha entrega": "Ar"
+  },
+  {
+    Orden: 19,
+    "Fecha creación": "Potassium",
+    "Fecha despacho": 39.0983,
+    "Fecha entrega": "K"
+  },
+  {
+    Orden: 20,
+    "Fecha creación": "Calcium",
+    "Fecha despacho": 40.078,
+    "Fecha entrega": "Ca"
   }
 ];
