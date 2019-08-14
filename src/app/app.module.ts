@@ -1,6 +1,7 @@
 import { BrowserModule } from "@angular/platform-browser";
 import { NgModule } from "@angular/core";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { HttpClientModule } from "@angular/common/http";
 import {
   MatDatepickerModule,
   MatInputModule,
@@ -30,6 +31,8 @@ import { StepperDetallesComponent } from "./components/stepper-detalles/stepper-
 import { DialogCambioEstadoComponent } from "./components/dialog-cambio-estado/dialog-cambio-estado.component";
 import { MatMomentDateModule } from "@angular/material-moment-adapter";
 import { TablaDetallesComponent } from './components/tabla-detalles/tabla-detalles.component';
+import { ToastrModule } from 'ngx-toastr';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   declarations: [
@@ -68,13 +71,19 @@ import { TablaDetallesComponent } from './components/tabla-detalles/tabla-detall
     MatTableExporterModule,
     MatMomentDateModule,
 
+    HttpClientModule,
+    RouterModule.forRoot([]),
+
     // DatePicker Range
     SatDatepickerModule,
     SatNativeDateModule,
 
     // Forms
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+
+    // Toastr notifications
+    ToastrModule.forRoot(),
   ],
   providers: [],
   bootstrap: [AppComponent]

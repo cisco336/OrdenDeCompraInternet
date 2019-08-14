@@ -1,9 +1,15 @@
 import { Component, OnInit, ViewChild, OnDestroy } from "@angular/core";
+import { ActivatedRoute } from "@angular/router";
 import { SelectionModel } from "@angular/cdk/collections";
 import { MatTableDataSource } from "@angular/material/table";
 import { Observable } from "rxjs";
 import { map, startWith } from "rxjs/operators";
-import { MatDialogRef, MatDialog, MatDialogConfig, MatCheckbox } from "@angular/material";
+import {
+  MatDialogRef,
+  MatDialog,
+  MatDialogConfig,
+  MatCheckbox
+} from "@angular/material";
 import { DialogDetallesComponent } from "../../components/dialog-detalles/dialog-detalles.component";
 import { DialogCambioEstadoComponent } from "../../components/dialog-cambio-estado/dialog-cambio-estado.component";
 import { MatPaginator } from "@angular/material/paginator";
@@ -13,12 +19,19 @@ import {
   Validators,
   FormBuilder
 } from "@angular/forms";
-import { RequireMatch as RequireMatch } from './customValidators';
-import {animate, state, style, transition, trigger} from '@angular/animations';
-
+import { RequireMatch } from "./customValidators";
+import {
+  animate,
+  state,
+  style,
+  transition,
+  trigger
+} from "@angular/animations";
+import { ToastrService } from "ngx-toastr";
+import { DataService } from "src/app/services/data.service";
 
 export interface PeriodicElement {
-  "Orden": number;
+  Orden: number;
   "Fecha creación": string;
   "Fecha despacho": number;
   "Fecha entrega": string;
@@ -36,121 +49,121 @@ export interface Estado {
 
 const ELEMENT_DATA: PeriodicElement[] = [
   {
-    "Orden": 1,
+    Orden: 1,
     "Fecha creación": "Hydrogen",
     "Fecha despacho": 1.0079,
     "Fecha entrega": "H"
   },
   {
-    "Orden": 2,
+    Orden: 2,
     "Fecha creación": "Helium",
     "Fecha despacho": 4.0026,
     "Fecha entrega": "He"
   },
   {
-    "Orden": 3,
+    Orden: 3,
     "Fecha creación": "Lithium",
     "Fecha despacho": 6.941,
     "Fecha entrega": "Li"
   },
   {
-    "Orden": 4,
+    Orden: 4,
     "Fecha creación": "Beryllium",
     "Fecha despacho": 9.0122,
     "Fecha entrega": "Be"
   },
   {
-    "Orden": 5,
+    Orden: 5,
     "Fecha creación": "Boron",
     "Fecha despacho": 10.811,
     "Fecha entrega": "B"
   },
   {
-    "Orden": 6,
+    Orden: 6,
     "Fecha creación": "Carbon",
     "Fecha despacho": 12.0107,
     "Fecha entrega": "C"
   },
   {
-    "Orden": 7,
+    Orden: 7,
     "Fecha creación": "Nitrogen",
     "Fecha despacho": 14.0067,
     "Fecha entrega": "N"
   },
   {
-    "Orden": 8,
+    Orden: 8,
     "Fecha creación": "Oxygen",
     "Fecha despacho": 15.9994,
     "Fecha entrega": "O"
   },
   {
-    "Orden": 9,
+    Orden: 9,
     "Fecha creación": "Fluorine",
     "Fecha despacho": 18.9984,
     "Fecha entrega": "F"
   },
   {
-    "Orden": 10,
+    Orden: 10,
     "Fecha creación": "Neon",
     "Fecha despacho": 20.1797,
     "Fecha entrega": "Ne"
   },
   {
-    "Orden": 11,
+    Orden: 11,
     "Fecha creación": "Sodium",
     "Fecha despacho": 22.9897,
     "Fecha entrega": "Na"
   },
   {
-    "Orden": 12,
+    Orden: 12,
     "Fecha creación": "Magnesium",
     "Fecha despacho": 24.305,
     "Fecha entrega": "Mg"
   },
   {
-    "Orden": 13,
+    Orden: 13,
     "Fecha creación": "Aluminum",
     "Fecha despacho": 26.9815,
     "Fecha entrega": "Al"
   },
   {
-    "Orden": 14,
+    Orden: 14,
     "Fecha creación": "Silicon",
     "Fecha despacho": 28.0855,
     "Fecha entrega": "Si"
   },
   {
-    "Orden": 15,
+    Orden: 15,
     "Fecha creación": "Phosphorus",
     "Fecha despacho": 30.9738,
     "Fecha entrega": "P"
   },
   {
-    "Orden": 16,
+    Orden: 16,
     "Fecha creación": "Sulfur",
     "Fecha despacho": 32.065,
     "Fecha entrega": "S"
   },
   {
-    "Orden": 17,
+    Orden: 17,
     "Fecha creación": "Chlorine",
     "Fecha despacho": 35.453,
     "Fecha entrega": "Cl"
   },
   {
-    "Orden": 18,
+    Orden: 18,
     "Fecha creación": "Argon",
     "Fecha despacho": 39.948,
     "Fecha entrega": "Ar"
   },
   {
-    "Orden": 19,
+    Orden: 19,
     "Fecha creación": "Potassium",
     "Fecha despacho": 39.0983,
     "Fecha entrega": "K"
   },
   {
-    "Orden": 20,
+    Orden: 20,
     "Fecha creación": "Calcium",
     "Fecha despacho": 40.078,
     "Fecha entrega": "Ca"
@@ -162,12 +175,31 @@ const ELEMENT_DATA: PeriodicElement[] = [
   templateUrl: "./ordenes-compra.component.html",
   styleUrls: ["./ordenes-compra.component.scss"],
   animations: [
-    trigger('detailExpand', [
-      state('collapsed', style({height: '0px', minHeight: '0'})),
-      state('expanded', style({height: '*'})),
-      transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+    trigger("entering", [
+      transition(":enter", [
+        style({ opacity: 0, transform: "translateY(100px)" }),
+        animate(
+          ".5s ease-out",
+          style({ opacity: 1, transform: "translateY(0px)" })
+        )
+      ]),
+      transition(":leave", [
+        style({ opacity: 1, transform: "trnaslateY(0px)" }),
+        animate(
+          ".2s ease-out",
+          style({ opacity: 0, transform: "translateY(-100px)" })
+        )
+      ])
     ]),
-  ],
+    trigger("detailExpand", [
+      state("collapsed", style({ height: "0px", minHeight: "0" })),
+      state("expanded", style({ height: "*" })),
+      transition(
+        "expanded <=> collapsed",
+        animate("225ms cubic-bezier(0.4, 0.0, 0.2, 1)")
+      )
+    ])
+  ]
 })
 export class OrdenesCompraComponent implements OnInit, OnDestroy {
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
@@ -202,11 +234,22 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
 
   fechaInicioSubscription;
   fechaFinSubscription;
+  routeSubscription;
 
-  constructor(public _dialog: MatDialog, _formBuilder: FormBuilder) {
+  usr = "";
+  key;
+  TOKEN;
+
+  constructor(
+    public _dialog: MatDialog,
+    _formBuilder: FormBuilder,
+    private _toastr: ToastrService,
+    private _route: ActivatedRoute,
+    private _dataService: DataService
+  ) {
     // Validators
     this.mainFilterForm = _formBuilder.group({
-      proveedorControl: ["",[Validators.required, RequireMatch]],
+      proveedorControl: ["", [Validators.required, RequireMatch]],
       estadosControl: ["", [Validators.required, RequireMatch]],
       fechaInicioControl: ["", [Validators.required]],
       fechaFinControl: ["", [Validators.required]]
@@ -214,31 +257,105 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.filteredProveedores = this.mainFilterForm
-      .get("proveedorControl")
-      .valueChanges.pipe(
-        startWith(""),
-        map(value => (typeof value === "string" ? value : value.DESCRIPCION)),
-        map(descripcion =>
-          descripcion
-            ? this._filterProveedor(descripcion)
-            : this.proveedores.slice()
-        )
-      );
-    this.filteredEstados = this.mainFilterForm.get("estadosControl").valueChanges.pipe(
-      startWith(""),
-      map(value => (typeof value === "string" ? value : value.DESCRIPCION)),
-      map(descripcion =>
-        descripcion ? this._filterEstados(descripcion) : this.estados.slice()
-      )
-    );
-    this.fechaInicioSubscription = this.mainFilterForm.get("fechaInicioControl").valueChanges.subscribe(data => {
-      this.compareDates();
+    this.routeSubscription = this._route.queryParams;
+    this.routeSubscription.subscribe(params => {
+      if (params["token"]) {
+        if (
+          !params["token"].split(";")[0] ||
+          !params["token"].split(";")[1] ||
+          !params["token"].split(";")[2]
+        ) {
+          this._toastr.error("Datos de inicio de sesión incorrectos.");
+          this.usr = null;
+        } else {
+          this.usr = params["token"].split(";")[0];
+          this.key = params["token"].split(";")[1];
+          this.TOKEN = params["token"].split(";")[2];
+          this.appStart(this.key);
+        }
+        // if (this.TOKEN) {
+        //   let theToken: string = "";
+        //   try {
+        //     theToken = atob(this.TOKEN);
+        //     this.dataService.setToken(theToken);
+        //   } catch (error) {
+        //     this.toastr.error("Error al decodificar token");
+        //   }
+        //   this.dataService.getAutorizar().subscribe(
+        //     data => {
+        //       if (data) {
+        //         this.appStart(this.key);
+        //       }
+        //     },
+        //     error => {
+        //       switch (error.status) {
+        //         case 401:
+        //           this._toastr.warning("Usuario No autorizado.");
+        //           break;
+        //         case 500:
+        //           this._toastr.error("Error en el servicio de autorización.");
+        //           break;
+        //         default:
+        //           this._toastr.error("Error de comunicación.");
+        //           break;
+        //       }
+        //     }
+        //   );
+        // }
+      }
     });
-    this.fechaFinSubscription = this.mainFilterForm.get("fechaFinControl").valueChanges.subscribe(data => {
-      this.compareDates();
-    })
+
     this.dataSource.paginator = this.paginator;
+  }
+
+  appStart(key?) {
+    this._dataService
+      .getDatosProveedor(key)
+      .toPromise()
+      .then(
+        data => {
+          console.log(data["Value"]);
+          this.filteredProveedores = this.mainFilterForm
+            .get("proveedorControl")
+            .valueChanges.pipe(
+              startWith(""),
+              map(value =>
+                typeof value === "string" ? value : value.DESCRIPCION
+              ),
+              map(descripcion =>
+                descripcion
+                  ? this._filterProveedor(descripcion)
+                  : this.proveedores.slice()
+              )
+            );
+          this.filteredEstados = this.mainFilterForm
+            .get("estadosControl")
+            .valueChanges.pipe(
+              startWith(""),
+              map(value =>
+                typeof value === "string" ? value : value.DESCRIPCION
+              ),
+              map(descripcion =>
+                descripcion
+                  ? this._filterEstados(descripcion)
+                  : this.estados.slice()
+              )
+            );
+          this.fechaInicioSubscription = this.mainFilterForm
+            .get("fechaInicioControl")
+            .valueChanges.subscribe(() => {
+              this.compareDates();
+            });
+          this.fechaFinSubscription = this.mainFilterForm
+            .get("fechaFinControl")
+            .valueChanges.subscribe(() => {
+              this.compareDates();
+            });
+        },
+        error => {
+          this._toastr.error(error);
+        }
+      );
   }
 
   ngOnDestroy() {
@@ -252,7 +369,11 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
 
   compareDates() {
     let form = this.mainFilterForm;
-    if ((this.mainFilterForm) && (new Date(form.get("fechaFinControl").value) <= new Date(form.get("fechaInicioControl").value))) {
+    if (
+      this.mainFilterForm &&
+      new Date(form.get("fechaFinControl").value) <=
+        new Date(form.get("fechaInicioControl").value)
+    ) {
       form.get("fechaInicioControl").setErrors({ incorrect: true });
       form.get("fechaFinControl").setErrors({ incorrect: true });
     } else {
@@ -280,9 +401,9 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
     if (!row) {
       return `${this.isAllSelected() ? "select" : "deselect"} all`;
     }
-    return `${
-      this.selection.isSelected(row) ? "deselect" : "select"
-    } row ${row["Orden"] + 1}`;
+    return `${this.selection.isSelected(row) ? "deselect" : "select"} row ${row[
+      "Orden"
+    ] + 1}`;
   }
 
   applyFilter(filterValue: string) {
