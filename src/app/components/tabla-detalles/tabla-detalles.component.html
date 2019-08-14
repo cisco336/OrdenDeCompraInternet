@@ -1,9 +1,4 @@
-<table
-  #table
-  mat-table
-  [dataSource]="dataSource"
-  multiTemplateDataRows
->
+<table #table mat-table [dataSource]="dataSource" multiTemplateDataRows>
   <!-- Checkbox Column -->
   <ng-container matColumnDef="Select">
     <th mat-header-cell *matHeaderCellDef>
@@ -33,7 +28,6 @@
       mat-cell
       *matCellDef="let element"
       class="position-label"
-      (click)="openDialogDetalles(element)"
     >
       {{ element.Orden }}
     </td>
@@ -102,3 +96,8 @@
     class="detail-row"
   ></tr>
 </table>
+
+<mat-paginator
+  [pageSizeOptions]="[5, 10, 20, 50, 100]"
+  showFirstLastButtons
+></mat-paginator>

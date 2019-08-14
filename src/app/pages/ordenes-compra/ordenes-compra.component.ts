@@ -298,14 +298,14 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
     const filterValue = DESCRIPCION.toLowerCase();
 
     return this.proveedores.filter(
-      option => option.DESCRIPCION.toLowerCase().indexOf(filterValue) === 0
+      option => option.DESCRIPCION.toLowerCase().indexOf(filterValue) >= 0
     );
   }
   private _filterEstados(DESCRIPCION: string): Estado[] {
     const filterValue = DESCRIPCION.toLowerCase();
 
     return this.estados.filter(
-      option => option.DESCRIPCION.toLowerCase().indexOf(filterValue) === 0
+      option => option.DESCRIPCION.toLowerCase().indexOf(filterValue) >= 0
     );
   }
 
