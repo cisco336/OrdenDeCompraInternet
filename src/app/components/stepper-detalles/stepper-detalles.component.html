@@ -11,11 +11,8 @@
   <mat-step [stepControl]="secondFormGroup" state="widgets">
     <form [formGroup]="secondFormGroup">
       <ng-template matStepLabel>Configuracion de Bultos</ng-template>
-      <p>
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Debitis error
-        alias, deleniti nulla exercitationem necessitatibus minus consectetur
-        aut aliquam hic voluptates, illo earum? At libero excepturi quis, odio
-        laboriosam aperiam.
+      <p *ngFor="let sku of selectedSku">
+        {{sku | json}}
       </p>
       <div class="stepper-buttons">
         <button mat-stroked-button color="warn" matStepperPrevious><mat-icon>navigate_before</mat-icon>Volver</button>

@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ViewChild } from "@angular/core";
 import {
   animate,
   state,
@@ -8,6 +8,8 @@ import {
 } from "@angular/animations";
 import { SelectionModel } from "@angular/cdk/collections";
 import { MatTableDataSource } from "@angular/material/table";
+import { MatPaginator } from "@angular/material/paginator";
+import { ComponentsService } from 'src/app/services/components.service';
 
 @Component({
   selector: "app-tabla-detalles",
@@ -25,6 +27,7 @@ import { MatTableDataSource } from "@angular/material/table";
   ]
 })
 export class TablaDetallesComponent implements OnInit {
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   displayedColumns: string[] = [
     "Select",
     "Orden",
@@ -35,9 +38,18 @@ export class TablaDetallesComponent implements OnInit {
   expandedElement: PeriodicElement | null;
   dataSource = new MatTableDataSource<PeriodicElement>(ELEMENT_DATA);
   selection = new SelectionModel<PeriodicElement>(true, []);
-  constructor() {}
+  constructor(private _componentService: ComponentsService) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.dataSource.paginator = this.paginator;
+    this.selection.onChange.subscribe(() => {
+      this.setSkus(this.selection.selected);
+    })
+  }
+
+  setSkus(data) {
+    this._componentService.setSelectedSku(data);
+  }
 
   /** Whether the number of selected elements matches the total number of rows. */
   isAllSelected() {

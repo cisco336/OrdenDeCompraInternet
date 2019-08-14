@@ -10,6 +10,7 @@ mat-horizontal-stepper {
   margin-top: 1rem;
   display: grid;
   grid-gap: 1rem;
+  padding: 1rem;
   grid-template-columns: max-content max-content;
   & button {
     max-width: 200px;
