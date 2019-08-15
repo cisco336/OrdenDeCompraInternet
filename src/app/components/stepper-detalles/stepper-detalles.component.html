@@ -1,6 +1,9 @@
-<mat-horizontal-stepper [linear]="false" #stepper>
+<mat-horizontal-stepper [linear]="true" #stepper>
   <mat-step [stepControl]="firstFormGroup" state="tab">
     <form [formGroup]="firstFormGroup">
+      <mat-form-field class="no-show">
+        <input matInput formControlName="selectedSkuControl" [value]="selectedSku.length">
+      </mat-form-field>
       <ng-template matStepLabel>Lista de SKU</ng-template>
       <app-tabla-detalles></app-tabla-detalles>
       <div class="stepper-buttons">

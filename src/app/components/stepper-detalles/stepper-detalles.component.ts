@@ -26,13 +26,18 @@ export class StepperDetallesComponent implements OnInit {
 
   ngOnInit() {
     this.firstFormGroup = this._formBuilder.group({
-      firstCtrl: ["", Validators.required]
+      selectedSkuControl: ["", Validators.required]
     });
     this.secondFormGroup = this._formBuilder.group({
       secondCtrl: ["", Validators.required]
     });
     this._componentService.getSelectedSku().subscribe(data => {
       this.selectedSku = data;
+      if (this.selectedSku.length > 0) {
+        this.firstFormGroup.get("selectedSkuControl").setErrors(null);
+      } else {
+        this.firstFormGroup.get("selectedSkuControl").setErrors({incorrect: true});
+      }
     })
   }
 }

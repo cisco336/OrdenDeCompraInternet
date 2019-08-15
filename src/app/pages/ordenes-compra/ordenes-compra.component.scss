@@ -1,4 +1,14 @@
 @import "../../../assets/css/vars";
+.no-data-grid {
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 .the-wrapper {
   padding: 2rem;
   background: #efefef;
@@ -38,10 +48,16 @@
         grid-template-columns: repeat(auto-fit, minmax(180px, auto));
         padding-bottom: 1rem;
       }
-      & button {
-        align-self: flex-start;
-        max-width: 250px;
-      }
+      & > div:nth-child(2) {
+        & button {
+          align-self: flex-start;
+          max-width: 250px;
+        }
+        & mat-icon {
+          align-self: center;
+          justify-self: flex-end;
+        }
+      } 
     }
     &.second {
       padding: 0;
@@ -55,6 +71,11 @@
         & h2 {
           font-weight: 300;
           align-self: center;
+          display: flex;
+          align-items: center;
+          & mat-icon {
+            margin-left: 15px;
+          }
         }
         & > div {
           display: grid;
@@ -131,7 +152,15 @@
     }
   }
 }
-
+input {
+  text-overflow: ellipsis !important;
+}
+.header-orden {
+  text-decoration: underline;
+  color: $HC-primary;
+  font-weight: 600;
+  cursor: pointer;
+}
 .no-privileges {
   margin: 1rem 0;
   border-radius: 0;

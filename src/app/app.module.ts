@@ -19,7 +19,10 @@ import {
   MatDialogModule,
   MatPaginatorModule,
   MatToolbarModule,
-  MatChipsModule
+  MatChipsModule,
+  MatProgressSpinnerModule,
+  MatTooltipModule,
+  MatRippleModule,
 } from "@angular/material";
 import { SatDatepickerModule, SatNativeDateModule } from "saturn-datepicker";
 import { MatTableExporterModule } from "mat-table-exporter";
@@ -70,6 +73,9 @@ import { RouterModule } from '@angular/router';
     MatOptionModule,
     MatTableExporterModule,
     MatMomentDateModule,
+    MatProgressSpinnerModule,
+    MatTooltipModule,
+    MatRippleModule,
 
     HttpClientModule,
     RouterModule.forRoot([]),

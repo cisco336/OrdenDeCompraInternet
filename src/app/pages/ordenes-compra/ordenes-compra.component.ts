@@ -38,8 +38,10 @@ export interface PeriodicElement {
 }
 
 export interface Proveedor {
+  ACTIVO: string;
+  EMAIL: string;
+  NOMBRE_PROVEEDOR: string;
   PROVEEDOR_ID: number;
-  DESCRIPCION: string;
 }
 
 export interface Estado {
@@ -198,23 +200,24 @@ const ELEMENT_DATA: PeriodicElement[] = [
         "expanded <=> collapsed",
         animate("225ms cubic-bezier(0.4, 0.0, 0.2, 1)")
       )
+    ]),
+    trigger("fade", [
+      transition(":enter", [
+        style({ opacity: 0 }),
+        animate(".2s ease-out", style({ opacity: 1 }))
+      ])
     ])
   ]
 })
 export class OrdenesCompraComponent implements OnInit, OnDestroy {
-  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
   mainFilterForm: FormGroup;
-  proveedores: Proveedor[] = [
-    { PROVEEDOR_ID: 1, DESCRIPCION: "Proveedor 1" },
-    { PROVEEDOR_ID: 2, DESCRIPCION: "Proveedor 2" },
-    { PROVEEDOR_ID: 3, DESCRIPCION: "Proveedor 3" },
-    { PROVEEDOR_ID: 4, DESCRIPCION: "Proveedor 4" }
-  ];
+  proveedores: Proveedor[] = [];
   estados: Estado[] = [
-    { ESTADO_ID: 1, DESCRIPCION: "Estado 1" },
-    { ESTADO_ID: 2, DESCRIPCION: "Estado 2" },
-    { ESTADO_ID: 3, DESCRIPCION: "Estado 3" },
-    { ESTADO_ID: 4, DESCRIPCION: "Estado 4" }
+    { ESTADO_ID: 1, DESCRIPCION: "Pendiente" },
+    { ESTADO_ID: 2, DESCRIPCION: "Preparado" },
+    { ESTADO_ID: 3, DESCRIPCION: "En transporte" },
+    { ESTADO_ID: 4, DESCRIPCION: "Estado final" }
   ];
   expandedElement: PeriodicElement;
   displayedColumns: string[] = [
@@ -227,7 +230,7 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
   dataSource = new MatTableDataSource<PeriodicElement>(ELEMENT_DATA);
   selection = new SelectionModel<PeriodicElement>(true, []);
 
-  proveedor = "";
+  proveedor: string = "";
   date: any;
   filteredProveedores: Observable<Proveedor[]>;
   filteredEstados: Observable<Estado[]>;
@@ -236,9 +239,23 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
   fechaFinSubscription;
   routeSubscription;
 
-  usr = "";
-  key;
-  TOKEN;
+  usr: string = "";
+  key: string = "";
+  TOKEN: string = "";
+
+  isLoading: boolean = false;
+
+  optionsInfo: string = "Cambiar estado: debe seleccionar (con el checkbox) las ordenes a las que desea cambiar el estado. Generar reporte: genera un archivo .xlsx (Excel) que contiene toda la información presentada en la tabla.";
+
+  mainFilterInfo: string = "La fecha final no puede ser anterior a la inicial. Todos los campos son obligatorios.";
+
+  tableFilterInfo: string = "El valor indicado se utilizará como filtro en toda la información de la tabla.";
+
+  checkBoxInfo: string = "Seleccione para habilitar la opción 'Cambio de Estado', puede seleccionar/deseleccionar todos con este check principal o sleccionar/deseleccionar cada orden de compra por separado";
+
+  tableFooterClick: string = "Haga clic sobre el número de orden para mostrar los detalles. ";
+
+  tableFooterDblclick: string = "Haga DOBLE clic sobre cualquier otra parte de la fila para mostrar más información sobre la orden.";
 
   constructor(
     public _dialog: MatDialog,
@@ -257,6 +274,7 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.isLoading = true;
     this.routeSubscription = this._route.queryParams;
     this.routeSubscription.subscribe(params => {
       if (params["token"]) {
@@ -267,6 +285,7 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
         ) {
           this._toastr.error("Datos de inicio de sesión incorrectos.");
           this.usr = null;
+          this.isLoading = false;
         } else {
           this.usr = params["token"].split(";")[0];
           this.key = params["token"].split(";")[1];
@@ -303,9 +322,8 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
         //   );
         // }
       }
+      this.isLoading = this.usr !== '';
     });
-
-    this.dataSource.paginator = this.paginator;
   }
 
   appStart(key?) {
@@ -314,7 +332,8 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
       .toPromise()
       .then(
         data => {
-          console.log(data["Value"]);
+          this.proveedores = data["Value"];
+          this.isLoading = false;
           this.filteredProveedores = this.mainFilterForm
             .get("proveedorControl")
             .valueChanges.pipe(
@@ -328,6 +347,13 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
                   : this.proveedores.slice()
               )
             );
+          if (this.proveedores.length === 1) {
+            this.mainFilterForm
+              .get("proveedorControl")
+              .setValue(this.proveedores[0]);
+            this.mainFilterForm.get("proveedorControl").disable();
+            this.proveedor = this.proveedores[0]["NOMBRE_PROVEEDOR"];
+          }
           this.filteredEstados = this.mainFilterForm
             .get("estadosControl")
             .valueChanges.pipe(
@@ -351,6 +377,7 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
             .valueChanges.subscribe(() => {
               this.compareDates();
             });
+          this.dataSource.paginator = this.paginator;
         },
         error => {
           this._toastr.error(error);
@@ -376,9 +403,14 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
     ) {
       form.get("fechaInicioControl").setErrors({ incorrect: true });
       form.get("fechaFinControl").setErrors({ incorrect: true });
+      this._toastr.error("Fecha fin no puede ser anterior a la fecha de inicio.")
     } else {
-      form.get("fechaInicioControl").setErrors(null);
-      form.get("fechaFinControl").setErrors(null);
+      if (this.mainFilterForm.get("fechaInicioControl").value !== '') {
+        form.get("fechaInicioControl").setErrors(null);
+      }
+      if (this.mainFilterForm.get("fechaFinControl").value !== '') {
+        form.get("fechaFinControl").setErrors(null);
+      }
     }
   }
 
@@ -410,7 +442,7 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
   displayProveedor(data?: Proveedor): string | undefined {
-    return data ? data.DESCRIPCION : undefined;
+    return data ? data.NOMBRE_PROVEEDOR : undefined;
   }
   displayEstados(data?: Estado): string | undefined {
     return data ? data.DESCRIPCION : undefined;
@@ -419,7 +451,7 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
     const filterValue = DESCRIPCION.toLowerCase();
 
     return this.proveedores.filter(
-      option => option.DESCRIPCION.toLowerCase().indexOf(filterValue) >= 0
+      option => option.NOMBRE_PROVEEDOR.toLowerCase().indexOf(filterValue) >= 0
     );
   }
   private _filterEstados(DESCRIPCION: string): Estado[] {
