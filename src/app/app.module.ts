@@ -44,7 +44,7 @@ import { RouterModule } from '@angular/router';
     DialogDetallesComponent,
     StepperDetallesComponent,
     DialogCambioEstadoComponent,
-    TablaDetallesComponent
+    TablaDetallesComponent,
   ],
   entryComponents: [DialogDetallesComponent, DialogCambioEstadoComponent],
   imports: [

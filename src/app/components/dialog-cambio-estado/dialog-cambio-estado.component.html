@@ -18,7 +18,12 @@
     >
   </mat-chip-list>
   <div class="error" *ngIf="!chips.length">
-    Debe seleccionar al menos una orden de compra.
+    <p>
+      Debe seleccionar al menos una orden de compra.
+    </p>
+    <p>  
+      Esta ventana se cerrará.
+    </p> 
   </div>
   <mat-form-field>
     <!-- <mat-label>Estados</mat-label>

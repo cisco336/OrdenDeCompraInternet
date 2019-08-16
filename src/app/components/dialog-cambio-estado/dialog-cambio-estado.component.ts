@@ -1,6 +1,5 @@
 import { Component, OnInit, Inject } from "@angular/core";
 import {
-  MatDialog,
   MatDialogRef,
   MAT_DIALOG_DATA
 } from "@angular/material/dialog";
@@ -67,6 +66,9 @@ export class DialogCambioEstadoComponent implements OnInit {
 
     if (index >= 0) {
       this.chips.splice(index, 1);
+      if (!this.chips.length) {
+        setTimeout(() => this.closeDialog(), 3000);
+      }
     }
   }
 

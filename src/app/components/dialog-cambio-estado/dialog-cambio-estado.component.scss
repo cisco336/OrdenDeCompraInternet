@@ -49,6 +49,7 @@
   }
   & div.error {
     display: flex;
+    flex-direction: column;
     grid-area: chips;
     align-items: center;
     justify-content: center;
