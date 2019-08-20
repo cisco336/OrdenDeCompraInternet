@@ -402,7 +402,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
         style({ opacity: 1, transform: "trnaslateY(0px)" }),
         animate(
           ".2s ease-out",
-          style({ opacity: 0, transform: "translateY(-100px)" })
+          style({ opacity: 0, transform: "translateY(100px)" })
         )
       ])
     ]),
@@ -651,7 +651,7 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
           }
         },
         error => {
-          this._toastr.error(error);
+          this._toastr.error("Error al obtener los datos, código: " + error.status);
         }
       );
   }

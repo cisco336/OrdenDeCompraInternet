@@ -130,7 +130,7 @@
           & div {
             display: grid;
             grid-gap: 10px;
-            grid-template-columns: auto auto;
+            grid-template-columns: min-content auto;
             grid-template-rows: auto auto;
             & mat-icon {
               grid-column: 1;
