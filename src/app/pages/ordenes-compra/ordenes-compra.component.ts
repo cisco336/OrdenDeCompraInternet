@@ -33,7 +33,6 @@ import {
 import { ToastrService } from "ngx-toastr";
 import { DataService } from "src/app/services/data.service";
 import { ExportAsExcelFileService } from "src/app/services/export-as-excel-file.service";
-import { skip } from "rxjs/operators";
 
 export interface PeriodicElement {
   Orden: number;
@@ -398,39 +397,45 @@ const ELEMENT_DATA: PeriodicElement[] = [
   styleUrls: ["./ordenes-compra.component.scss"],
   animations: [
     trigger("entering", [
-      transition(":enter", [
+      transition("* <=> *", [
+        // each time the binding value changes
         query(
-          "@entering",
+          ":leave",
+          [
+            stagger(100, [
+              animate(
+                "0.5s",
+                style({ opacity: 0, transform: "translateY(-100px)" })
+              )
+            ]),
+            query("@child", [animateChild()], { optional: true })
+          ],
+          { optional: true }
+        ),
+        query(
+          ":enter",
           [
             style({ opacity: 0, transform: "translateY(100px)" }),
-            stagger(100, [
-              animate(
-                ".5s ease-out",
-                style({ opacity: 1, transform: "translateY(0px)" })
-              )
+            stagger(50, [
+              animate("0.5s", style({ opacity: 1, transform: "translateY(0)" }))
             ]),
-            animateChild()
+            query("@child", [animateChild()], { optional: true })
           ],
           { optional: true }
-        ),
-        query("*", [animateChild()], { optional: true })
-      ]),
-      transition(":leave", [
+        )
+      ])
+    ]),
+    trigger("child", [
+      transition("* <=> *", [
         query(
-          "the-wrapper",
+          "*",
           [
-            style({ opacity: 1, transform: "trnaslateY(0px)" }),
-            stagger(100, [
-              animate(
-                ".2s ease-out",
-                style({ opacity: 0, transform: "translateY(100px)" })
-              )
-            ]),
+            style({ opacity: 0 }),
+            animate("2s ease-out", style({ opacity: 1 })),
             animateChild()
           ],
           { optional: true }
-        ),
-        query("@fade", [animateChild()], { optional: true })
+        )
       ])
     ]),
     trigger("detailExpand", [
@@ -558,74 +563,37 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.dataSource = new MatTableDataSource();
     this.isLoading = true;
-
     this.routeSubscription = this._route.queryParams;
-    this.routeSubscription.subscribe(params => {
-      if (params["token"]) {
-        if (
-          !params["token"].split(";")[0] ||
-          !params["token"].split(";")[1] ||
-          !params["token"].split(";")[2]
-        ) {
-          this._toastr.error("Datos de inicio de sesión incorrectos.");
+    this.routeSubscription.subscribe(
+      params => {
+        if (!params["token"] || !params["token"].split(";")[0]) {
           this.usr = "";
-          this.noData = true;
           this.isLoading = false;
           this.errorMessage = "Usted no tiene privilegios";
         } else {
+          this.errorMessage = "";
           this.usr = params["token"].split(";")[0];
-          this.key = params["token"].split(";")[1];
-          this.TOKEN = params["token"].split(";")[2];
-          this.appStart(this.key);
+          this.appStart();
         }
-        // if (this.TOKEN) {
-        //   let theToken: string = "";
-        //   try {
-        //     theToken = atob(this.TOKEN);
-        //     this.dataService.setToken(theToken);
-        //   } catch (error) {
-        //     this.toastr.error("Error al decodificar token");
-        //   }
-        //   this.dataService.getAutorizar().subscribe(
-        //     data => {
-        //       if (data) {
-        //         this.appStart(this.key);
-        //       }
-        //     },
-        //     error => {
-        //       switch (error.status) {
-        //         case 401:
-        //           this._toastr.warning("Usuario No autorizado.");
-        //           break;
-        //         case 500:
-        //           this._toastr.error("Error en el servicio de autorización.");
-        //           break;
-        //         default:
-        //           this._toastr.error("Error de comunicación.");
-        //           break;
-        //       }
-        //     }
-        //   );
-        // }
-      } else {
-        // this.isLoading = false;
-        // this.noData = true;
-        // this.errorMessage = "Usted no tiene privilegios.";
+      },
+      error => {
+        this.isLoading = false;
+        this.noData = true;
+        this.errorMessage = `Usted no tiene privilegios. ${error.statusText ||
+          error.status}`;
       }
-    });
+    );
   }
 
   appStart(key?) {
     this.isLoading = true;
     this._dataService
-      // .getDatosProveedor(key)
       .getProveedores()
       .toPromise()
       .then(
         data => {
-          if (!data["Value"][0]["Código"]) {
+          if (!data["Estado"] || !data["Value"][0]["Código"]) {
             this.proveedores = data["Value"];
             this.isLoading = false;
             this.filteredProveedores = this.mainFilterForm
@@ -659,7 +627,7 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
               .toPromise()
               .then(
                 data => {
-                  if (!data["Value"][0]["Código"]) {
+                  if (!data["Estado"] || !data["Value"][0]["Código"]) {
                     this.estados = data["Value"];
                     this.filteredEstados = this.mainFilterForm
                       .get("estadosControl")
@@ -675,20 +643,15 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
                         )
                       );
                   } else {
-                    throwError(Error);
+                    throw throwError(Error);
                   }
                 },
                 error => {
-                  this._toastr.error(
-                    "Error al obtener los datos de estados, código: " +
-                      error.status
-                  );
+                  this.errorHandling(error);
                   this.mainFilterForm
                     .get("estadosControl")
                     .setErrors({ incorrect: true });
                   this.mainFilterForm.get("estadosControl").disable();
-                  this.noData = true;
-                  this.isLoading = false;
                 }
               );
             this.fechaInicioSubscription = this.mainFilterForm
@@ -704,21 +667,41 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
 
             this.render = true;
           } else {
-            throwError(Error);
+            throw throwError("Error");
           }
         },
         error => {
-          this._toastr.error(
-            "Error al obtener los datos de proveedores, código: " + error.status
-          );
+          this.errorHandling(error);
           this.mainFilterForm
             .get("proveedorControl")
             .setErrors({ incorrect: true });
           this.mainFilterForm.get("proveedorControl").disable();
-          this.noData = true;
-          this.isLoading = false;
         }
       );
+  }
+
+  errorHandling(error) {
+    let toastrError;
+    switch (error.status) {
+      case 0:
+        toastrError = "Error de conexión.";
+        break;
+      case 401:
+        toastrError = "Error: no autorizado."
+        break;
+      case 404:
+        toastrError = "Error: el elemento seleccionado no existe."
+        break;
+      case 500:
+        toastrError = "Error interno del servidor."
+        break;
+      default:
+        toastrError = "Error desconocido.";
+        break;
+    }
+    this._toastr.error(toastrError);
+    this.noData = true;
+    this.isLoading = false;
   }
 
   ngOnDestroy() {
@@ -739,13 +722,11 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
       p_origen: "-1",
       p_salida: "" //<Cursor>
     };
-    console.log(query);
     this._dataService
       .postTablaPrincipalOC(query)
       .toPromise()
       .then(
         data => {
-          console.log(data);
           this.dataSource = new MatTableDataSource();
           this.dataSource.data = data["Value"];
           setTimeout(() => {
@@ -753,7 +734,7 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
           }, 0);
         },
         error => {
-          this._toastr.error(`Error al obetenre los datos: ${error.statusText}`);
+          this.errorHandling(error);
 
           //Borrar luego
           this.dataSource = new MatTableDataSource<PeriodicElement>(
