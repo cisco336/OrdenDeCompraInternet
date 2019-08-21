@@ -1,20 +1,23 @@
-import { Injectable } from '@angular/core';
+import { Injectable } from "@angular/core";
 import { HttpClient, HttpHeaders, HttpResponse } from "@angular/common/http";
 import { BehaviorSubject, Observable } from "rxjs";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root"
 })
 export class DataService {
+  // API Local
+  API = "http://localhost/Abastecimiento/Servicios/OrdenCompra/api";
 
   // API Externa Azure
-  API = "https://apim-dev-proxy.sodhc.co/inventario/api";
+  // API = "https://apim-dev-proxy.sodhc.co/inventario/api";
   // API = "https://apim-qa-proxy.sodhc.co/inventario/api"
   // API = "https://apim-prod-proxy.sodhc.co/inventario/api";
 
   // AUTH = "https://apim-dev-proxy.sodhc.co/logisticaSeguridadAutenticacion/authenticated";
   // AUTH = "https://apim-qa-proxy.sodhc.co/logisticaSeguridadAutenticacion/authenticated";
-  AUTH = "https://apim-prod-proxy.sodhc.co/logisticaSeguridadAutenticacion/authenticated";
+  AUTH =
+    "https://apim-prod-proxy.sodhc.co/logisticaSeguridadAutenticacion/authenticated";
 
   // Subscription keys
   // DEV
@@ -27,22 +30,43 @@ export class DataService {
   token = new BehaviorSubject<string>("");
 
   // Calls
-  getDatosProveedorCall = "/Configuracion/GetDatosProveedor"; 
+  getDatosProveedorCall = "/Configuracion/GetDatosProveedor";
+  getProveedoresCall = "/Configuracion/GetProveedores";
+  getEstadosCall = "/Configuracion/GetEstados";
+  postTablaPrincipalOCCall = "/Configuración/PostTablaPrincipalOC";
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   protected generateBasicHeadersJWT(): HttpHeaders {
     return new HttpHeaders({
       "Content-Type": "application/json",
       "Ocp-Apim-Subscription-Key": this.subscriptionKey,
-      "Authorization": "Bearer " + this.token.value,
+      Authorization: "Bearer " + this.token.value
     });
   }
 
   getDatosProveedor(data) {
-    return this.http.get(this.API + this.getDatosProveedorCall + '/' + data, {
+    return this.http.get(this.API + this.getDatosProveedorCall + "/" + data, {
       headers: this.generateBasicHeadersJWT()
-    })
+    });
+  }
+
+  getProveedores() {
+    return this.http.get(this.API + this.getProveedoresCall, {
+      headers: this.generateBasicHeadersJWT()
+    });
+  }
+
+  getEstados() {
+    return this.http.get(this.API + this.getEstadosCall, {
+      headers: this.generateBasicHeadersJWT()
+    });
+  }
+
+  postTablaPrincipalOC(data) {
+    return this.http.post(this.API + this.postTablaPrincipalOCCall, data, {
+      headers: this.generateBasicHeadersJWT()
+    });
   }
 
   setToken(data) {

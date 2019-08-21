@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, OnDestroy } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { SelectionModel } from "@angular/cdk/collections";
 import { MatTableDataSource } from "@angular/material/table";
-import { Observable } from "rxjs";
+import { Observable, throwError } from "rxjs";
 import { map, startWith } from "rxjs/operators";
 import {
   MatDialogRef,
@@ -27,11 +27,13 @@ import {
   transition,
   trigger,
   query,
-  stagger
+  stagger,
+  animateChild
 } from "@angular/animations";
 import { ToastrService } from "ngx-toastr";
 import { DataService } from "src/app/services/data.service";
 import { ExportAsExcelFileService } from "src/app/services/export-as-excel-file.service";
+import { skip } from "rxjs/operators";
 
 export interface PeriodicElement {
   Orden: number;
@@ -59,6 +61,11 @@ export interface Proveedor {
 
 export interface Estado {
   ESTADO_ID: number;
+  DESCRIPCION: string;
+}
+
+export interface Proveedores {
+  ID: number;
   DESCRIPCION: string;
 }
 
@@ -392,18 +399,38 @@ const ELEMENT_DATA: PeriodicElement[] = [
   animations: [
     trigger("entering", [
       transition(":enter", [
-        style({ opacity: 0, transform: "translateY(100px)" }),
-        animate(
-          ".5s ease-out",
-          style({ opacity: 1, transform: "translateY(0px)" })
-        )
+        query(
+          "@entering",
+          [
+            style({ opacity: 0, transform: "translateY(100px)" }),
+            stagger(100, [
+              animate(
+                ".5s ease-out",
+                style({ opacity: 1, transform: "translateY(0px)" })
+              )
+            ]),
+            animateChild()
+          ],
+          { optional: true }
+        ),
+        query("*", [animateChild()], { optional: true })
       ]),
       transition(":leave", [
-        style({ opacity: 1, transform: "trnaslateY(0px)" }),
-        animate(
-          ".2s ease-out",
-          style({ opacity: 0, transform: "translateY(100px)" })
-        )
+        query(
+          "the-wrapper",
+          [
+            style({ opacity: 1, transform: "trnaslateY(0px)" }),
+            stagger(100, [
+              animate(
+                ".2s ease-out",
+                style({ opacity: 0, transform: "translateY(100px)" })
+              )
+            ]),
+            animateChild()
+          ],
+          { optional: true }
+        ),
+        query("@fade", [animateChild()], { optional: true })
       ])
     ]),
     trigger("detailExpand", [
@@ -443,13 +470,8 @@ const ELEMENT_DATA: PeriodicElement[] = [
 export class OrdenesCompraComponent implements OnInit, OnDestroy {
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
   mainFilterForm: FormGroup;
-  proveedores: Proveedor[] = [];
-  estados: Estado[] = [
-    { ESTADO_ID: 1, DESCRIPCION: "Pendiente" },
-    { ESTADO_ID: 2, DESCRIPCION: "Preparado" },
-    { ESTADO_ID: 3, DESCRIPCION: "En transporte" },
-    { ESTADO_ID: 4, DESCRIPCION: "Estado final" }
-  ];
+  proveedores: Proveedores[] = [];
+  estados: Estado[] = [];
   expandedElement: PeriodicElement;
   displayedColumns: string[] = [
     "Select",
@@ -470,24 +492,26 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
     // "Estado de integración",
     // "Fecha de integración"
   ];
-  dataSource ;
+  dataSource;
   selection = new SelectionModel<PeriodicElement>(true, []);
 
   proveedor: string = "";
   date: any;
-  filteredProveedores: Observable<Proveedor[]>;
+  filteredProveedores: Observable<Proveedores[]>;
   filteredEstados: Observable<Estado[]>;
 
   fechaInicioSubscription;
   fechaFinSubscription;
   routeSubscription;
+  proveedoresControlSubscription;
 
   usr: string = "";
   key: string = "";
   TOKEN: string = "";
 
-  isLoading: boolean = false;
+  isLoading: boolean = true;
   noData: boolean = false;
+  render: boolean = false;
 
   optionsInfo: string =
     "Cambiar estado: debe seleccionar (con el checkbox) las ordenes a las que desea cambiar el estado. Generar reporte: genera un archivo .xlsx (Excel) que contiene toda la información presentada en la tabla.";
@@ -534,8 +558,9 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.dataSource = new MatTableDataSource;
+    this.dataSource = new MatTableDataSource();
     this.isLoading = true;
+
     this.routeSubscription = this._route.queryParams;
     this.routeSubscription.subscribe(params => {
       if (params["token"]) {
@@ -545,7 +570,8 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
           !params["token"].split(";")[2]
         ) {
           this._toastr.error("Datos de inicio de sesión incorrectos.");
-          this.usr = '';
+          this.usr = "";
+          this.noData = true;
           this.isLoading = false;
           this.errorMessage = "Usted no tiene privilegios";
         } else {
@@ -584,15 +610,18 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
         //   );
         // }
       } else {
-        this.isLoading = this.usr !== "";
-        this.errorMessage = "Usted no tiene privilegios."
+        // this.isLoading = false;
+        // this.noData = true;
+        // this.errorMessage = "Usted no tiene privilegios.";
       }
     });
   }
 
   appStart(key?) {
+    this.isLoading = true;
     this._dataService
-      .getDatosProveedor(key)
+      // .getDatosProveedor(key)
+      .getProveedores()
       .toPromise()
       .then(
         data => {
@@ -618,19 +647,49 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
                 .setValue(this.proveedores[0]);
               this.mainFilterForm.get("proveedorControl").disable();
               this.proveedor = this.proveedores[0]["NOMBRE_PROVEEDOR"];
+            } else {
+              this.proveedoresControlSubscription = this.mainFilterForm
+                .get("proveedorControl")
+                .valueChanges.subscribe(data => {
+                  this.proveedor = data.DESCRIPCION;
+                });
             }
-            this.filteredEstados = this.mainFilterForm
-              .get("estadosControl")
-              .valueChanges.pipe(
-                startWith(""),
-                map(value =>
-                  typeof value === "string" ? value : value.DESCRIPCION
-                ),
-                map(descripcion =>
-                  descripcion
-                    ? this._filterEstados(descripcion)
-                    : this.estados.slice()
-                )
+            this._dataService
+              .getEstados()
+              .toPromise()
+              .then(
+                data => {
+                  if (!data["Value"][0]["Código"]) {
+                    this.estados = data["Value"];
+                    this.filteredEstados = this.mainFilterForm
+                      .get("estadosControl")
+                      .valueChanges.pipe(
+                        startWith(""),
+                        map(value =>
+                          typeof value === "string" ? value : value.DESCRIPCION
+                        ),
+                        map(descripcion =>
+                          descripcion
+                            ? this._filterEstados(descripcion)
+                            : this.estados.slice()
+                        )
+                      );
+                  } else {
+                    throwError(Error);
+                  }
+                },
+                error => {
+                  this._toastr.error(
+                    "Error al obtener los datos de estados, código: " +
+                      error.status
+                  );
+                  this.mainFilterForm
+                    .get("estadosControl")
+                    .setErrors({ incorrect: true });
+                  this.mainFilterForm.get("estadosControl").disable();
+                  this.noData = true;
+                  this.isLoading = false;
+                }
               );
             this.fechaInicioSubscription = this.mainFilterForm
               .get("fechaInicioControl")
@@ -642,16 +701,22 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
               .valueChanges.subscribe(() => {
                 this.compareDates();
               });
-            this.dataSource = new MatTableDataSource<PeriodicElement>(ELEMENT_DATA);
-            this.dataSource.paginator = this.paginator;
+
+            this.render = true;
           } else {
-            this.noData = true;
-            this.isLoading = false;
-            this.errorMessage = "No se encontraron datos."
+            throwError(Error);
           }
         },
         error => {
-          this._toastr.error("Error al obtener los datos, código: " + error.status);
+          this._toastr.error(
+            "Error al obtener los datos de proveedores, código: " + error.status
+          );
+          this.mainFilterForm
+            .get("proveedorControl")
+            .setErrors({ incorrect: true });
+          this.mainFilterForm.get("proveedorControl").disable();
+          this.noData = true;
+          this.isLoading = false;
         }
       );
   }
@@ -659,17 +724,53 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.fechaInicioSubscription.unsubscribe();
     this.fechaFinSubscription.unsubscribe();
+    this.proveedoresControlSubscription.unsubscribe();
   }
 
-  consultar(event) {
-    console.log(this.mainFilterForm);
+  consultar(event, transaccion) {
+    let form = this.mainFilterForm;
+    let query = {
+      p_transaccion: transaccion, //GE (generar encabezado) ó GD (generar detalle)
+      p_pmg_po_number: -1,
+      p_vtc_tech_key: form.get("proveedorControl").value["ID"],
+      p_fecha_inicio: new Date(form.get("fechaInicioControl").value),
+      p_fecha_fin: new Date(form.get("fechaFinControl").value),
+      p_id_estado: -1,
+      p_origen: "-1",
+      p_salida: "" //<Cursor>
+    };
+    console.log(query);
+    this._dataService
+      .postTablaPrincipalOC(query)
+      .toPromise()
+      .then(
+        data => {
+          console.log(data);
+          this.dataSource = new MatTableDataSource();
+          this.dataSource.data = data["Value"];
+          setTimeout(() => {
+            this.dataSource.paginator = this.paginator;
+          }, 0);
+        },
+        error => {
+          this._toastr.error(`Error al obetenre los datos: ${error.statusText}`);
+
+          //Borrar luego
+          this.dataSource = new MatTableDataSource<PeriodicElement>(
+            ELEMENT_DATA
+          );
+          setTimeout(() => {
+            this.dataSource.paginator = this.paginator;
+          }, 0);
+        }
+      );
   }
 
   compareDates() {
     let form = this.mainFilterForm;
     if (
       this.mainFilterForm &&
-      new Date(form.get("fechaFinControl").value) <=
+      new Date(form.get("fechaFinControl").value) <
         new Date(form.get("fechaInicioControl").value)
     ) {
       form.get("fechaInicioControl").setErrors({ incorrect: true });
@@ -714,17 +815,17 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
   applyFilter(filterValue: string) {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
-  displayProveedor(data?: Proveedor): string | undefined {
-    return data ? data.NOMBRE_PROVEEDOR : undefined;
+  displayProveedor(data?: Proveedores): string | undefined {
+    return data ? data.DESCRIPCION : undefined;
   }
   displayEstados(data?: Estado): string | undefined {
     return data ? data.DESCRIPCION : undefined;
   }
-  private _filterProveedor(DESCRIPCION: string): Proveedor[] {
+  private _filterProveedor(DESCRIPCION: string): Proveedores[] {
     const filterValue = DESCRIPCION.toLowerCase();
 
     return this.proveedores.filter(
-      option => option.NOMBRE_PROVEEDOR.toLowerCase().indexOf(filterValue) >= 0
+      option => option.DESCRIPCION.toLowerCase().indexOf(filterValue) >= 0
     );
   }
   private _filterEstados(DESCRIPCION: string): Estado[] {

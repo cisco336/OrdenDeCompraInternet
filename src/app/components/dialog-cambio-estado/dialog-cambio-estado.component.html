@@ -38,12 +38,12 @@
       aria-label="Estados"
       matInput
       required
-      [matAutocomplete]="estados"
       [formControl]="estadosControl"
+      [matAutocomplete]="estados"
     />
     <mat-autocomplete
       #estados="matAutocomplete"
-      [displayWith]="displayProveedor"
+      [displayWith]="displayEstados"
     >
       <mat-option
         *ngFor="let estado of filteredEstados | async"
