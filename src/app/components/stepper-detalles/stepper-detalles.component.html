@@ -13,10 +13,12 @@
   </mat-step>
   <mat-step [stepControl]="secondFormGroup" state="widgets">
     <form [formGroup]="secondFormGroup">
-      <ng-template matStepLabel>Configuracion de Bultos</ng-template>
-      <p *ngFor="let sku of selectedSku">
-        {{sku | json}}
-      </p>
+      <div class="step-container">
+        <ng-template matStepLabel>Configuracion de Bultos</ng-template>
+        <p *ngFor="let sku of selectedSku">
+          {{sku | json}}
+        </p>
+      </div>
       <div class="stepper-buttons">
         <button mat-stroked-button color="warn" matStepperPrevious><mat-icon>navigate_before</mat-icon>Volver</button>
         <button mat-raised-button color="primary" matStepperNext><mat-icon>navigate_next</mat-icon>Siguiente</button>
