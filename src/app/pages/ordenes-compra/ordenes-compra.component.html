@@ -1,19 +1,19 @@
 <div class="no-data-grid" *ngIf="isLoading" [@fade]>
   <mat-spinner mode="indeterminate" [diameter]="60"></mat-spinner>
 </div>
-<div class="the-wrapper" [@entering]>
-  <mat-card class="no-privileges mat-elevation-z4" *ngIf="!render && noData" [@entering]>
+<div class="the-wrapper" [@entering]="render">
+  <mat-card class="no-privileges mat-elevation-z4" *ngIf="!render && errorMessage" [@entering]="errorMessage">
     <h2>{{ errorMessage }}</h2>
   </mat-card>
-  <div *ngIf="render" [@entering]>
-    <h1 >
-      <span>Proveedor:</span><span >{{ proveedor }}</span>
+  <div *ngIf="render" >
+    <h1 [@child]>
+      <span >Proveedor:</span><span>{{ proveedor }}</span>
     </h1>
     <button mat-mini-fab color="accent">
       <mat-icon>help_outline</mat-icon>
     </button>
   </div>
-  <mat-card class="mat-elevation-z4 first" *ngIf="render" >
+  <mat-card class="mat-elevation-z4 first" *ngIf="render">
     <div [formGroup]="mainFilterForm">
       <mat-form-field class="example-full-width">
         <input
@@ -102,7 +102,9 @@
       >
     </div>
   </mat-card>
-  <mat-card class="mat-elevation-z4 second" *ngIf="render">
+  <span [@child]>
+  
+  <mat-card class="mat-elevation-z4 second" *ngIf="dataSource" >
     <div>
       <h2>
         Opciones:
@@ -338,4 +340,6 @@
       showFirstLastButtons
     ></mat-paginator>
   </mat-card>
+
+</span>
 </div>
