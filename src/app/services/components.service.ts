@@ -7,6 +7,7 @@ import { BehaviorSubject } from 'rxjs';
 export class ComponentsService {
 
   selectedSku = new BehaviorSubject<any>('');
+  estados = new BehaviorSubject<any>('');
 
   constructor() { }
 
@@ -16,5 +17,13 @@ export class ComponentsService {
 
   getSelectedSku() {
     return this.selectedSku;
+  }
+
+  setEstados(data) {
+    this.estados.next(data);
+  }
+
+  getEstados() {
+    return this.estados;
   }
 }

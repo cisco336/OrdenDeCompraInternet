@@ -33,40 +33,9 @@ import {
 import { ToastrService } from "ngx-toastr";
 import { DataService } from "src/app/services/data.service";
 import { ExportAsExcelFileService } from "src/app/services/export-as-excel-file.service";
+import { ComponentsService } from 'src/app/services/components.service';
+import { PeriodicElement, Estado, Proveedores } from '../../interfaces/interfaces';
 
-export interface PeriodicElement {
-  Orden: number;
-  "Fecha creación": string;
-  "Fecha despacho": number;
-  "Fecha entrega": string;
-  "Estado orden": string;
-  "Almacen a entregar": string;
-  "Fecha real de entrega": string;
-  Valor: number;
-  "Consecutivo nota pedido": string;
-  "Estado nota pedido": string;
-  "Tipo de entrega": string;
-  "Operador (transportadora)": string;
-  "Estado de integración": string;
-  "Fecha de integración": string;
-}
-
-export interface Proveedor {
-  ACTIVO: string;
-  EMAIL: string;
-  NOMBRE_PROVEEDOR: string;
-  PROVEEDOR_ID: number;
-}
-
-export interface Estado {
-  ESTADO_ID: number;
-  DESCRIPCION: string;
-}
-
-export interface Proveedores {
-  ID: number;
-  DESCRIPCION: string;
-}
 
 const ELEMENT_DATA: PeriodicElement[] = [
   {
@@ -544,7 +513,8 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
     private _toastr: ToastrService,
     private _route: ActivatedRoute,
     private _dataService: DataService,
-    private _excelExport: ExportAsExcelFileService
+    private _excelExport: ExportAsExcelFileService,
+    private _compoentnService: ComponentsService
   ) {
     // Validators
     this.mainFilterForm = _formBuilder.group({
@@ -629,6 +599,7 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
                 data => {
                   if (!data["Estado"] || !data["Value"][0]["Código"]) {
                     this.estados = data["Value"];
+                    this._compoentnService.setEstados(this.estados);
                     this.filteredEstados = this.mainFilterForm
                       .get("estadosControl")
                       .valueChanges.pipe(

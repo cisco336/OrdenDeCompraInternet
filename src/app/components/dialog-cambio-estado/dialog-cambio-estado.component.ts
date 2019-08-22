@@ -4,11 +4,8 @@ import { Observable } from "rxjs";
 import { FormControl, Validators } from "@angular/forms";
 import { startWith, map } from "rxjs/operators";
 import { RequireMatch } from "src/app/pages/ordenes-compra/customValidators";
-
-export interface Estado {
-  ESTADO_ID: number;
-  DESCRIPCION: string;
-}
+import { ComponentsService } from "src/app/services/components.service";
+import { Estado } from '../../interfaces/interfaces';
 
 @Component({
   selector: "app-dialog-cambio-estado",
@@ -26,23 +23,19 @@ export class DialogCambioEstadoComponent implements OnInit {
   addOnBlur: boolean = true;
   estadosControl = new FormControl("", [Validators.required, RequireMatch]);
 
-  estados: Estado[] = [
-    { ESTADO_ID: 1, DESCRIPCION: "Pendiente" },
-    { ESTADO_ID: 2, DESCRIPCION: "Preparado" },
-    { ESTADO_ID: 3, DESCRIPCION: "En transporte" },
-    { ESTADO_ID: 4, DESCRIPCION: "Estado final" }
-  ];
+  estados: Estado[] = [];
 
   constructor(
     public dialogRef: MatDialogRef<DialogCambioEstadoComponent>,
-    @Inject(MAT_DIALOG_DATA) public data
+    @Inject(MAT_DIALOG_DATA) public data,
+    private _componentService: ComponentsService
   ) {}
 
   ngOnInit() {
     this.chips = this.data.data.selected ? this.data.data.selected : {};
     this.background = this.background ? "" : "primary";
     this.color = this.color ? "" : "accent";
-
+    this.estados = this._componentService.getEstados().value;
     this.filteredEstados = this.estadosControl.valueChanges.pipe(
       startWith(""),
       map(value => (typeof value === "string" ? value : value.DESCRIPCION)),
