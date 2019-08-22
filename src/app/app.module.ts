@@ -23,6 +23,8 @@ import {
   MatProgressSpinnerModule,
   MatTooltipModule,
   MatRippleModule,
+  MatListModule,
+  MatLineModule,
 } from "@angular/material";
 import { SatDatepickerModule, SatNativeDateModule } from "saturn-datepicker";
 import { MatTableExporterModule } from "mat-table-exporter";
@@ -76,6 +78,8 @@ import { RouterModule } from '@angular/router';
     MatProgressSpinnerModule,
     MatTooltipModule,
     MatRippleModule,
+    MatListModule,
+    MatLineModule,
 
     HttpClientModule,
     RouterModule.forRoot([]),

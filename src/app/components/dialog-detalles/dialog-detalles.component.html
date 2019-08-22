@@ -40,9 +40,9 @@
       </div>
       <div class="card-body">
         <ul>
-          <li>Número de orden:</li>
-          <li>Tipo de entrega:</li>
-          <li>Sitio (radicación factura):</li>
+          <li>Número de orden: </li>
+          <li>Tipo de entrega: </li>
+          <li>Origen: </li>
         </ul>
       </div>
     </mat-card>
@@ -52,10 +52,7 @@
         Observaciones:
       </div>
       <div class="card-body">
-        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Magni, in eum?
-        Quo commodi fugit deleniti soluta facilis explicabo neque quaerat et
-        unde fugiat, nam necessitatibus tenetur quod! Et, magnam ipsa!
-        lore
+        {{ordenCompra.observaciones || "Sin observaciones"}}
       </div>
     </mat-card>
   </div>

@@ -22,33 +22,29 @@
   </ng-container>
 
   <!-- Orden -->
-  <ng-container matColumnDef="Orden">
+  <ng-container matColumnDef="PMG_PO_NUMBER">
     <th mat-header-cell *matHeaderCellDef># Orden</th>
-    <td
-      mat-cell
-      *matCellDef="let element"
-      class="position-label"
-    >
-      {{ element.Orden }}
+    <td mat-cell *matCellDef="let element" class="position-label">
+      {{ element.PMG_PO_NUMBER }}
     </td>
   </ng-container>
 
   <!-- Fecha Creación -->
-  <ng-container matColumnDef="Fecha_creacion">
+  <ng-container matColumnDef="FECHA_CREACION">
     <th mat-header-cell *matHeaderCellDef>Fecha creación</th>
-    <td mat-cell *matCellDef="let element">{{ element.Fecha_creacion }}</td>
+    <td mat-cell *matCellDef="let element">{{ element.FECHA_CREACION }}</td>
   </ng-container>
 
   <!-- Fecha  Despacho-->
-  <ng-container matColumnDef="Fecha_despacho">
+  <ng-container matColumnDef="PMG_SHIP_DATE">
     <th mat-header-cell *matHeaderCellDef>Fecha despacho</th>
-    <td mat-cell *matCellDef="let element">{{ element.Fecha_despacho }}</td>
+    <td mat-cell *matCellDef="let element">{{ element.PMG_SHIP_DATE }}</td>
   </ng-container>
 
   <!-- Fecha Entrega -->
-  <ng-container matColumnDef="Fecha_entrega">
+  <ng-container matColumnDef="PMG_SHIP_DATE1">
     <th mat-header-cell *matHeaderCellDef>Fecha entrega</th>
-    <td mat-cell *matCellDef="let element">{{ element.Fecha_entrega }}</td>
+    <td mat-cell *matCellDef="let element">{{ element.PMG_SHIP_DATE1 }}</td>
   </ng-container>
 
   <!-- Detalles -->
@@ -62,22 +58,132 @@
         class="element-detail "
         [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'"
       >
-        <div class="element-diagram">
-          <div class="element-position">{{ element["Orden"] }}</div>
-          <div class="element-symbol">
-            {{ element["Orden"] }}
-          </div>
-          <div class="element-name">{{ element["Orden"] }}</div>
-          <div class="element-weight">
-            {{ element["Fecha_creacion"] }}
-          </div>
-        </div>
-        <div class="element-description">
-          {{ element["Fecha_entrega"] }}
-          <span class="element-description-attribution">
-            -- Wikipedia
-          </span>
-        </div>
+        <mat-list>
+          <mat-list-item
+            ><span mat-line>ESTADO: </span
+            ><span mat-line>{{ element.ESTADO || "Sin datos" }}</span></mat-list-item
+          >
+          <mat-list-item
+            ><span mat-line>FECHA_CREACION: </span
+            ><span mat-line>{{ element.FECHA_CREACION || "Sin datos" }}</span></mat-list-item
+          >
+          <mat-list-item>
+            <span mat-line>FECHA_MODIFICACION: </span
+            ><span mat-line>{{ element.FECHA_MODIFICACION || "Sin datos" }}</span>
+          </mat-list-item>
+          <mat-list-item
+            ><span mat-line>ID_ESTADO: </span
+            ><span mat-line>{{ element.ID_ESTADO || "Sin datos" }}</span></mat-list-item
+          >
+          <mat-list-item
+            ><span mat-line>NAME_FAMILIA: </span
+            ><span mat-line>{{ element.NAME_FAMILIA || "Sin datos" }}</span></mat-list-item
+          >
+          <mat-list-item
+            ><span mat-line>ORG_LVL_CHILD: </span
+            ><span mat-line>{{ element.ORG_LVL_CHILD || "Sin datos" }}</span></mat-list-item
+          >
+          <mat-list-item
+            ><span mat-line>ORG_NAME_FULL: </span
+            ><span mat-line>{{ element.ORG_NAME_FULL || "Sin datos" }}</span></mat-list-item
+          >
+          <mat-list-item
+            ><span mat-line>ORIGEN_DESC: </span
+            ><span mat-line>{{ element.ORIGEN_DESC || "Sin datos" }}</span></mat-list-item
+          >
+          <mat-list-item
+            ><span mat-line>PMG_CANCEL_DATE: </span
+            ><span mat-line>{{ element.PMG_CANCEL_DATE || "Sin datos" }}</span></mat-list-item
+          >
+          <mat-list-item>
+            <span mat-line>PMG_DTL_TECH_KEY: </span
+            ><span mat-line>{{ element.PMG_DTL_TECH_KEY || "Sin datos" }}</span>
+          </mat-list-item>
+          <mat-list-item
+            ><span mat-line>PMG_DTL_TYPE: </span
+            ><span mat-line>{{ element.PMG_DTL_TYPE || "Sin datos" }}</span></mat-list-item
+          >
+          <mat-list-item>
+            <span mat-line>PMG_EXP_RCT_DATE: </span
+            ><span mat-line>{{ element.PMG_EXP_RCT_DATE || "Sin datos" }}</span>
+          </mat-list-item>
+          <mat-list-item
+            ><span mat-line>PMG_PACK_COST: </span
+            ><span mat-line>{{ element.PMG_PACK_COST || "Sin datos" }}</span></mat-list-item
+          >
+          <mat-list-item
+            ><span mat-line>PMG_PACK_QTY: </span
+            ><span mat-line>{{ element.PMG_PACK_QTY || "Sin datos" }}</span></mat-list-item
+          >
+          <mat-list-item
+            ><span mat-line>PMG_PAY_DATE: </span
+            ><span mat-line>{{ element.PMG_PAY_DATE || "Sin datos" }}</span></mat-list-item
+          >
+          <mat-list-item
+            ><span mat-line>PMG_PO_NUMBER: </span
+            ><span mat-line>{{ element.PMG_PO_NUMBER || "Sin datos" }}</span></mat-list-item
+          >
+          <mat-list-item
+            ><span mat-line>PMG_RETAIL: </span
+            ><span mat-line>{{ element.PMG_RETAIL || "Sin datos" }}</span></mat-list-item
+          >
+          <mat-list-item
+            ><span mat-line>PMG_SELL_COST: </span
+            ><span mat-line>{{ element.PMG_SELL_COST || "Sin datos" }}</span></mat-list-item
+          >
+          <mat-list-item
+            ><span mat-line>PMG_SELL_QTY: </span
+            ><span mat-line>{{ element.PMG_SELL_QTY || "Sin datos" }}</span></mat-list-item
+          >
+          <mat-list-item
+            ><span mat-line>PMG_SEQ_NUM: </span
+            ><span mat-line>{{ element.PMG_SEQ_NUM || "Sin datos" }}</span></mat-list-item
+          >
+          <mat-list-item
+            ><span mat-line>PMG_SHIP_DATE: </span
+            ><span mat-line>{{ element.PMG_SHIP_DATE || "Sin datos" }}</span></mat-list-item
+          >
+          <mat-list-item
+            ><span mat-line>PMG_STATUS: </span
+            ><span mat-line>{{ element.PMG_STATUS || "Sin datos" }}</span></mat-list-item
+          >
+          <mat-list-item
+            ><span mat-line>PMG_STAT_NAME: </span
+            ><span mat-line>{{ element.PMG_STAT_NAME || "Sin datos" }}</span></mat-list-item
+          >
+          <mat-list-item>
+            <span mat-line>PMG_TOT_DTL_COST: </span
+            ><span mat-line>{{ element.PMG_TOT_DTL_COST || "Sin datos" }}</span>
+          </mat-list-item>
+          <mat-list-item
+            ><span mat-line>PRD_LVL_CHILD: </span
+            ><span mat-line>{{ element.PRD_LVL_CHILD || "Sin datos" }}</span></mat-list-item
+          >
+          <mat-list-item
+            ><span mat-line>PRD_LVL_NUMBER: </span
+            ><span mat-line>{{ element.PRD_LVL_NUMBER || "Sin datos" }}</span></mat-list-item
+          >
+          <mat-list-item
+            ><span mat-line>PRD_NAME_FULL: </span
+            ><span mat-line>{{ element.PRD_NAME_FULL || "Sin datos" }}</span></mat-list-item
+          >
+          <mat-list-item
+            ><span mat-line>PRD_UPC: </span
+            ><span mat-line>{{ element.PRD_UPC || "Sin datos" }}</span></mat-list-item
+          >
+          <mat-list-item
+            ><span mat-line>USR_CREACION: </span
+            ><span mat-line>{{ element.USR_CREACION || "Sin datos" }}</span></mat-list-item
+          >
+          <mat-list-item>
+            <span mat-line>USR_MODIFICACION: </span
+            ><span mat-line>{{ element.USR_MODIFICACION || "Sin datos" }}</span>
+          </mat-list-item>
+          <mat-list-item>
+            <span mat-line>VPC_PRD_TECH_KEY: </span
+            ><span mat-line>{{ element.VPC_PRD_TECH_KEY || "Sin datos" }}</span>
+          </mat-list-item>
+        </mat-list>
       </div>
     </td>
   </ng-container>

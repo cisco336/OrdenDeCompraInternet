@@ -8,6 +8,7 @@ export class ComponentsService {
 
   selectedSku = new BehaviorSubject<any>('');
   estados = new BehaviorSubject<any>('');
+  tablaDetalle = new BehaviorSubject<any>('');
 
   constructor() { }
 
@@ -25,5 +26,13 @@ export class ComponentsService {
 
   getEstados() {
     return this.estados;
+  }
+
+  setTablaDetalles(data) {
+    this.tablaDetalle.next(data);
+  }
+
+  getTablaDetalles() {
+    return this.tablaDetalle;
   }
 }

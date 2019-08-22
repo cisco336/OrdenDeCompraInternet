@@ -33,7 +33,7 @@ export class DataService {
   getDatosProveedorCall = "/Configuracion/GetDatosProveedor";
   getProveedoresCall = "/Configuracion/GetProveedores";
   getEstadosCall = "/Configuracion/GetEstados";
-  postTablaPrincipalOCCall = "/Configuración/PostTablaPrincipalOC";
+  postTablaPrincipalOCCall = "/Configuracion/GetOc";
 
   constructor(private http: HttpClient) {}
 
