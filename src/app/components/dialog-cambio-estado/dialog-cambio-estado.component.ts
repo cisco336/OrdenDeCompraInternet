@@ -85,7 +85,7 @@ export class DialogCambioEstadoComponent implements OnInit {
   cambiarEstados() {
     let query = {
       p_transaccion: 'UO',
-      p_pmg_po_number: this.chips[0].PMG_PO_NUMBER,
+      p_pmg_po_number: null,
       p_vpc_tech_key: '-1',
       p_fecha_inicio: '-1',
       p_fecha_fin: '-1',
@@ -93,17 +93,19 @@ export class DialogCambioEstadoComponent implements OnInit {
       p_origen: '-1',
       p_usuario: this.data.data.usr
     };
-    console.log(JSON.stringify(query));
-    this._dataService
-      .postTablaPrincipalOC(query)
-      .toPromise()
-      .then(response => {
-        console.log(response);
-        this.responseMessage = response['Mensaje'];
-        setTimeout(() => {
-          this.responseMessage = '';
-        }, 5000);
-      });
+    this.chips.forEach(data => {
+      query.p_pmg_po_number = data.PMG_PO_NUMBER;
+      this._dataService
+        .postTablaPrincipalOC(query)
+        .toPromise()
+        .then(response => {
+          this.responseMessage = response['Mensaje'];
+          setTimeout(() => {
+            this.responseMessage = '';
+            this.closeDialog();
+          }, 2000);
+        });
+    });
   }
 
   displayEstados(data?: Estado): string | undefined {
