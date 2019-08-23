@@ -72,11 +72,9 @@ export class DialogDetallesComponent implements OnInit {
     this.background = this.background ? '' : 'primary';
     this.color = this.color ? '' : 'accent';
     this._componentService.getSelectedSku().subscribe(data => {
-      debugger;
       this.skus = data;
       this.mostrarCambioBotton = data.length;
     });
-    debugger;
   }
 
   cambioEstado(estado) {
