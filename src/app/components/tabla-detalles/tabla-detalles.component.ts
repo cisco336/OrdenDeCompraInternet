@@ -47,8 +47,11 @@ export class TablaDetallesComponent implements OnInit {
   
   ngOnInit() {
     this.dataSource = new MatTableDataSource<DetalleOrdenDeCompra>();
+    this._componentService.getTablaDetalles().subscribe(data => {
+      this.dataSource.data = data["Value"];
+      this.selection.clear();
+    });
     this.dataSource.data = this._componentService.getTablaDetalles().value;
-    console.log(this.dataSource);
     setTimeout(() => {
       this.dataSource.paginator = this.paginator;
     }, 0)

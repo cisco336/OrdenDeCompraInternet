@@ -35,12 +35,12 @@ import { DataService } from 'src/app/services/data.service';
 import { ExportAsExcelFileService } from 'src/app/services/export-as-excel-file.service';
 import { ComponentsService } from 'src/app/services/components.service';
 import {
-  PeriodicElement,
   Estado,
   Proveedores,
   OrdenDeCompra
 } from '../../interfaces/interfaces';
 import { HostListener } from '@angular/core';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-ordenes-compra',
@@ -124,6 +124,10 @@ import { HostListener } from '@angular/core';
   ]
 })
 export class OrdenesCompraComponent implements OnInit, OnDestroy {
+  queryDetallesDialog: {
+  p_transaccion: string; //Actualizar orden 'UO', 'US' => actualizar SKU
+    p_pmg_po_number: any; p_vpc_tech_key: any; p_fecha_inicio: any; p_fecha_fin: any; p_id_estado: any; p_origen: string; p_usuario: string;
+  };
   @HostListener('window:resize', ['$event'])
   onResize(event?) {
     this.screenHeight = window.innerHeight;
@@ -197,8 +201,8 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
     this.mainFilterForm = _formBuilder.group({
       proveedorControl: ['', [Validators.required, RequireMatch]],
       estadosControl: ['', [Validators.required, RequireMatch]],
-      fechaInicioControl: ['', [Validators.required]],
-      fechaFinControl: ['', [Validators.required]]
+      fechaInicioControl: [moment().subtract(1, 'months'), [Validators.required]],
+      fechaFinControl: [moment(), [Validators.required]]
     });
     this.onResize();
   }
@@ -211,7 +215,6 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    console.log(window.innerHeight, window.innerWidth);
     this.isLoading = true;
     this.routeSubscription = this._route.queryParams;
     this.routeSubscription.subscribe(
@@ -278,6 +281,7 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
                 data => {
                   if (!data['Estado'] || !data['Value'][0]['Código']) {
                     this.estados = data['Value'];
+                    this.mainFilterForm.get("estadosControl").setValue(this.estados[0]);
                     this._compoentnService.setEstados(this.estados);
                     this.filteredEstados = this.mainFilterForm
                       .get('estadosControl')
@@ -360,17 +364,22 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
     this.proveedoresControlSubscription.unsubscribe();
   }
 
-  consultar(event, transaccion) {
+  consultar() {
+    if (this.dataSource !== undefined) {
+      this.dataSource.data = [];
+      this.paginator._changePageSize(this.paginator.pageSize);
+    }
     let form = this.mainFilterForm;
     let query = {
-      p_transaccion: transaccion,
+      p_transaccion: 'GE',
       p_pmg_po_number: -1,
+      p_prd_lvl_child: -1,
       p_vpc_tech_key: form.get('proveedorControl').value['ID'],
       p_fecha_inicio: form.get('fechaInicioControl').value.format('DD/MM/YYYY'),
       p_fecha_fin: form.get('fechaFinControl').value.format('DD/MM/YYYY'),
       p_id_estado: form.get('estadosControl').value.ID,
       p_origen: '-1',
-      p_usuario: this.usr
+      p_usuario: this.usr,
     };
     this._dataService
       .postTablaPrincipalOC(query)
@@ -378,7 +387,11 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
       .then(
         data => {
           this.dataSource = new MatTableDataSource();
-          this.dataSource.data = data['Value'];
+          if (data["Value"] && data["Value"][0]["Código"]) {
+            this.dataSource._data.next([]);
+          } else {
+            this.dataSource.data = data['Value'];
+          }
           setTimeout(() => {
             this.dataSource.paginator = this.paginator;
           }, 0);
@@ -473,6 +486,7 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
       p_origen: '-1',
       p_usuario: this.usr
     };
+    this.queryDetallesDialog = query;
     this._dataService
       .postTablaPrincipalOC(query)
       .toPromise()
@@ -489,11 +503,13 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
   }
   openDialogDetalles(data): Observable<any> {
     const dialogRef = this._dialog.open(DialogDetallesComponent, {
-      width: '95vw',
+      maxWidth: '95vw',
       maxHeight: '95vh',
       data: {
         data: {
+          queryDetalles: this.queryDetallesDialog,
           ordenCompra: data,
+          usr: this.usr,
           estados: this.estados
         }
       },
@@ -502,6 +518,14 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
     });
 
     return dialogRef.afterClosed();
+  }
+
+  cambioEstadoDialog() {
+    this.openDialogCambioEstado().toPromise()
+      .then(() => {
+        this.consultar();
+        this.selection.clear();
+      })
   }
 
   openDialogCambioEstado(): Observable<any> {
