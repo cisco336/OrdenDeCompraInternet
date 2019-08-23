@@ -13,7 +13,7 @@
       [removable]="removable"
       (removed)="remove(chip)"
       color="primary"
-      >{{ chip.Orden
+      >{{ chip.PMG_PO_NUMBER
       }}<mat-icon *ngIf="removable" matChipRemove>cancel</mat-icon></mat-chip
     >
   </mat-chip-list>
@@ -21,9 +21,9 @@
     <p>
       Debe seleccionar al menos una orden de compra.
     </p>
-    <p>  
+    <p>
       Esta ventana se cerrará.
-    </p> 
+    </p>
   </div>
   <mat-form-field>
     <!-- <mat-label>Estados</mat-label>
@@ -41,10 +41,7 @@
       [formControl]="estadosControl"
       [matAutocomplete]="estados"
     />
-    <mat-autocomplete
-      #estados="matAutocomplete"
-      [displayWith]="displayEstados"
-    >
+    <mat-autocomplete #estados="matAutocomplete" [displayWith]="displayEstados">
       <mat-option
         *ngFor="let estado of filteredEstados | async"
         [value]="estado"
@@ -53,7 +50,15 @@
       </mat-option>
     </mat-autocomplete>
   </mat-form-field>
-  <button mat-raised-button color="primary" [disabled]="!chips.length">
-    Cambiar
+  <button
+    mat-raised-button
+    color="primary"
+    [disabled]="!chips.length || estadosControl.invalid"
+    (click)="cambiarEstados()"
+  >
+    Cambiar estado
   </button>
+  <div [@show]="responseMessage !== ''" class="response-message">
+    {{ responseMessage }}
+  </div>
 </div>

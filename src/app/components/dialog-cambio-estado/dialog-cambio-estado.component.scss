@@ -1,4 +1,4 @@
-@import "../../../assets/css/vars";
+@import '../../../assets/css/vars';
 .toolbar {
   margin-bottom: 1rem;
   display: flex;
@@ -21,19 +21,21 @@
   grid-template-columns: 1fr 1fr;
   grid-template-rows: auto auto auto auto;
   grid-template-areas:
-    "titulo titulo"
-    "chips selector"
-    "chips ."
-    "chips boton";
+    'titulo titulo'
+    'chips selector'
+    'chips .'
+    'chips boton'
+    'responseMessage responseMessage';
   @include custom-media-query-1 {
     grid-template-columns: 1fr;
     grid-template-rows: repeat(5, auto);
     grid-template-areas:
-      "titulo"
-      "."
-      "chips"
-      "selector"
-      "boton";
+      'titulo'
+      '.'
+      'chips'
+      'selector'
+      'boton'
+      'responseMessage';
   }
   & h5 {
     grid-area: titulo;
@@ -46,6 +48,15 @@
   }
   & button {
     grid-area: boton;
+  }
+  & div.response-message {
+    padding: 0;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: $HC-danger;
+    grid-area: responseMessage;
   }
   & div.error {
     display: flex;

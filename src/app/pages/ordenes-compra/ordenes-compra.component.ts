@@ -40,7 +40,7 @@ import {
   Proveedores,
   OrdenDeCompra
 } from '../../interfaces/interfaces';
-import { ELEMENT_DATA } from '../../mockData/mockData';
+import { HostListener } from '@angular/core';
 
 @Component({
   selector: 'app-ordenes-compra',
@@ -124,6 +124,11 @@ import { ELEMENT_DATA } from '../../mockData/mockData';
   ]
 })
 export class OrdenesCompraComponent implements OnInit, OnDestroy {
+  @HostListener('window:resize', ['$event'])
+  onResize(event?) {
+    this.screenHeight = window.innerHeight;
+    this.screenWidth = window.innerWidth;
+  }
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
   mainFilterForm: FormGroup;
   proveedores: Proveedores[] = [];
@@ -136,6 +141,8 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
     'FECHA_CREACION',
     'PMG_EXP_RCT_DATE'
   ];
+  screenHeight: number = 0;
+  screenWidth: number = 0;
   dataSource;
   selection = new SelectionModel<OrdenDeCompra>(true, []);
 
@@ -193,6 +200,7 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
       fechaInicioControl: ['', [Validators.required]],
       fechaFinControl: ['', [Validators.required]]
     });
+    this.onResize();
   }
 
   exportXlsx() {
@@ -203,6 +211,7 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    console.log(window.innerHeight, window.innerWidth);
     this.isLoading = true;
     this.routeSubscription = this._route.queryParams;
     this.routeSubscription.subscribe(
@@ -417,7 +426,7 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
   }
 
   /** The label for the checkbox on the passed row */
-  checkboxLabel(row?: PeriodicElement): string {
+  checkboxLabel(row?: OrdenDeCompra): string {
     if (!row) {
       return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
     }
@@ -450,11 +459,12 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
     );
   }
 
+  // Cuando se actualiza el SKU se debe enviar PRD_LVL_CHILD
+  // EL SKU ES EL PRD_LVL_NUMBER
   getOrdenDetalle(data) {
-    let dialogData;
     let form = this.mainFilterForm;
     let query = {
-      p_transaccion: 'GD',
+      p_transaccion: 'GD', //Actualizar orden 'UO', 'US' => actualizar SKU
       p_pmg_po_number: data.PMG_PO_NUMBER,
       p_vpc_tech_key: form.get('proveedorControl').value['ID'],
       p_fecha_inicio: form.get('fechaInicioControl').value.format('DD/MM/YYYY'),
@@ -469,7 +479,7 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
       .then(
         result => {
           if (result) {
-            this.openDialogDetalles(result["Value"]);
+            this.openDialogDetalles(result['Value']);
           }
         },
         error => {
@@ -479,9 +489,14 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
   }
   openDialogDetalles(data): Observable<any> {
     const dialogRef = this._dialog.open(DialogDetallesComponent, {
-      width: '90vw',
-      maxHeight: '90vh',
-      data: { data: { ordenCompra: data } },
+      width: '95vw',
+      maxHeight: '95vh',
+      data: {
+        data: {
+          ordenCompra: data,
+          estados: this.estados
+        }
+      },
       panelClass: 'dialog-detalles',
       disableClose: true
     });
@@ -489,11 +504,17 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
     return dialogRef.afterClosed();
   }
 
-  openDialogCambioEstado(data): Observable<any> {
+  openDialogCambioEstado(): Observable<any> {
     const dialogRef = this._dialog.open(DialogCambioEstadoComponent, {
       maxWidth: '90vw',
       maxHeight: '90vh',
-      data: { data: { data: data, selected: this.selection.selected } },
+      data: {
+        data: {
+          selected: this.selection.selected,
+          usr: this.usr,
+          proveedor: null
+        }
+      },
       panelClass: 'dialog-detalles',
       disableClose: true
     });

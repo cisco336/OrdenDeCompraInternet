@@ -31,10 +31,14 @@ export class TablaDetallesComponent implements OnInit {
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   displayedColumns: string[] = [
     'Select',
-    'PMG_PO_NUMBER',
+    'PRD_LVL_NUMBER',
+    'PRD_NAME_FULL',
+    'ESTADO',
     'FECHA_CREACION',
     'PMG_SHIP_DATE',
-    'PMG_SHIP_DATE1'
+    'PMG_SHIP_DATE1',
+    'FECHA_MODIFICACION',
+    'PRD_UPC',
   ];
   dataSource;
   expandedElement: DetalleOrdenDeCompra | null;
