@@ -32,13 +32,13 @@ export class TablaDetallesComponent implements OnInit {
   displayedColumns: string[] = [
     'Select',
     'PRD_LVL_NUMBER',
+    'PRD_UPC',
     'PRD_NAME_FULL',
     'ESTADO',
-    'FECHA_CREACION',
+    // 'FECHA_CREACION',
     'PMG_SHIP_DATE',
     'PMG_SHIP_DATE1',
     'FECHA_MODIFICACION',
-    'PRD_UPC',
   ];
   dataSource;
   expandedElement: DetalleOrdenDeCompra | null;

@@ -26,6 +26,7 @@ import {
   MatListModule,
   MatLineModule,
   MatMenuModule,
+  MatBottomSheetModule,
 } from "@angular/material";
 import { SatDatepickerModule, SatNativeDateModule } from "saturn-datepicker";
 import { MatTableExporterModule } from "mat-table-exporter";
@@ -39,6 +40,7 @@ import { MatMomentDateModule } from "@angular/material-moment-adapter";
 import { TablaDetallesComponent } from './components/tabla-detalles/tabla-detalles.component';
 import { ToastrModule } from 'ngx-toastr';
 import { RouterModule } from '@angular/router';
+import { BottomSheetComponent } from './components/bottom-sheet/bottom-sheet.component';
 
 @NgModule({
   declarations: [
@@ -48,8 +50,9 @@ import { RouterModule } from '@angular/router';
     StepperDetallesComponent,
     DialogCambioEstadoComponent,
     TablaDetallesComponent,
+    BottomSheetComponent,
   ],
-  entryComponents: [DialogDetallesComponent, DialogCambioEstadoComponent],
+  entryComponents: [DialogDetallesComponent, DialogCambioEstadoComponent, BottomSheetComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
@@ -82,6 +85,7 @@ import { RouterModule } from '@angular/router';
     MatListModule,
     MatLineModule,
     MatMenuModule,
+    MatBottomSheetModule,
 
     HttpClientModule,
     RouterModule.forRoot([]),

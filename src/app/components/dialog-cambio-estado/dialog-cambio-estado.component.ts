@@ -16,6 +16,12 @@ import {
   animateChild,
   state
 } from '@angular/animations';
+import * as moment from 'moment';
+
+export interface Response {
+  message: string;
+  ID: number;
+}
 
 @Component({
   selector: 'app-dialog-cambio-estado',
@@ -26,6 +32,12 @@ import {
       state('true', style({ margin: '1rem', opacity: 1, height: '*' })),
       state('false', style({ margin: '0', opacity: 0, height: 0 })),
       transition('false <=> true', animate('.2s ease-out'))
+    ]),
+    trigger('fade', [
+      transition(':enter', [
+        style({ opacity: 0 }),
+        animate('.2s ease-out', style({ opacity: 1 }))
+      ])
     ])
   ]
 })
@@ -38,9 +50,13 @@ export class DialogCambioEstadoComponent implements OnInit {
   selectable: boolean = true;
   removable: boolean = true;
   addOnBlur: boolean = true;
+  isLoading: boolean = false;
   estadosControl = new FormControl('', [Validators.required, RequireMatch]);
-  responseMessage: string = '';
+  fechaCambioControl = new FormControl(moment(), [Validators.required]);
+  horaCambioControl = new FormControl('00:00', [Validators.required]);
+  responseMessage: Response;
   estados: Estado[] = [];
+  today = moment();
 
   constructor(
     public dialogRef: MatDialogRef<DialogCambioEstadoComponent>,
@@ -50,6 +66,10 @@ export class DialogCambioEstadoComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.responseMessage = {
+      message: '',
+      ID: 0
+    };
     this.chips = this.data.data.selected;
     this.background = this.background ? '' : 'primary';
     this.color = this.color ? '' : 'accent';
@@ -83,29 +103,36 @@ export class DialogCambioEstadoComponent implements OnInit {
   }
 
   cambiarEstados() {
+    this.isLoading = true;
     let query = {
       p_transaccion: 'UO',
       p_pmg_po_number: null,
       p_vpc_tech_key: '-1',
       p_fecha_inicio: '-1',
       p_fecha_fin: '-1',
+      p_fecha_real: `${this.fechaCambioControl.value.format('DD/MM/YYYY')} ${this.horaCambioControl.value}`,
       p_id_estado: this.estadosControl.value.ID,
       p_origen: '-1',
       p_usuario: this.data.data.usr
     };
+    debugger
     this.chips.forEach(data => {
       query.p_pmg_po_number = data.PMG_PO_NUMBER;
       this._dataService
         .postTablaPrincipalOC(query)
         .toPromise()
         .then(response => {
-          this.responseMessage = response['Mensaje'];
-          setTimeout(() => {
-            this.responseMessage = '';
-            this.closeDialog();
-          }, 2000);
+          this.responseMessage = {
+            message: response['Value'][0]['MENSAJE'],
+            ID: response['Value'][0]['ID']
+          };
         });
     });
+    setTimeout(() => {
+      this.responseMessage.message = '';
+      this.closeDialog();
+    }, 2000);
+    this.isLoading = false;
   }
 
   displayEstados(data?: Estado): string | undefined {

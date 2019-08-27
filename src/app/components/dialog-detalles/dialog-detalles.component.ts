@@ -16,6 +16,8 @@ import {
   animate
 } from '@angular/animations';
 import { DataService } from 'src/app/services/data.service';
+import { MatBottomSheet } from '@angular/material/bottom-sheet';
+import { BottomSheetComponent } from '../bottom-sheet/bottom-sheet.component';
 
 @Component({
   selector: 'app-dialog-detalles',
@@ -61,7 +63,8 @@ export class DialogDetallesComponent implements OnInit {
     public dialogRef: MatDialogRef<DialogDetallesComponent>,
     @Inject(MAT_DIALOG_DATA) public data,
     private _componentService: ComponentsService,
-    private _dataService: DataService
+    private _dataService: DataService,
+    private _bottomSheet: MatBottomSheet
   ) {}
 
   ngOnInit() {
@@ -73,8 +76,11 @@ export class DialogDetallesComponent implements OnInit {
     this.color = this.color ? '' : 'accent';
     this._componentService.getSelectedSku().subscribe(data => {
       this.skus = data;
-      this.mostrarCambioBotton = data.length;
     });
+  }
+
+  openBottomSheet(): void {
+    this._bottomSheet.open(BottomSheetComponent, {data: {estados: this.estados}});
   }
 
   cambioEstado(estado) {
@@ -87,7 +93,7 @@ export class DialogDetallesComponent implements OnInit {
       p_fecha_fin: '-1',
       p_id_estado: estado,
       p_origen: '-1',
-      p_usuario: this.data.data.usr,
+      p_usuario: this.data.data.usr
     };
     this.skus.forEach(data => {
       query.p_pmg_po_number = data.PMG_PO_NUMBER;
@@ -95,17 +101,18 @@ export class DialogDetallesComponent implements OnInit {
       this._dataService
         .postTablaPrincipalOC(query)
         .toPromise()
-        .then(response => {
-        });
+        .then();
     });
     this.refreshTable();
   }
 
   refreshTable() {
-    this._dataService.postTablaPrincipalOC(this.data.data.queryDetalles).toPromise()
+    this._dataService
+      .postTablaPrincipalOC(this.data.data.queryDetalles)
+      .toPromise()
       .then(data => {
         this._componentService.setTablaDetalles(data);
-    })
+      });
   }
 
   closeDialog() {

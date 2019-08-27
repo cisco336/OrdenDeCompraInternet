@@ -1,7 +1,8 @@
 <mat-toolbar class="toolbar mat-elevation-z10" color="primary">
   <span>Detalles</span>
   <span>
-    <button
+    <!-- <button mat-stroked-button (click)="openBottomSheet()">Test</button> -->
+    <!-- <button
       mat-stroked-button
       [matMenuTriggerFor]="cambioEstadoMenu"
       *ngIf="mostrarCambioBotton"
@@ -13,7 +14,7 @@
       <button mat-menu-item *ngFor="let estado of estados" (click)="cambioEstado(estado.ID)">
         {{ estado.DESCRIPCION }}
       </button>
-    </mat-menu>
+    </mat-menu> -->
     <button mat-icon-button (click)="closeDialog()">
       <mat-icon>close</mat-icon>
     </button>
@@ -84,7 +85,7 @@
     <mat-tab label="SKU">
       <app-stepper-detalles></app-stepper-detalles>
     </mat-tab>
-    <mat-tab label="Second"> Content 2 </mat-tab>
-    <mat-tab label="Third"> Content 3 </mat-tab>
+    <mat-tab label="Second" disabled> Content 2 </mat-tab>
+    <mat-tab label="Third" disabled> Content 3 </mat-tab>
   </mat-tab-group>
 </div>

@@ -125,8 +125,15 @@ import * as moment from 'moment';
 })
 export class OrdenesCompraComponent implements OnInit, OnDestroy {
   queryDetallesDialog: {
-  p_transaccion: string; //Actualizar orden 'UO', 'US' => actualizar SKU
-    p_pmg_po_number: any; p_vpc_tech_key: any; p_fecha_inicio: any; p_fecha_fin: any; p_id_estado: any; p_origen: string; p_usuario: string;
+    p_transaccion: string; //Actualizar orden 'UO', 'US' => actualizar SKU
+    p_pmg_po_number: string;
+    p_vpc_tech_key: string;
+    p_fecha_inicio: string;
+    p_fecha_fin: string;
+    p_fecha_real: string;
+    p_id_estado: string;
+    p_origen: string;
+    p_usuario: string;
   };
   @HostListener('window:resize', ['$event'])
   onResize(event?) {
@@ -151,6 +158,7 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
   selection = new SelectionModel<OrdenDeCompra>(true, []);
 
   proveedor: string = '';
+  tableMessage: string = '';
   date: any;
   filteredProveedores: Observable<Proveedores[]>;
   filteredEstados: Observable<Estado[]>;
@@ -195,13 +203,16 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
     private _route: ActivatedRoute,
     private _dataService: DataService,
     private _excelExport: ExportAsExcelFileService,
-    private _compoentnService: ComponentsService
+    private _componentService: ComponentsService
   ) {
     // Validators
     this.mainFilterForm = _formBuilder.group({
       proveedorControl: ['', [Validators.required, RequireMatch]],
       estadosControl: ['', [Validators.required, RequireMatch]],
-      fechaInicioControl: [moment().subtract(1, 'months'), [Validators.required]],
+      fechaInicioControl: [
+        moment().subtract(1, 'months'),
+        [Validators.required]
+      ],
       fechaFinControl: [moment(), [Validators.required]]
     });
     this.onResize();
@@ -226,6 +237,7 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
         } else {
           this.errorMessage = '';
           this.usr = params['token'].split(';')[0];
+          this._componentService.setUser(this.usr);
           this.appStart();
         }
       },
@@ -247,7 +259,6 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
         data => {
           if (!data['Estado'] || !data['Value'][0]['Código']) {
             this.proveedores = data['Value'];
-            this.isLoading = false;
             this.filteredProveedores = this.mainFilterForm
               .get('proveedorControl')
               .valueChanges.pipe(
@@ -280,9 +291,13 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
               .then(
                 data => {
                   if (!data['Estado'] || !data['Value'][0]['Código']) {
+                    this._componentService.setEstados(data['Value']);
                     this.estados = data['Value'];
-                    this.mainFilterForm.get("estadosControl").setValue(this.estados[0]);
-                    this._compoentnService.setEstados(this.estados);
+                    this.mainFilterForm
+                      .get('estadosControl')
+                      .setValue(this.estados[0]);
+                    this.isLoading = false;
+                    this._componentService.setEstados(this.estados);
                     this.filteredEstados = this.mainFilterForm
                       .get('estadosControl')
                       .valueChanges.pipe(
@@ -365,9 +380,10 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
   }
 
   consultar() {
+    this.isLoading = true;
     if (this.dataSource !== undefined) {
       this.dataSource.data = [];
-      this.paginator._changePageSize(this.paginator.pageSize);
+      // this.paginator._changePageSize(this.paginator.pageSize);
     }
     let form = this.mainFilterForm;
     let query = {
@@ -377,23 +393,28 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
       p_vpc_tech_key: form.get('proveedorControl').value['ID'],
       p_fecha_inicio: form.get('fechaInicioControl').value.format('DD/MM/YYYY'),
       p_fecha_fin: form.get('fechaFinControl').value.format('DD/MM/YYYY'),
+      p_fecha_real: '-1',
       p_id_estado: form.get('estadosControl').value.ID,
       p_origen: '-1',
-      p_usuario: this.usr,
+      p_usuario: this.usr
     };
     this._dataService
       .postTablaPrincipalOC(query)
       .toPromise()
       .then(
         data => {
+          this.tableMessage = '';
           this.dataSource = new MatTableDataSource();
-          if (data["Value"] && data["Value"][0]["Código"]) {
+          if (data['Value'] && data['Value'][0]['Código']) {
             this.dataSource._data.next([]);
+            this.tableMessage = data['Value'][0]['Mensaje'];
           } else {
+            this.tableMessage = '';
             this.dataSource.data = data['Value'];
           }
           setTimeout(() => {
             this.dataSource.paginator = this.paginator;
+            this.isLoading = false;
           }, 0);
         },
         error => {
@@ -482,6 +503,7 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
       p_vpc_tech_key: form.get('proveedorControl').value['ID'],
       p_fecha_inicio: form.get('fechaInicioControl').value.format('DD/MM/YYYY'),
       p_fecha_fin: form.get('fechaFinControl').value.format('DD/MM/YYYY'),
+      p_fecha_real: '-1',
       p_id_estado: form.get('estadosControl').value.ID,
       p_origen: '-1',
       p_usuario: this.usr
@@ -502,6 +524,7 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
       );
   }
   openDialogDetalles(data): Observable<any> {
+    this._componentService.setQueryDetalles(this.queryDetallesDialog);
     const dialogRef = this._dialog.open(DialogDetallesComponent, {
       maxWidth: '95vw',
       maxHeight: '95vh',
@@ -521,11 +544,12 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
   }
 
   cambioEstadoDialog() {
-    this.openDialogCambioEstado().toPromise()
+    this.openDialogCambioEstado()
+      .toPromise()
       .then(() => {
         this.consultar();
         this.selection.clear();
-      })
+      });
   }
 
   openDialogCambioEstado(): Observable<any> {

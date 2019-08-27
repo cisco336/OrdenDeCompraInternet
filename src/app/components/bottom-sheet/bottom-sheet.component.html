@@ -1,0 +1,38 @@
+<div class="wrapper">
+  <div>
+    <mat-form-field>
+      <input
+        matInput
+        required
+        [matDatepicker]="dp1"
+        placeholder="Fecha del cambio"
+        [formControl]="fechaCambioControl"
+      />
+      <mat-datepicker-toggle matSuffix [for]="dp1"></mat-datepicker-toggle>
+      <mat-datepicker #dp1></mat-datepicker>
+    </mat-form-field>
+    <mat-form-field>
+      <input
+        type="time"
+        matInput
+        required
+        placeholder="Hora del cambio"
+        [formControl]="horaCambioControl"
+        value="00:00"
+      />
+    </mat-form-field>
+  </div>
+  <div>
+    <button
+      mat-stroked-button
+      color="primary"
+      *ngFor="let estado of data.estados"
+      [disabled]="
+        fechaCambioControl.invalid || fechaCambioControl.invalid || fechaCambioControl.value > today || horaCambioControl.invalid
+      "
+      (click)="closeSheet(estado)"
+    >
+      {{ estado.DESCRIPCION | titlecase }}
+    </button>
+  </div>
+</div>
