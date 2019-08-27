@@ -5,6 +5,11 @@
   align-items: center;
   justify-content: space-between;
   color: $HC-white;
+  & span {
+    &:nth-child(2) {
+      display: flex;
+    }
+  }
   & button span mat-icon {
     margin-right: 0!important;
   }

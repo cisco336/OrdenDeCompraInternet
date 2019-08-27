@@ -1,6 +1,12 @@
 @import '../../../assets/css/vars';
 table {
   width: 100%;
+  // & td:not(:first-child), & td:not(:last-child) {
+  //   padding: 0 16px;
+  // }
+  & tr.mat-footer-row, & tr.mat-row:not(.detail-row) {
+    height: 35px;
+  }
 }
 
 tr.detail-row {
@@ -17,34 +23,39 @@ tr.element-row:not(.expanded-row):active {
   background: #efefef;
 }
 
+
 .element-row td {
   border-bottom-width: 0;
+}
+
+.element-row.expanded-row + .detail-row .element-detail {
+  margin-bottom: 1rem;
 }
 
 .element-detail {
   overflow: hidden;
   display: flex;
+  & mat-list {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 250px));
+    & mat-list-item {
+      transition: all .2s ease-out;
+      & span:first-child {
+        font-weight: bold;
+      }
+      & span:nth-child(2) {
+        white-space: normal;
+      }
+      &:hover {
+        background: $HC-primary;
+        color: $HC-white;
+      }
+    }
+  }
 }
 
-.element-diagram {
-  min-width: 80px;
-  border: 2px solid black;
-  padding: 8px;
-  font-weight: lighter;
-  margin: 8px 0;
-  height: 104px;
-}
-
-.element-symbol {
-  font-weight: bold;
-  font-size: 40px;
-  line-height: normal;
-}
-
-.element-description {
-  padding: 16px;
-}
-
-.element-description-attribution {
-  opacity: 0.5;
+.description {
+  // white-space: nowrap;
+  text-overflow: ellipsis;
 }

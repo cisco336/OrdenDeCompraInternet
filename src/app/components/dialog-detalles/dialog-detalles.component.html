@@ -1,12 +1,28 @@
-<mat-toolbar class="toolbar mat-elevation-z10" color="primary"
-  ><span>Detalles</span
-  ><button mat-icon-button (click)="closeDialog()">
-    <mat-icon>close</mat-icon>
-  </button></mat-toolbar
->
+<mat-toolbar class="toolbar mat-elevation-z10" color="primary">
+  <span>Detalles</span>
+  <span>
+    <!-- <button mat-stroked-button (click)="openBottomSheet()">Test</button> -->
+    <!-- <button
+      mat-stroked-button
+      [matMenuTriggerFor]="cambioEstadoMenu"
+      *ngIf="mostrarCambioBotton"
+      
+    >
+      Cambiar estado
+    </button>
+    <mat-menu #cambioEstadoMenu="matMenu">
+      <button mat-menu-item *ngFor="let estado of estados" (click)="cambioEstado(estado.ID)">
+        {{ estado.DESCRIPCION }}
+      </button>
+    </mat-menu> -->
+    <button mat-icon-button (click)="closeDialog()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </span>
+</mat-toolbar>
 <div class="the-wrapper" mat-dialog-content>
-  <div class="card-wrapper">
-    <mat-card class="card-first mat-elevation-z10">
+  <div [@cardGroup]="ordenCompra !== null ? true : false" class="card-wrapper">
+    <mat-card @card class="card-first mat-elevation-z10">
       <div class="card-title">
         <mat-icon>person</mat-icon>
         Datos del Ciente:
@@ -21,7 +37,7 @@
         </ul>
       </div>
     </mat-card>
-    <mat-card class="card-second mat-elevation-z10">
+    <mat-card @card class="card-second mat-elevation-z10">
       <div class="card-title">
         <mat-icon>local_shipping</mat-icon>
         Datos de entrega:
@@ -33,7 +49,7 @@
         </ul>
       </div>
     </mat-card>
-    <mat-card class="card-third mat-elevation-z10">
+    <mat-card @card class="card-third mat-elevation-z10">
       <div class="card-title">
         <mat-icon>local_offer</mat-icon>
         Datos de la orden:
@@ -42,28 +58,32 @@
         <ul>
           <li>Número de orden:</li>
           <li>Tipo de entrega:</li>
-          <li>Sitio (radicación factura):</li>
+          <li>Origen:</li>
         </ul>
       </div>
     </mat-card>
-    <mat-card class="card-fourth mat-elevation-z10">
+    <mat-card
+      [@card]="ordenCompra['observaciones']"
+      class="card-fourth mat-elevation-z10"
+      *ngIf="ordenCompra['observaciones']"
+    >
       <div class="card-title">
         <mat-icon>insert_comment</mat-icon>
         Observaciones:
       </div>
       <div class="card-body">
-        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Magni, in eum?
-        Quo commodi fugit deleniti soluta facilis explicabo neque quaerat et
-        unde fugiat, nam necessitatibus tenetur quod! Et, magnam ipsa!
-        lore
+        {{ ordenCompra['observaciones'] || 'Sin observaciones' }}
       </div>
     </mat-card>
   </div>
-  <mat-tab-group [color]="warn" [backgroundColor]="accent" dynamicHeight mat-stretch-tabs>
+  <mat-tab-group
+    dynamicHeight
+    mat-stretch-tabs
+  >
     <mat-tab label="SKU">
       <app-stepper-detalles></app-stepper-detalles>
     </mat-tab>
-    <mat-tab label="Second" > Content 2 </mat-tab>
-    <mat-tab label="Third" > Content 3 </mat-tab>
+    <mat-tab label="Second" disabled> Content 2 </mat-tab>
+    <mat-tab label="Third" disabled> Content 3 </mat-tab>
   </mat-tab-group>
 </div>

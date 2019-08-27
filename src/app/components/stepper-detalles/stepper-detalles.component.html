@@ -2,28 +2,45 @@
   <mat-step [stepControl]="firstFormGroup" state="tab">
     <form [formGroup]="firstFormGroup">
       <mat-form-field class="no-show">
-        <input matInput formControlName="selectedSkuControl" [value]="selectedSku.length">
+        <input
+          matInput
+          formControlName="selectedSkuControl"
+          [value]="selectedSku.length"
+        />
       </mat-form-field>
       <ng-template matStepLabel>Lista de SKU</ng-template>
       <app-tabla-detalles></app-tabla-detalles>
       <div class="stepper-buttons">
-        <button mat-raised-button color="primary" matStepperNext><mat-icon>navigate_next</mat-icon>Siguiente</button>
+        <button
+          mat-raised-button
+          color="accent"
+          [disabled]="!selectedSku.length"
+          (click)="openBottomSheet()"
+        >
+          <mat-icon>category</mat-icon>Cambiar estado
+        </button>
+        <button mat-raised-button color="primary" matStepperNext>
+          <mat-icon>navigate_next</mat-icon>Siguiente
+        </button>
       </div>
     </form>
   </mat-step>
-  <mat-step [stepControl]="secondFormGroup" state="widgets">
+  <mat-step [stepControl]="secondFormGroup" state="widgets" disabled>
     <form [formGroup]="secondFormGroup">
-      <ng-template matStepLabel>Configuracion de Bultos</ng-template>
-      <p *ngFor="let sku of selectedSku">
-        {{sku | json}}
-      </p>
+      <div class="step-container">
+        <ng-template matStepLabel>Configuracion de Bultos</ng-template>
+      </div>
       <div class="stepper-buttons">
-        <button mat-stroked-button color="warn" matStepperPrevious><mat-icon>navigate_before</mat-icon>Volver</button>
-        <button mat-raised-button color="primary" matStepperNext><mat-icon>navigate_next</mat-icon>Siguiente</button>
+        <button mat-stroked-button color="warn" matStepperPrevious>
+          <mat-icon>navigate_before</mat-icon>Volver
+        </button>
+        <button mat-raised-button color="primary" matStepperNext>
+          <mat-icon>navigate_next</mat-icon>Siguiente
+        </button>
       </div>
     </form>
   </mat-step>
-  <mat-step [stepControl]="secondFormGroup" state="location">
+  <mat-step [stepControl]="secondFormGroup" state="location" disabled>
     <form [formGroup]="secondFormGroup">
       <ng-template matStepLabel>Direccion de Origen/Entrega</ng-template>
       <p>
@@ -33,8 +50,12 @@
         laboriosam aperiam.
       </p>
       <div class="stepper-buttons">
-        <button mat-stroked-button color="warn" matStepperPrevious><mat-icon>navigate_before</mat-icon>Volver</button>
-        <button mat-raised-button color="primary" matStepperNext><mat-icon>navigate_next</mat-icon>Siguiente</button>
+        <button mat-stroked-button color="warn" matStepperPrevious>
+          <mat-icon>navigate_before</mat-icon>Volver
+        </button>
+        <button mat-raised-button color="primary" matStepperNext>
+          <mat-icon>navigate_next</mat-icon>Siguiente
+        </button>
       </div>
     </form>
   </mat-step>
@@ -42,11 +63,14 @@
     <ng-template matStepLabel>Confirmar Generacion de Guia</ng-template>
     You are now done.
     <div class="stepper-buttons">
-      <button mat-stroked-button color="warn" matStepperPrevious><mat-icon>navigate_before</mat-icon>Volver</button>
-      <button mat-raised-button color="primary" (click)="stepper.reset()"><mat-icon>description</mat-icon>Generar Guia</button>
+      <button mat-stroked-button color="warn" matStepperPrevious>
+        <mat-icon>navigate_before</mat-icon>Volver
+      </button>
+      <button mat-raised-button color="primary" (click)="stepper.reset()">
+        <mat-icon>description</mat-icon>Generar Guia
+      </button>
     </div>
   </mat-step>
-
 
   <!-- Template Icons -->
   <ng-template matStepperIcon="tab">

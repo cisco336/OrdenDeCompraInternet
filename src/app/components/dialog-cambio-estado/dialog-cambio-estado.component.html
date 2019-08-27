@@ -13,7 +13,7 @@
       [removable]="removable"
       (removed)="remove(chip)"
       color="primary"
-      >{{ chip.Orden
+      >{{ chip.PMG_PO_NUMBER
       }}<mat-icon *ngIf="removable" matChipRemove>cancel</mat-icon></mat-chip
     >
   </mat-chip-list>
@@ -21,39 +21,78 @@
     <p>
       Debe seleccionar al menos una orden de compra.
     </p>
-    <p>  
+    <p>
       Esta ventana se cerrará.
-    </p> 
+    </p>
   </div>
-  <mat-form-field>
-    <!-- <mat-label>Estados</mat-label>
-    <mat-select>
-      <mat-option *ngFor="let estado of estados" [value]="estado.value">
-        {{ estado.viewValue }}
-      </mat-option>
-    </mat-select> -->
-    <input
-      type="text"
-      placeholder="Estados"
-      aria-label="Estados"
-      matInput
-      required
-      [formControl]="estadosControl"
-      [matAutocomplete]="estados"
-    />
-    <mat-autocomplete
-      #estados="matAutocomplete"
-      [displayWith]="displayEstados"
-    >
-      <mat-option
-        *ngFor="let estado of filteredEstados | async"
-        [value]="estado"
+  <form>
+    <mat-form-field>
+      <input
+        type="text"
+        placeholder="Estados"
+        aria-label="Estados"
+        matInput
+        required
+        [formControl]="estadosControl"
+        [matAutocomplete]="estados"
+      />
+      <mat-autocomplete
+        #estados="matAutocomplete"
+        [displayWith]="displayEstados"
       >
-        {{ estado.DESCRIPCION }}
-      </mat-option>
-    </mat-autocomplete>
-  </mat-form-field>
-  <button mat-raised-button color="primary" [disabled]="!chips.length">
-    Cambiar
+        <mat-option
+          *ngFor="let estado of filteredEstados | async"
+          [value]="estado"
+        >
+          {{ estado.DESCRIPCION }}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+    <mat-form-field>
+      <input
+        type="datetime"
+        matInput
+        required
+        [matDatepicker]="dp1"
+        placeholder="Fecha del cambio"
+        [formControl]="fechaCambioControl"
+      />
+      <mat-datepicker-toggle matSuffix [for]="dp1"></mat-datepicker-toggle>
+      <mat-datepicker #dp1></mat-datepicker>
+    </mat-form-field>
+    <mat-form-field>
+      <input
+        type="time"
+        matInput
+        required
+        placeholder="Hora del cambio"
+        [formControl]="horaCambioControl"
+        value="00:00"
+      />
+    </mat-form-field>
+  </form>
+  <button
+    mat-raised-button
+    color="primary"
+    [disabled]="
+      !chips.length || estadosControl.invalid || fechaCambioControl.invalid || fechaCambioControl.value > today|| horaCambioControl.invalid
+    "
+    (click)="cambiarEstados()"
+  >
+    Cambiar estado
   </button>
+</div>
+<div
+  mat-dialog-actions
+  [@show]="responseMessage.message !== ''"
+  class="response-message"
+  [ngClass]="{
+    error: responseMessage.ID >= 0,
+    success: responseMessage.ID < 0
+  }"
+>
+  {{ responseMessage.message }}
+</div>
+<div class="loading" *ngIf="isLoading" [@fade]>
+  <mat-spinner mode="indeterminate" [diameter]="60"></mat-spinner>
 </div>

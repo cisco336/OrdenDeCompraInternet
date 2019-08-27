@@ -1,25 +1,25 @@
-import { Component, OnInit, ViewChild, OnDestroy } from "@angular/core";
-import { ActivatedRoute } from "@angular/router";
-import { SelectionModel } from "@angular/cdk/collections";
-import { MatTableDataSource } from "@angular/material/table";
-import { Observable, throwError } from "rxjs";
-import { map, startWith } from "rxjs/operators";
+import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { SelectionModel } from '@angular/cdk/collections';
+import { MatTableDataSource } from '@angular/material/table';
+import { Observable, throwError } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
 import {
   MatDialogRef,
   MatDialog,
   MatDialogConfig,
   MatCheckbox
-} from "@angular/material";
-import { DialogDetallesComponent } from "../../components/dialog-detalles/dialog-detalles.component";
-import { DialogCambioEstadoComponent } from "../../components/dialog-cambio-estado/dialog-cambio-estado.component";
-import { MatPaginator } from "@angular/material/paginator";
+} from '@angular/material';
+import { DialogDetallesComponent } from '../../components/dialog-detalles/dialog-detalles.component';
+import { DialogCambioEstadoComponent } from '../../components/dialog-cambio-estado/dialog-cambio-estado.component';
+import { MatPaginator } from '@angular/material/paginator';
 import {
   FormGroup,
   FormControl,
   Validators,
   FormBuilder
-} from "@angular/forms";
-import { RequireMatch } from "./customValidators";
+} from '@angular/forms';
+import { RequireMatch } from './customValidators';
 import {
   animate,
   state,
@@ -29,437 +29,93 @@ import {
   query,
   stagger,
   animateChild
-} from "@angular/animations";
-import { ToastrService } from "ngx-toastr";
-import { DataService } from "src/app/services/data.service";
-import { ExportAsExcelFileService } from "src/app/services/export-as-excel-file.service";
-import { skip } from "rxjs/operators";
-
-export interface PeriodicElement {
-  Orden: number;
-  "Fecha creación": string;
-  "Fecha despacho": number;
-  "Fecha entrega": string;
-  "Estado orden": string;
-  "Almacen a entregar": string;
-  "Fecha real de entrega": string;
-  Valor: number;
-  "Consecutivo nota pedido": string;
-  "Estado nota pedido": string;
-  "Tipo de entrega": string;
-  "Operador (transportadora)": string;
-  "Estado de integración": string;
-  "Fecha de integración": string;
-}
-
-export interface Proveedor {
-  ACTIVO: string;
-  EMAIL: string;
-  NOMBRE_PROVEEDOR: string;
-  PROVEEDOR_ID: number;
-}
-
-export interface Estado {
-  ESTADO_ID: number;
-  DESCRIPCION: string;
-}
-
-export interface Proveedores {
-  ID: number;
-  DESCRIPCION: string;
-}
-
-const ELEMENT_DATA: PeriodicElement[] = [
-  {
-    Orden: 1,
-    "Fecha creación": "Hydrogen",
-    "Fecha despacho": 1.0079,
-    "Fecha entrega": "H",
-    "Estado orden": "string",
-    "Almacen a entregar": "string",
-    "Fecha real de entrega": "string",
-    Valor: 123456,
-    "Consecutivo nota pedido": "string",
-    "Estado nota pedido": "string",
-    "Tipo de entrega": "string",
-    "Operador (transportadora)": "string",
-    "Estado de integración": "string",
-    "Fecha de integración": "string"
-  },
-  {
-    Orden: 2,
-    "Fecha creación": "Helium",
-    "Fecha despacho": 4.0026,
-    "Fecha entrega": "He",
-    "Estado orden": "string",
-    "Almacen a entregar": "string",
-    "Fecha real de entrega": "string",
-    Valor: 123456,
-    "Consecutivo nota pedido": "string",
-    "Estado nota pedido": "string",
-    "Tipo de entrega": "string",
-    "Operador (transportadora)": "string",
-    "Estado de integración": "string",
-    "Fecha de integración": "string"
-  },
-  {
-    Orden: 3,
-    "Fecha creación": "Lithium",
-    "Fecha despacho": 6.941,
-    "Fecha entrega": "Li",
-    "Estado orden": "string",
-    "Almacen a entregar": "string",
-    "Fecha real de entrega": "string",
-    Valor: 123456,
-    "Consecutivo nota pedido": "string",
-    "Estado nota pedido": "string",
-    "Tipo de entrega": "string",
-    "Operador (transportadora)": "string",
-    "Estado de integración": "string",
-    "Fecha de integración": "string"
-  },
-  {
-    Orden: 4,
-    "Fecha creación": "Beryllium",
-    "Fecha despacho": 9.0122,
-    "Fecha entrega": "Be",
-    "Estado orden": "string",
-    "Almacen a entregar": "string",
-    "Fecha real de entrega": "string",
-    Valor: 123456,
-    "Consecutivo nota pedido": "string",
-    "Estado nota pedido": "string",
-    "Tipo de entrega": "string",
-    "Operador (transportadora)": "string",
-    "Estado de integración": "string",
-    "Fecha de integración": "string"
-  },
-  {
-    Orden: 5,
-    "Fecha creación": "Boron",
-    "Fecha despacho": 10.811,
-    "Fecha entrega": "B",
-    "Estado orden": "string",
-    "Almacen a entregar": "string",
-    "Fecha real de entrega": "string",
-    Valor: 123456,
-    "Consecutivo nota pedido": "string",
-    "Estado nota pedido": "string",
-    "Tipo de entrega": "string",
-    "Operador (transportadora)": "string",
-    "Estado de integración": "string",
-    "Fecha de integración": "string"
-  },
-  {
-    Orden: 6,
-    "Fecha creación": "Carbon",
-    "Fecha despacho": 12.0107,
-    "Fecha entrega": "C",
-    "Estado orden": "string",
-    "Almacen a entregar": "string",
-    "Fecha real de entrega": "string",
-    Valor: 123456,
-    "Consecutivo nota pedido": "string",
-    "Estado nota pedido": "string",
-    "Tipo de entrega": "string",
-    "Operador (transportadora)": "string",
-    "Estado de integración": "string",
-    "Fecha de integración": "string"
-  },
-  {
-    Orden: 7,
-    "Fecha creación": "Nitrogen",
-    "Fecha despacho": 14.0067,
-    "Fecha entrega": "N",
-    "Estado orden": "string",
-    "Almacen a entregar": "string",
-    "Fecha real de entrega": "string",
-    Valor: 123456,
-    "Consecutivo nota pedido": "string",
-    "Estado nota pedido": "string",
-    "Tipo de entrega": "string",
-    "Operador (transportadora)": "string",
-    "Estado de integración": "string",
-    "Fecha de integración": "string"
-  },
-  {
-    Orden: 8,
-    "Fecha creación": "Oxygen",
-    "Fecha despacho": 15.9994,
-    "Fecha entrega": "O",
-    "Estado orden": "string",
-    "Almacen a entregar": "string",
-    "Fecha real de entrega": "string",
-    Valor: 123456,
-    "Consecutivo nota pedido": "string",
-    "Estado nota pedido": "string",
-    "Tipo de entrega": "string",
-    "Operador (transportadora)": "string",
-    "Estado de integración": "string",
-    "Fecha de integración": "string"
-  },
-  {
-    Orden: 9,
-    "Fecha creación": "Fluorine",
-    "Fecha despacho": 18.9984,
-    "Fecha entrega": "F",
-    "Estado orden": "string",
-    "Almacen a entregar": "string",
-    "Fecha real de entrega": "string",
-    Valor: 123456,
-    "Consecutivo nota pedido": "string",
-    "Estado nota pedido": "string",
-    "Tipo de entrega": "string",
-    "Operador (transportadora)": "string",
-    "Estado de integración": "string",
-    "Fecha de integración": "string"
-  },
-  {
-    Orden: 10,
-    "Fecha creación": "Neon",
-    "Fecha despacho": 20.1797,
-    "Fecha entrega": "Ne",
-    "Estado orden": "string",
-    "Almacen a entregar": "string",
-    "Fecha real de entrega": "string",
-    Valor: 123456,
-    "Consecutivo nota pedido": "string",
-    "Estado nota pedido": "string",
-    "Tipo de entrega": "string",
-    "Operador (transportadora)": "string",
-    "Estado de integración": "string",
-    "Fecha de integración": "string"
-  },
-  {
-    Orden: 11,
-    "Fecha creación": "Sodium",
-    "Fecha despacho": 22.9897,
-    "Fecha entrega": "Na",
-    "Estado orden": "string",
-    "Almacen a entregar": "string",
-    "Fecha real de entrega": "string",
-    Valor: 123456,
-    "Consecutivo nota pedido": "string",
-    "Estado nota pedido": "string",
-    "Tipo de entrega": "string",
-    "Operador (transportadora)": "string",
-    "Estado de integración": "string",
-    "Fecha de integración": "string"
-  },
-  {
-    Orden: 12,
-    "Fecha creación": "Magnesium",
-    "Fecha despacho": 24.305,
-    "Fecha entrega": "Mg",
-    "Estado orden": "string",
-    "Almacen a entregar": "string",
-    "Fecha real de entrega": "string",
-    Valor: 123456,
-    "Consecutivo nota pedido": "string",
-    "Estado nota pedido": "string",
-    "Tipo de entrega": "string",
-    "Operador (transportadora)": "string",
-    "Estado de integración": "string",
-    "Fecha de integración": "string"
-  },
-  {
-    Orden: 13,
-    "Fecha creación": "Aluminum",
-    "Fecha despacho": 26.9815,
-    "Fecha entrega": "Al",
-    "Estado orden": "string",
-    "Almacen a entregar": "string",
-    "Fecha real de entrega": "string",
-    Valor: 123456,
-    "Consecutivo nota pedido": "string",
-    "Estado nota pedido": "string",
-    "Tipo de entrega": "string",
-    "Operador (transportadora)": "string",
-    "Estado de integración": "string",
-    "Fecha de integración": "string"
-  },
-  {
-    Orden: 14,
-    "Fecha creación": "Silicon",
-    "Fecha despacho": 28.0855,
-    "Fecha entrega": "Si",
-    "Estado orden": "string",
-    "Almacen a entregar": "string",
-    "Fecha real de entrega": "string",
-    Valor: 123456,
-    "Consecutivo nota pedido": "string",
-    "Estado nota pedido": "string",
-    "Tipo de entrega": "string",
-    "Operador (transportadora)": "string",
-    "Estado de integración": "string",
-    "Fecha de integración": "string"
-  },
-  {
-    Orden: 15,
-    "Fecha creación": "Phosphorus",
-    "Fecha despacho": 30.9738,
-    "Fecha entrega": "P",
-    "Estado orden": "string",
-    "Almacen a entregar": "string",
-    "Fecha real de entrega": "string",
-    Valor: 123456,
-    "Consecutivo nota pedido": "string",
-    "Estado nota pedido": "string",
-    "Tipo de entrega": "string",
-    "Operador (transportadora)": "string",
-    "Estado de integración": "string",
-    "Fecha de integración": "string"
-  },
-  {
-    Orden: 16,
-    "Fecha creación": "Sulfur",
-    "Fecha despacho": 32.065,
-    "Fecha entrega": "S",
-    "Estado orden": "string",
-    "Almacen a entregar": "string",
-    "Fecha real de entrega": "string",
-    Valor: 123456,
-    "Consecutivo nota pedido": "string",
-    "Estado nota pedido": "string",
-    "Tipo de entrega": "string",
-    "Operador (transportadora)": "string",
-    "Estado de integración": "string",
-    "Fecha de integración": "string"
-  },
-  {
-    Orden: 17,
-    "Fecha creación": "Chlorine",
-    "Fecha despacho": 35.453,
-    "Fecha entrega": "Cl",
-    "Estado orden": "string",
-    "Almacen a entregar": "string",
-    "Fecha real de entrega": "string",
-    Valor: 123456,
-    "Consecutivo nota pedido": "string",
-    "Estado nota pedido": "string",
-    "Tipo de entrega": "string",
-    "Operador (transportadora)": "string",
-    "Estado de integración": "string",
-    "Fecha de integración": "string"
-  },
-  {
-    Orden: 18,
-    "Fecha creación": "Argon",
-    "Fecha despacho": 39.948,
-    "Fecha entrega": "Ar",
-    "Estado orden": "string",
-    "Almacen a entregar": "string",
-    "Fecha real de entrega": "string",
-    Valor: 123456,
-    "Consecutivo nota pedido": "string",
-    "Estado nota pedido": "string",
-    "Tipo de entrega": "string",
-    "Operador (transportadora)": "string",
-    "Estado de integración": "string",
-    "Fecha de integración": "string"
-  },
-  {
-    Orden: 19,
-    "Fecha creación": "Potassium",
-    "Fecha despacho": 39.0983,
-    "Fecha entrega": "K",
-    "Estado orden": "string",
-    "Almacen a entregar": "string",
-    "Fecha real de entrega": "string",
-    Valor: 123456,
-    "Consecutivo nota pedido": "string",
-    "Estado nota pedido": "string",
-    "Tipo de entrega": "string",
-    "Operador (transportadora)": "string",
-    "Estado de integración": "string",
-    "Fecha de integración": "string"
-  },
-  {
-    Orden: 20,
-    "Fecha creación": "Calcium",
-    "Fecha despacho": 40.078,
-    "Fecha entrega": "Ca",
-    "Estado orden": "string",
-    "Almacen a entregar": "string",
-    "Fecha real de entrega": "string",
-    Valor: 123456,
-    "Consecutivo nota pedido": "string",
-    "Estado nota pedido": "string",
-    "Tipo de entrega": "string",
-    "Operador (transportadora)": "string",
-    "Estado de integración": "string",
-    "Fecha de integración": "string"
-  }
-];
+} from '@angular/animations';
+import { ToastrService } from 'ngx-toastr';
+import { DataService } from 'src/app/services/data.service';
+import { ExportAsExcelFileService } from 'src/app/services/export-as-excel-file.service';
+import { ComponentsService } from 'src/app/services/components.service';
+import {
+  Estado,
+  Proveedores,
+  OrdenDeCompra
+} from '../../interfaces/interfaces';
+import { HostListener } from '@angular/core';
+import * as moment from 'moment';
 
 @Component({
-  selector: "app-ordenes-compra",
-  templateUrl: "./ordenes-compra.component.html",
-  styleUrls: ["./ordenes-compra.component.scss"],
+  selector: 'app-ordenes-compra',
+  templateUrl: './ordenes-compra.component.html',
+  styleUrls: ['./ordenes-compra.component.scss'],
   animations: [
-    trigger("entering", [
-      transition(":enter", [
-        query(
-          "@entering",
-          [
-            style({ opacity: 0, transform: "translateY(100px)" }),
-            stagger(100, [
-              animate(
-                ".5s ease-out",
-                style({ opacity: 1, transform: "translateY(0px)" })
-              )
-            ]),
-            animateChild()
-          ],
-          { optional: true }
-        ),
-        query("*", [animateChild()], { optional: true })
-      ]),
-      transition(":leave", [
-        query(
-          "the-wrapper",
-          [
-            style({ opacity: 1, transform: "trnaslateY(0px)" }),
-            stagger(100, [
-              animate(
-                ".2s ease-out",
-                style({ opacity: 0, transform: "translateY(100px)" })
-              )
-            ]),
-            animateChild()
-          ],
-          { optional: true }
-        ),
-        query("@fade", [animateChild()], { optional: true })
-      ])
-    ]),
-    trigger("detailExpand", [
-      state("collapsed", style({ height: "0px", minHeight: "0" })),
-      state("expanded", style({ height: "*" })),
-      transition(
-        "expanded <=> collapsed",
-        animate("225ms cubic-bezier(0.4, 0.0, 0.2, 1)")
-      )
-    ]),
-    trigger("fade", [
-      transition(":enter", [
-        style({ opacity: 0 }),
-        animate(".2s ease-out", style({ opacity: 1 }))
-      ])
-    ]),
-    trigger("listAnimation", [
-      transition("* => *", [
+    trigger('entering', [
+      transition('* <=> *', [
         // each time the binding value changes
         query(
-          ":leave",
-          [stagger(100, [animate("0.5s", style({ opacity: 0 }))])],
+          ':leave',
+          [
+            stagger(100, [
+              animate(
+                '0.5s',
+                style({ opacity: 0, transform: 'translateY(-100px)' })
+              )
+            ]),
+            query('@child', [animateChild()], { optional: true })
+          ],
           { optional: true }
         ),
         query(
-          ":enter",
+          ':enter',
+          [
+            style({ opacity: 0, transform: 'translateY(100px)' }),
+            stagger(50, [
+              animate('0.5s', style({ opacity: 1, transform: 'translateY(0)' }))
+            ]),
+            query('@child', [animateChild()], { optional: true })
+          ],
+          { optional: true }
+        )
+      ])
+    ]),
+    trigger('child', [
+      transition('* <=> *', [
+        query(
+          '*',
           [
             style({ opacity: 0 }),
-            stagger(100, [animate("0.5s", style({ opacity: 1 }))])
+            animate('2s ease-out', style({ opacity: 1 })),
+            animateChild()
+          ],
+          { optional: true }
+        )
+      ])
+    ]),
+    trigger('detailExpand', [
+      state('collapsed', style({ height: '0px', minHeight: '0' })),
+      state('expanded', style({ height: '*' })),
+      transition(
+        'expanded <=> collapsed',
+        animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')
+      )
+    ]),
+    trigger('fade', [
+      transition(':enter', [
+        style({ opacity: 0 }),
+        animate('.2s ease-out', style({ opacity: 1 }))
+      ])
+    ]),
+    trigger('listAnimation', [
+      transition('* => *', [
+        // each time the binding value changes
+        query(
+          ':leave',
+          [stagger(100, [animate('0.5s', style({ opacity: 0 }))])],
+          { optional: true }
+        ),
+        query(
+          ':enter',
+          [
+            style({ opacity: 0 }),
+            stagger(100, [animate('0.5s', style({ opacity: 1 }))])
           ],
           { optional: true }
         )
@@ -468,34 +124,42 @@ const ELEMENT_DATA: PeriodicElement[] = [
   ]
 })
 export class OrdenesCompraComponent implements OnInit, OnDestroy {
+  queryDetallesDialog: {
+    p_transaccion: string; //Actualizar orden 'UO', 'US' => actualizar SKU
+    p_pmg_po_number: string;
+    p_vpc_tech_key: string;
+    p_fecha_inicio: string;
+    p_fecha_fin: string;
+    p_fecha_real: string;
+    p_id_estado: string;
+    p_origen: string;
+    p_usuario: string;
+  };
+  aux: any;
+  @HostListener('window:resize', ['$event'])
+  onResize(event?) {
+    this.screenHeight = window.innerHeight;
+    this.screenWidth = window.innerWidth;
+  }
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
   mainFilterForm: FormGroup;
   proveedores: Proveedores[] = [];
   estados: Estado[] = [];
-  expandedElement: PeriodicElement;
+  expandedElement: OrdenDeCompra;
   displayedColumns: string[] = [
-    "Select",
-    "Orden",
-    "Estado orden",
-    "Fecha creación",
-    "Fecha entrega"
-
-    // Abajo
-    // "Fecha despacho",
-    // "Almacen a entregar",
-    // "Fecha real de entrega",
-    // "Valor",
-    // "Consecutivo nota pedido",
-    // "Estado nota pedido",
-    // "Tipo de entrega",
-    // "Operador (transportadora)",
-    // "Estado de integración",
-    // "Fecha de integración"
+    'Select',
+    'PMG_PO_NUMBER',
+    'ESTADO',
+    'FECHA_CREACION',
+    'PMG_EXP_RCT_DATE'
   ];
+  screenHeight: number = 0;
+  screenWidth: number = 0;
   dataSource;
-  selection = new SelectionModel<PeriodicElement>(true, []);
+  selection = new SelectionModel<OrdenDeCompra>(true, []);
 
-  proveedor: string = "";
+  proveedor: string = '';
+  tableMessage: string = '';
   date: any;
   filteredProveedores: Observable<Proveedores[]>;
   filteredEstados: Observable<Estado[]>;
@@ -505,33 +169,33 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
   routeSubscription;
   proveedoresControlSubscription;
 
-  usr: string = "";
-  key: string = "";
-  TOKEN: string = "";
+  usr: string = '';
+  key: string = '';
+  TOKEN: string = '';
 
   isLoading: boolean = true;
   noData: boolean = false;
   render: boolean = false;
 
   optionsInfo: string =
-    "Cambiar estado: debe seleccionar (con el checkbox) las ordenes a las que desea cambiar el estado. Generar reporte: genera un archivo .xlsx (Excel) que contiene toda la información presentada en la tabla.";
+    'Cambiar estado: debe seleccionar (con el checkbox) las ordenes a las que desea cambiar el estado. Generar reporte: genera un archivo .xlsx (Excel) que contiene toda la información presentada en la tabla.';
 
   mainFilterInfo: string =
-    "La fecha final no puede ser anterior a la inicial. Todos los campos son obligatorios.";
+    'La fecha final no puede ser anterior a la inicial. Todos los campos son obligatorios.';
 
   tableFilterInfo: string =
-    "El valor indicado se utilizará como filtro en toda la información de la tabla.";
+    'El valor indicado se utilizará como filtro en toda la información de la tabla.';
 
   checkBoxInfo: string =
     "Seleccione para habilitar la opción 'Cambio de Estado', puede seleccionar/deseleccionar todos con este check principal o sleccionar/deseleccionar cada orden de compra por separado";
 
   tableFooterClick: string =
-    "Haga clic sobre el número de orden para mostrar los detalles. ";
+    'Haga clic sobre el número de orden para mostrar los detalles. ';
 
   tableFooterDblclick: string =
-    "Haga DOBLE clic sobre cualquier otra parte de la fila para mostrar más información sobre la orden.";
+    'Haga DOBLE clic sobre cualquier otra parte de la fila para mostrar más información sobre la orden.';
 
-  errorMessage: string = "";
+  errorMessage: string = '';
 
   constructor(
     public _dialog: MatDialog,
@@ -539,101 +203,69 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
     private _toastr: ToastrService,
     private _route: ActivatedRoute,
     private _dataService: DataService,
-    private _excelExport: ExportAsExcelFileService
+    private _excelExport: ExportAsExcelFileService,
+    private _componentService: ComponentsService
   ) {
     // Validators
     this.mainFilterForm = _formBuilder.group({
-      proveedorControl: ["", [Validators.required, RequireMatch]],
-      estadosControl: ["", [Validators.required, RequireMatch]],
-      fechaInicioControl: ["", [Validators.required]],
-      fechaFinControl: ["", [Validators.required]]
+      proveedorControl: ['', [Validators.required, RequireMatch]],
+      estadosControl: ['', [Validators.required, RequireMatch]],
+      fechaInicioControl: [
+        moment().subtract(1, 'months'),
+        [Validators.required]
+      ],
+      fechaFinControl: [moment(), [Validators.required]]
     });
+    this.onResize();
   }
 
   exportXlsx() {
     this._excelExport.exportAsExcelFile(
       this.dataSource.data,
-      "Ordenes_de_compra_" + this.proveedor
+      'Ordenes_de_compra_' + this.proveedor
     );
   }
-
+  
   ngOnInit() {
-    this.dataSource = new MatTableDataSource();
     this.isLoading = true;
-
     this.routeSubscription = this._route.queryParams;
-    this.routeSubscription.subscribe(params => {
-      if (params["token"]) {
-        if (
-          !params["token"].split(";")[0] ||
-          !params["token"].split(";")[1] ||
-          !params["token"].split(";")[2]
-        ) {
-          this._toastr.error("Datos de inicio de sesión incorrectos.");
-          this.usr = "";
-          this.noData = true;
+    this.routeSubscription.subscribe(
+      params => {
+        if (!params['token'] || !params['token'].split(';')[0]) {
+          this.usr = '';
           this.isLoading = false;
-          this.errorMessage = "Usted no tiene privilegios";
+          this.errorMessage = 'Usted no tiene privilegios';
         } else {
-          this.usr = params["token"].split(";")[0];
-          this.key = params["token"].split(";")[1];
-          this.TOKEN = params["token"].split(";")[2];
-          this.appStart(this.key);
+          this.errorMessage = '';
+          this.usr = params['token'].split(';')[0];
+          this._componentService.setUser(this.usr);
+          this.appStart();
         }
-        // if (this.TOKEN) {
-        //   let theToken: string = "";
-        //   try {
-        //     theToken = atob(this.TOKEN);
-        //     this.dataService.setToken(theToken);
-        //   } catch (error) {
-        //     this.toastr.error("Error al decodificar token");
-        //   }
-        //   this.dataService.getAutorizar().subscribe(
-        //     data => {
-        //       if (data) {
-        //         this.appStart(this.key);
-        //       }
-        //     },
-        //     error => {
-        //       switch (error.status) {
-        //         case 401:
-        //           this._toastr.warning("Usuario No autorizado.");
-        //           break;
-        //         case 500:
-        //           this._toastr.error("Error en el servicio de autorización.");
-        //           break;
-        //         default:
-        //           this._toastr.error("Error de comunicación.");
-        //           break;
-        //       }
-        //     }
-        //   );
-        // }
-      } else {
-        // this.isLoading = false;
-        // this.noData = true;
-        // this.errorMessage = "Usted no tiene privilegios.";
+      },
+      error => {
+        this.isLoading = false;
+        this.noData = true;
+        this.errorMessage = `Usted no tiene privilegios. ${error.statusText ||
+          error.status}`;
       }
-    });
+    );
   }
 
   appStart(key?) {
     this.isLoading = true;
     this._dataService
-      // .getDatosProveedor(key)
       .getProveedores()
       .toPromise()
       .then(
         data => {
-          if (!data["Value"][0]["Código"]) {
-            this.proveedores = data["Value"];
-            this.isLoading = false;
+          if (!data['Estado'] || !data['Value'][0]['Código']) {
+            this.proveedores = data['Value'];
             this.filteredProveedores = this.mainFilterForm
-              .get("proveedorControl")
+              .get('proveedorControl')
               .valueChanges.pipe(
-                startWith(""),
+                startWith(''),
                 map(value =>
-                  typeof value === "string" ? value : value.DESCRIPCION
+                  typeof value === 'string' ? value : value.DESCRIPCION
                 ),
                 map(descripcion =>
                   descripcion
@@ -643,13 +275,13 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
               );
             if (this.proveedores.length === 1) {
               this.mainFilterForm
-                .get("proveedorControl")
+                .get('proveedorControl')
                 .setValue(this.proveedores[0]);
-              this.mainFilterForm.get("proveedorControl").disable();
-              this.proveedor = this.proveedores[0]["NOMBRE_PROVEEDOR"];
+              this.mainFilterForm.get('proveedorControl').disable();
+              this.proveedor = this.proveedores[0]['NOMBRE_PROVEEDOR'];
             } else {
               this.proveedoresControlSubscription = this.mainFilterForm
-                .get("proveedorControl")
+                .get('proveedorControl')
                 .valueChanges.subscribe(data => {
                   this.proveedor = data.DESCRIPCION;
                 });
@@ -659,14 +291,20 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
               .toPromise()
               .then(
                 data => {
-                  if (!data["Value"][0]["Código"]) {
-                    this.estados = data["Value"];
+                  if (!data['Estado'] || !data['Value'][0]['Código']) {
+                    this._componentService.setEstados(data['Value']);
+                    this.estados = data['Value'];
+                    this.mainFilterForm
+                      .get('estadosControl')
+                      .setValue(this.estados[0]);
+                    this.isLoading = false;
+                    this._componentService.setEstados(this.estados);
                     this.filteredEstados = this.mainFilterForm
-                      .get("estadosControl")
+                      .get('estadosControl')
                       .valueChanges.pipe(
-                        startWith(""),
+                        startWith(''),
                         map(value =>
-                          typeof value === "string" ? value : value.DESCRIPCION
+                          typeof value === 'string' ? value : value.DESCRIPCION
                         ),
                         map(descripcion =>
                           descripcion
@@ -675,50 +313,65 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
                         )
                       );
                   } else {
-                    throwError(Error);
+                    throw throwError(Error);
                   }
                 },
                 error => {
-                  this._toastr.error(
-                    "Error al obtener los datos de estados, código: " +
-                      error.status
-                  );
+                  this.errorHandling(error);
                   this.mainFilterForm
-                    .get("estadosControl")
+                    .get('estadosControl')
                     .setErrors({ incorrect: true });
-                  this.mainFilterForm.get("estadosControl").disable();
-                  this.noData = true;
-                  this.isLoading = false;
+                  this.mainFilterForm.get('estadosControl').disable();
                 }
               );
             this.fechaInicioSubscription = this.mainFilterForm
-              .get("fechaInicioControl")
+              .get('fechaInicioControl')
               .valueChanges.subscribe(() => {
                 this.compareDates();
               });
             this.fechaFinSubscription = this.mainFilterForm
-              .get("fechaFinControl")
+              .get('fechaFinControl')
               .valueChanges.subscribe(() => {
                 this.compareDates();
               });
 
             this.render = true;
           } else {
-            throwError(Error);
+            throw throwError('Error');
           }
         },
         error => {
-          this._toastr.error(
-            "Error al obtener los datos de proveedores, código: " + error.status
-          );
+          this.errorHandling(error);
           this.mainFilterForm
-            .get("proveedorControl")
+            .get('proveedorControl')
             .setErrors({ incorrect: true });
-          this.mainFilterForm.get("proveedorControl").disable();
-          this.noData = true;
-          this.isLoading = false;
+          this.mainFilterForm.get('proveedorControl').disable();
         }
       );
+  }
+
+  errorHandling(error) {
+    let toastrError;
+    switch (error.status) {
+      case 0:
+        toastrError = 'Error de conexión.';
+        break;
+      case 401:
+        toastrError = 'Error: no autorizado.';
+        break;
+      case 404:
+        toastrError = 'Error: el elemento seleccionado no existe.';
+        break;
+      case 500:
+        toastrError = 'Error interno del servidor.';
+        break;
+      default:
+        toastrError = 'Error desconocido.';
+        break;
+    }
+    this._toastr.error(toastrError);
+    this.noData = true;
+    this.isLoading = false;
   }
 
   ngOnDestroy() {
@@ -727,41 +380,46 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
     this.proveedoresControlSubscription.unsubscribe();
   }
 
-  consultar(event, transaccion) {
+  consultar() {
+    this.isLoading = true;
+    if (this.dataSource !== undefined) {
+      this.dataSource.data = [];
+      // this.paginator._changePageSize(this.paginator.pageSize);
+    }
     let form = this.mainFilterForm;
     let query = {
-      p_transaccion: transaccion, //GE (generar encabezado) ó GD (generar detalle)
+      p_transaccion: 'GE',
       p_pmg_po_number: -1,
-      p_vtc_tech_key: form.get("proveedorControl").value["ID"],
-      p_fecha_inicio: new Date(form.get("fechaInicioControl").value),
-      p_fecha_fin: new Date(form.get("fechaFinControl").value),
-      p_id_estado: -1,
-      p_origen: "-1",
-      p_salida: "" //<Cursor>
+      p_prd_lvl_child: -1,
+      p_vpc_tech_key: form.get('proveedorControl').value['ID'],
+      p_fecha_inicio: form.get('fechaInicioControl').value.format('DD/MM/YYYY'),
+      p_fecha_fin: form.get('fechaFinControl').value.format('DD/MM/YYYY'),
+      p_fecha_real: '-1',
+      p_id_estado: form.get('estadosControl').value.ID,
+      p_origen: '-1',
+      p_usuario: this.usr
     };
-    console.log(query);
     this._dataService
       .postTablaPrincipalOC(query)
       .toPromise()
       .then(
         data => {
-          console.log(data);
+          this.tableMessage = '';
           this.dataSource = new MatTableDataSource();
-          this.dataSource.data = data["Value"];
+          if (data['Value'] && data['Value'][0]['Código']) {
+            this.dataSource._data.next([]);
+            this.tableMessage = data['Value'][0]['Mensaje'];
+          } else {
+            this.tableMessage = '';
+            this.dataSource.data = data['Value'];
+          }
           setTimeout(() => {
             this.dataSource.paginator = this.paginator;
+            this.isLoading = false;
           }, 0);
         },
         error => {
-          this._toastr.error(`Error al obetenre los datos: ${error.statusText}`);
-
-          //Borrar luego
-          this.dataSource = new MatTableDataSource<PeriodicElement>(
-            ELEMENT_DATA
-          );
-          setTimeout(() => {
-            this.dataSource.paginator = this.paginator;
-          }, 0);
+          this.errorHandling(error);
         }
       );
   }
@@ -770,20 +428,20 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
     let form = this.mainFilterForm;
     if (
       this.mainFilterForm &&
-      new Date(form.get("fechaFinControl").value) <
-        new Date(form.get("fechaInicioControl").value)
+      new Date(form.get('fechaFinControl').value) <
+        new Date(form.get('fechaInicioControl').value)
     ) {
-      form.get("fechaInicioControl").setErrors({ incorrect: true });
-      form.get("fechaFinControl").setErrors({ incorrect: true });
+      form.get('fechaInicioControl').setErrors({ incorrect: true });
+      form.get('fechaFinControl').setErrors({ incorrect: true });
       this._toastr.error(
-        "Fecha fin no puede ser anterior a la fecha de inicio."
+        'Fecha fin no puede ser anterior a la fecha de inicio.'
       );
     } else {
-      if (this.mainFilterForm.get("fechaInicioControl").value !== "") {
-        form.get("fechaInicioControl").setErrors(null);
+      if (this.mainFilterForm.get('fechaInicioControl').value !== '') {
+        form.get('fechaInicioControl').setErrors(null);
       }
-      if (this.mainFilterForm.get("fechaFinControl").value !== "") {
-        form.get("fechaFinControl").setErrors(null);
+      if (this.mainFilterForm.get('fechaFinControl').value !== '') {
+        form.get('fechaFinControl').setErrors(null);
       }
     }
   }
@@ -803,12 +461,12 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
   }
 
   /** The label for the checkbox on the passed row */
-  checkboxLabel(row?: PeriodicElement): string {
+  checkboxLabel(row?: OrdenDeCompra): string {
     if (!row) {
-      return `${this.isAllSelected() ? "select" : "deselect"} all`;
+      return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
     }
-    return `${this.selection.isSelected(row) ? "deselect" : "select"} row ${row[
-      "Orden"
+    return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row[
+      'Orden'
     ] + 1}`;
   }
 
@@ -836,23 +494,82 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
     );
   }
 
+  // Cuando se actualiza el SKU se debe enviar PRD_LVL_CHILD
+  // EL SKU ES EL PRD_LVL_NUMBER
+  getOrdenDetalle(data, event) {
+    if (!this.aux) {
+      this.aux = true;
+      let form = this.mainFilterForm;
+      let query = {
+        p_transaccion: 'GD', //Actualizar orden 'UO', 'US' => actualizar SKU
+        p_pmg_po_number: data.PMG_PO_NUMBER,
+        p_vpc_tech_key: form.get('proveedorControl').value['ID'],
+        p_fecha_inicio: form.get('fechaInicioControl').value.format('DD/MM/YYYY'),
+        p_fecha_fin: form.get('fechaFinControl').value.format('DD/MM/YYYY'),
+        p_fecha_real: '-1',
+        p_id_estado: form.get('estadosControl').value.ID,
+        p_origen: '-1',
+        p_usuario: this.usr
+      };
+      this.queryDetallesDialog = query;
+      this._dataService
+        .postTablaPrincipalOC(query)
+        .toPromise()
+        .then(
+          result => {
+            this.aux = false;
+            if (result) {
+              this.openDialogDetalles(result['Value']);
+            }
+          },
+          error => {
+            this.aux = false;
+            this.errorHandling(error);
+          }
+        );
+    }
+  }
   openDialogDetalles(data): Observable<any> {
+    this._componentService.setQueryDetalles(this.queryDetallesDialog);
     const dialogRef = this._dialog.open(DialogDetallesComponent, {
-      width: "90vw",
-      maxHeight: "90vh",
-      data: { data: { data: data } },
-      panelClass: "dialog-detalles",
+      maxWidth: '95vw',
+      maxHeight: '95vh',
+      data: {
+        data: {
+          queryDetalles: this.queryDetallesDialog,
+          ordenCompra: data,
+          usr: this.usr,
+          estados: this.estados
+        }
+      },
+      panelClass: 'dialog-detalles',
       disableClose: true
     });
 
     return dialogRef.afterClosed();
   }
-  openDialogCambioEstado(data): Observable<any> {
+
+  cambioEstadoDialog() {
+    this.openDialogCambioEstado()
+      .toPromise()
+      .then(() => {
+        this.consultar();
+        this.selection.clear();
+      });
+  }
+
+  openDialogCambioEstado(): Observable<any> {
     const dialogRef = this._dialog.open(DialogCambioEstadoComponent, {
-      maxWidth: "90vw",
-      maxHeight: "90vh",
-      data: { data: { data: data, selected: this.selection.selected } },
-      panelClass: "dialog-detalles",
+      maxWidth: '90vw',
+      maxHeight: '90vh',
+      data: {
+        data: {
+          selected: this.selection.selected,
+          usr: this.usr,
+          proveedor: null
+        }
+      },
+      panelClass: 'dialog-detalles',
       disableClose: true
     });
 

@@ -1,4 +1,14 @@
-@import "../../../assets/css/vars";
+@import '../../../assets/css/vars';
+.loading {
+  position: relative;
+  // width: 100vw;
+  // height: 100vh;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 .toolbar {
   margin-bottom: 1rem;
   display: flex;
@@ -21,19 +31,21 @@
   grid-template-columns: 1fr 1fr;
   grid-template-rows: auto auto auto auto;
   grid-template-areas:
-    "titulo titulo"
-    "chips selector"
-    "chips ."
-    "chips boton";
+    'titulo titulo'
+    'chips selector'
+    'chips .'
+    'chips boton';
+    // 'responseMessage responseMessage';
   @include custom-media-query-1 {
     grid-template-columns: 1fr;
     grid-template-rows: repeat(5, auto);
     grid-template-areas:
-      "titulo"
-      "."
-      "chips"
-      "selector"
-      "boton";
+      'titulo'
+      '.'
+      'chips'
+      'selector'
+      'boton';
+      // 'responseMessage';
   }
   & h5 {
     grid-area: titulo;
@@ -41,7 +53,9 @@
   & mat-chip-list {
     grid-area: chips;
   }
-  & mat-form-field {
+  & form {
+    display: flex;
+    flex-flow: column nowrap;
     grid-area: selector;
   }
   & button {
@@ -55,5 +69,23 @@
     justify-content: center;
     color: red;
     text-align: center;
+  }
+}
+div.response-message {
+  padding: .2rem 1rem;
+  font-size: 70%;
+  margin: 0 !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  grid-area: responseMessage;
+  font-weight: 600;
+  &.error {
+    color: $HC-white;
+    background: $HC-success;
+  }
+  &.success {
+    color: $HC-white;
+    background: $HC-danger;
   }
 }
