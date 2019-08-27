@@ -7,14 +7,14 @@ import { BehaviorSubject, Observable } from "rxjs";
 })
 export class DataService {
   // API Local
-  // API = "http://localhost/Abastecimiento/Servicios/OrdenCompra/api";
+  API = "http://localhost/Abastecimiento/Servicios/OrdenCompra/api";
 
   // API INTERNA
   // DEV
   // API = "http://10.23.14.95:8996/Servicios/HUB_OC_2.0.0/";
 
   // QA
-  API = "http://10.23.14.94:8996/Servicios/HUB_OC_2.0.0/";
+  // API = "http://10.23.14.94:8996/Servicios/HUB_OC_2.0.0/";
 
   // PROD
   // API = "http://10.23.14.164:8996/Servicios/HUB_OC_2.0.0/";
