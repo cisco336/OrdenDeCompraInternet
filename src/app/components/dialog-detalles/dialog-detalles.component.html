@@ -63,22 +63,20 @@
       </div>
     </mat-card>
     <mat-card
-      [@card]="ordenCompra.observaciones"
+      [@card]="ordenCompra['observaciones']"
       class="card-fourth mat-elevation-z10"
-      *ngIf="ordenCompra.observaciones"
+      *ngIf="ordenCompra['observaciones']"
     >
       <div class="card-title">
         <mat-icon>insert_comment</mat-icon>
         Observaciones:
       </div>
       <div class="card-body">
-        {{ ordenCompra.observaciones || 'Sin observaciones' }}
+        {{ ordenCompra['observaciones'] || 'Sin observaciones' }}
       </div>
     </mat-card>
   </div>
   <mat-tab-group
-    [color]="warn"
-    [backgroundColor]="accent"
     dynamicHeight
     mat-stretch-tabs
   >

@@ -135,6 +135,7 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
     p_origen: string;
     p_usuario: string;
   };
+  aux: any;
   @HostListener('window:resize', ['$event'])
   onResize(event?) {
     this.screenHeight = window.innerHeight;
@@ -224,7 +225,7 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
       'Ordenes_de_compra_' + this.proveedor
     );
   }
-
+  
   ngOnInit() {
     this.isLoading = true;
     this.routeSubscription = this._route.queryParams;
@@ -495,33 +496,38 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
 
   // Cuando se actualiza el SKU se debe enviar PRD_LVL_CHILD
   // EL SKU ES EL PRD_LVL_NUMBER
-  getOrdenDetalle(data) {
-    let form = this.mainFilterForm;
-    let query = {
-      p_transaccion: 'GD', //Actualizar orden 'UO', 'US' => actualizar SKU
-      p_pmg_po_number: data.PMG_PO_NUMBER,
-      p_vpc_tech_key: form.get('proveedorControl').value['ID'],
-      p_fecha_inicio: form.get('fechaInicioControl').value.format('DD/MM/YYYY'),
-      p_fecha_fin: form.get('fechaFinControl').value.format('DD/MM/YYYY'),
-      p_fecha_real: '-1',
-      p_id_estado: form.get('estadosControl').value.ID,
-      p_origen: '-1',
-      p_usuario: this.usr
-    };
-    this.queryDetallesDialog = query;
-    this._dataService
-      .postTablaPrincipalOC(query)
-      .toPromise()
-      .then(
-        result => {
-          if (result) {
-            this.openDialogDetalles(result['Value']);
+  getOrdenDetalle(data, event) {
+    if (!this.aux) {
+      this.aux = true;
+      let form = this.mainFilterForm;
+      let query = {
+        p_transaccion: 'GD', //Actualizar orden 'UO', 'US' => actualizar SKU
+        p_pmg_po_number: data.PMG_PO_NUMBER,
+        p_vpc_tech_key: form.get('proveedorControl').value['ID'],
+        p_fecha_inicio: form.get('fechaInicioControl').value.format('DD/MM/YYYY'),
+        p_fecha_fin: form.get('fechaFinControl').value.format('DD/MM/YYYY'),
+        p_fecha_real: '-1',
+        p_id_estado: form.get('estadosControl').value.ID,
+        p_origen: '-1',
+        p_usuario: this.usr
+      };
+      this.queryDetallesDialog = query;
+      this._dataService
+        .postTablaPrincipalOC(query)
+        .toPromise()
+        .then(
+          result => {
+            this.aux = false;
+            if (result) {
+              this.openDialogDetalles(result['Value']);
+            }
+          },
+          error => {
+            this.aux = false;
+            this.errorHandling(error);
           }
-        },
-        error => {
-          this.errorHandling(error);
-        }
-      );
+        );
+    }
   }
   openDialogDetalles(data): Observable<any> {
     this._componentService.setQueryDetalles(this.queryDetallesDialog);

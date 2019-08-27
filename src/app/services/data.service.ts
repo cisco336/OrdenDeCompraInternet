@@ -7,7 +7,17 @@ import { BehaviorSubject, Observable } from "rxjs";
 })
 export class DataService {
   // API Local
-  API = "http://localhost/Abastecimiento/Servicios/OrdenCompra/api";
+  // API = "http://localhost/Abastecimiento/Servicios/OrdenCompra/api";
+
+  // API INTERNA
+  // DEV
+  // API = "http://10.23.14.95:8996/Servicios/HUB_OC_2.0.0/";
+
+  // QA
+  API = "http://10.23.14.94:8996/Servicios/HUB_OC_2.0.0/";
+
+  // PROD
+  // API = "http://10.23.14.164:8996/Servicios/HUB_OC_2.0.0/";
 
   // API Externa Azure
   // API = "https://apim-dev-proxy.sodhc.co/inventario/api";
@@ -21,9 +31,9 @@ export class DataService {
 
   // Subscription keys
   // DEV
-  subscriptionKey = "dfeb9e69860f45258647cc7ba45fb040";
+  // subscriptionKey = "dfeb9e69860f45258647cc7ba45fb040";
   // QA
-  // subscriptionKey = "442c55ae313642028c9eb69dc4220dad";
+  subscriptionKey = "442c55ae313642028c9eb69dc4220dad";
   // PROD
   // subscriptionKey = "209fa70e5b0c4b5c8bddaf0aa54b8e19";
 

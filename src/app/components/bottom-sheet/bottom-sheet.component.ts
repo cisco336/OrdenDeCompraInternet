@@ -24,7 +24,6 @@ export class BottomSheetComponent implements OnInit {
       ID: data.ID || -1,
       fecha_real: data.ID > 0 ? `${this.fechaCambioControl.value.format('DD/MM/YYYY')} ${this.horaCambioControl.value}` : null
     }
-    debugger
     this._bottomSheetRef.dismiss(response);
   }
 }

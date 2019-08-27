@@ -73,6 +73,7 @@ export interface DetalleOrdenDeCompra {
   USR_CREACION: string;
   USR_MODIFICACION: string;
   VPC_PRD_TECH_KEY: number;
+  observaciones: string;
 }
 export interface Proveedor {
   ACTIVO: string;

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import {
   animate,
   state,
@@ -27,7 +27,7 @@ import { DetalleOrdenDeCompra } from '../../interfaces/interfaces';
     ])
   ]
 })
-export class TablaDetallesComponent implements OnInit {
+export class TablaDetallesComponent implements OnInit, OnDestroy {
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   displayedColumns: string[] = [
     'Select',
@@ -38,26 +38,31 @@ export class TablaDetallesComponent implements OnInit {
     // 'FECHA_CREACION',
     'PMG_SHIP_DATE',
     'PMG_SHIP_DATE1',
-    'FECHA_MODIFICACION',
+    'FECHA_MODIFICACION'
   ];
   dataSource;
   expandedElement: DetalleOrdenDeCompra | null;
   selection = new SelectionModel<DetalleOrdenDeCompra>(true, []);
   constructor(private _componentService: ComponentsService) {}
-  
+
   ngOnInit() {
     this.dataSource = new MatTableDataSource<DetalleOrdenDeCompra>();
     this._componentService.getTablaDetalles().subscribe(data => {
-      this.dataSource.data = data["Value"];
+      this.dataSource.data = data['Value'];
       this.selection.clear();
     });
     this.dataSource.data = this._componentService.getTablaDetalles().value;
-    setTimeout(() => {
-      this.dataSource.paginator = this.paginator;
-    }, 0)
+    // setTimeout(() => {
+    //   this.dataSource.paginator = this.paginator;
+    // }, 3000);
     this.selection.onChange.subscribe(() => {
       this.setSkus(this.selection.selected);
     });
+  }
+
+  ngOnDestroy() {
+    // this._componentService.getTablaDetalles().unsubscribe();
+    // this.selection.onChange.unsubscribe();
   }
 
   setSkus(data) {
@@ -66,9 +71,11 @@ export class TablaDetallesComponent implements OnInit {
 
   /** Whether the number of selected elements matches the total number of rows. */
   isAllSelected() {
-    const numSelected = this.selection.selected.length;
-    const numRows = this.dataSource.data.length;
-    return numSelected === numRows;
+    if (this.selection.selected && this.dataSource.data) {
+      const numSelected = this.selection.selected.length;
+      const numRows = this.dataSource.data.length;
+      return numSelected === numRows;
+    }
   }
 
   /** Selects all rows if they are not all selected; otherwise clear selection. */

@@ -4,7 +4,7 @@ table {
   // & td:not(:first-child), & td:not(:last-child) {
   //   padding: 0 16px;
   // }
-  & tr.mat-footer-row, & tr.mat-row {
+  & tr.mat-footer-row, & tr.mat-row:not(.detail-row) {
     height: 35px;
   }
 }
