@@ -1,20 +1,3 @@
-export interface PeriodicElement {
-  Orden: number;
-  'Fecha creación': string;
-  'Fecha despacho': number;
-  'Fecha entrega': string;
-  'Estado orden': string;
-  'Almacen a entregar': string;
-  'Fecha real de entrega': string;
-  Valor: number;
-  'Consecutivo nota pedido': string;
-  'Estado nota pedido': string;
-  'Tipo de entrega': string;
-  'Operador (transportadora)': string;
-  'Estado de integración': string;
-  'Fecha de integración': string;
-}
-
 export interface OrdenDeCompra {
   CNTRY_NAME: string;
   ESTADO: string;
@@ -90,4 +73,35 @@ export interface Estado {
 export interface Proveedores {
   ID: number;
   DESCRIPCION: string;
+}
+
+export interface TrackingObject {
+  ORIGEN: string;
+  OBJECT_ID: number;
+  DESCRIPCION: string;
+  FECHA_ESTADO: string;
+  FECHA_CREACION: string;
+  USR_CREACION: string;
+  CAUSAL: string;
+  DESCRIPCION_CAUSAL: string;
+  SKU: number;
+  DESCRIPCION_SKU: string;
+}
+export interface InfoBaseOC {
+  CEDULA: number;
+  CLIENTE: string;
+  TELEFONOS: string;
+  DIRECCION_CTE: string;
+  CIUDAD_CTE: string;
+  DIRECCION_ENTREGA: string;
+  CIUDAD_ENTREGA: string;
+  PMG_PO_NUMBER: number;
+  TIPO_ENTREGA: string;
+  STICKER: string;
+  ORIGEN: string;
+  NOTA_PEDIDO: string;
+  PROVEEDOR: string;
+  GUIA: string;
+  CUMPLIDO: string;
+  TRANSPORTADORA: string;
 }

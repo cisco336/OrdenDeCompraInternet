@@ -11,6 +11,7 @@ export class ComponentsService {
   tablaDetalle = new BehaviorSubject<any>('');
   user = new BehaviorSubject<string>('');
   queryDetalles = new BehaviorSubject<any>('');
+  infoBaseOC = new BehaviorSubject<any>('');
 
   constructor() { }
 
@@ -52,5 +53,13 @@ export class ComponentsService {
 
   getQueryDetalles() {
     return this.queryDetalles;
+  }
+
+  setInfoBaseOC(data) {
+    return this.infoBaseOC.next(data);
+  }
+
+  getInfoBaseOC() {
+    return this.infoBaseOC;
   }
 }

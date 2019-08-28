@@ -77,17 +77,10 @@ import * as moment from 'moment';
       ])
     ]),
     trigger('child', [
-      transition('* <=> *', [
-        query(
-          '*',
-          [
-            style({ opacity: 0 }),
-            animate('2s ease-out', style({ opacity: 1 })),
-            animateChild()
-          ],
-          { optional: true }
-        )
-      ])
+      state('true', style({ transform: 'translateX(0)', opacity: 1, height: '*' })),
+      state('false', style({ transform: 'translateX(200px)',opacity: 0, height: 0 })),
+      transition('0 => 1', animate('.5s ease-out')),
+      transition('1 => 0', animate('.5s ease-out'))
     ]),
     trigger('detailExpand', [
       state('collapsed', style({ height: '0px', minHeight: '0' })),
@@ -158,7 +151,7 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
   dataSource;
   selection = new SelectionModel<OrdenDeCompra>(true, []);
 
-  proveedor: string = '';
+  proveedor: string;
   tableMessage: string = '';
   date: any;
   filteredProveedores: Observable<Proveedores[]>;
@@ -533,6 +526,7 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
     this._componentService.setQueryDetalles(this.queryDetallesDialog);
     const dialogRef = this._dialog.open(DialogDetallesComponent, {
       maxWidth: '95vw',
+      width: '95vw',
       maxHeight: '95vh',
       data: {
         data: {
@@ -543,7 +537,7 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
         }
       },
       panelClass: 'dialog-detalles',
-      disableClose: true
+      disableClose: false
     });
 
     return dialogRef.afterClosed();

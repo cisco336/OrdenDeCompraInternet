@@ -4,7 +4,11 @@ import {
   MatDialogRef,
   MAT_DIALOG_DATA
 } from '@angular/material/dialog';
-import { DetalleOrdenDeCompra, Estado } from 'src/app/interfaces/interfaces';
+import {
+  DetalleOrdenDeCompra,
+  Estado,
+  InfoBaseOC
+} from 'src/app/interfaces/interfaces';
 import { ComponentsService } from 'src/app/services/components.service';
 import {
   trigger,
@@ -18,6 +22,7 @@ import {
 import { DataService } from 'src/app/services/data.service';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { BottomSheetComponent } from '../bottom-sheet/bottom-sheet.component';
+import { BottomSheetImgComponent } from '../bottom-sheet-img/bottom-sheet-img.component';
 
 @Component({
   selector: 'app-dialog-detalles',
@@ -57,6 +62,7 @@ export class DialogDetallesComponent implements OnInit {
   estados: Estado[] = [];
   mostrarCambioBotton: boolean = false;
   skus: any[] = [];
+  infoBaseOC: InfoBaseOC[] = [];
   numeroOrden: number = 0;
 
   constructor(
@@ -70,6 +76,13 @@ export class DialogDetallesComponent implements OnInit {
   ngOnInit() {
     this.estados = this.data.data.estados;
     this.ordenCompra = this.data.data.ordenCompra;
+    this._dataService
+      .GetInfoBaseOc(this.ordenCompra[0].PMG_PO_NUMBER)
+      .toPromise()
+      .then(data => {
+        this.infoBaseOC = data['Value'][0];
+        this._componentService.setInfoBaseOC(this.infoBaseOC);
+      });
     this.numeroOrden = this.ordenCompra[0].PMG_PO_NUMBER;
     this._componentService.setTablaDetalles(this.ordenCompra);
     this.background = this.background ? '' : 'primary';
@@ -80,7 +93,9 @@ export class DialogDetallesComponent implements OnInit {
   }
 
   openBottomSheet(): void {
-    this._bottomSheet.open(BottomSheetComponent, {data: {estados: this.estados}});
+    this._bottomSheet.open(BottomSheetComponent, {
+      data: { estados: this.estados }
+    });
   }
 
   cambioEstado(estado) {
@@ -113,6 +128,31 @@ export class DialogDetallesComponent implements OnInit {
       .then(data => {
         this._componentService.setTablaDetalles(data);
       });
+  }
+
+  showImg(data) {
+    console.log(data);
+    window.open(data, '_blank');
+  }
+
+  openBottomSheetImg(img): void {
+    let sheet = this._bottomSheet.open(BottomSheetImgComponent, {
+      data: { img: img, minWidth: '100vw', width: '100vw' },
+      disableClose: false
+    });
+    sheet
+      .afterDismissed()
+      .toPromise()
+      .then(
+        response => {
+          if (response && response['ID'] > 0) {
+            this.cambioEstado(response);
+          }
+        },
+        error => {
+          console.log(error);
+        }
+      );
   }
 
   closeDialog() {

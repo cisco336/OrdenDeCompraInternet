@@ -53,7 +53,7 @@ export class DialogCambioEstadoComponent implements OnInit {
   isLoading: boolean = false;
   estadosControl = new FormControl('', [Validators.required, RequireMatch]);
   fechaCambioControl = new FormControl(moment(), [Validators.required]);
-  horaCambioControl = new FormControl('00:00', [Validators.required]);
+  horaCambioControl = new FormControl('00:00:00', [Validators.required]);
   responseMessage: Response;
   estados: Estado[] = [];
   today = moment();
@@ -110,7 +110,7 @@ export class DialogCambioEstadoComponent implements OnInit {
       p_vpc_tech_key: '-1',
       p_fecha_inicio: '-1',
       p_fecha_fin: '-1',
-      p_fecha_real: `${this.fechaCambioControl.value.format('DD/MM/YYYY')} ${this.horaCambioControl.value}`,
+      p_fecha_real: `${this.fechaCambioControl.value.format('DD/MM/YYYY')} ${this.horaCambioControl.value}:00`,
       p_id_estado: this.estadosControl.value.ID,
       p_origen: '-1',
       p_usuario: this.data.data.usr

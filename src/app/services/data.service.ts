@@ -31,9 +31,9 @@ export class DataService {
 
   // Subscription keys
   // DEV
-  // subscriptionKey = "dfeb9e69860f45258647cc7ba45fb040";
+  subscriptionKey = "dfeb9e69860f45258647cc7ba45fb040";
   // QA
-  subscriptionKey = "442c55ae313642028c9eb69dc4220dad";
+  // subscriptionKey = "442c55ae313642028c9eb69dc4220dad";
   // PROD
   // subscriptionKey = "209fa70e5b0c4b5c8bddaf0aa54b8e19";
 
@@ -44,6 +44,7 @@ export class DataService {
   getProveedoresCall = "/Configuracion/GetProveedores";
   getEstadosCall = "/Configuracion/GetEstados";
   postTablaPrincipalOCCall = "/Configuracion/GetOc";
+  getInfoBaseOcCall = "/Configuracion/GetInfoBaseOc?id=";
 
   constructor(private http: HttpClient) {}
 
@@ -75,6 +76,12 @@ export class DataService {
 
   postTablaPrincipalOC(data) {
     return this.http.post(this.API + this.postTablaPrincipalOCCall, data, {
+      headers: this.generateBasicHeadersJWT()
+    });
+  }
+  
+  GetInfoBaseOc(data) {
+    return this.http.get(this.API + this.getInfoBaseOcCall + data, {
       headers: this.generateBasicHeadersJWT()
     });
   }

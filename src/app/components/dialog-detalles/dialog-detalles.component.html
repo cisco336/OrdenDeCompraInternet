@@ -1,20 +1,6 @@
 <mat-toolbar class="toolbar mat-elevation-z10" color="primary">
   <span>Detalles</span>
   <span>
-    <!-- <button mat-stroked-button (click)="openBottomSheet()">Test</button> -->
-    <!-- <button
-      mat-stroked-button
-      [matMenuTriggerFor]="cambioEstadoMenu"
-      *ngIf="mostrarCambioBotton"
-      
-    >
-      Cambiar estado
-    </button>
-    <mat-menu #cambioEstadoMenu="matMenu">
-      <button mat-menu-item *ngFor="let estado of estados" (click)="cambioEstado(estado.ID)">
-        {{ estado.DESCRIPCION }}
-      </button>
-    </mat-menu> -->
     <button mat-icon-button (click)="closeDialog()">
       <mat-icon>close</mat-icon>
     </button>
@@ -29,11 +15,24 @@
       </div>
       <div class="card-body">
         <ul>
-          <li>Cédula:</li>
-          <li>Cliente:</li>
-          <li>Teléfono:</li>
-          <li>Dirección:</li>
-          <li>Ciudad:</li>
+          <li>
+            <span>Cédula:</span><span>{{ infoBaseOC.CEDULA }}</span>
+          </li>
+          <li>
+            <span>Cliente:</span
+            ><span>{{ infoBaseOC.CLIENTE | titlecase }}</span>
+          </li>
+          <li>
+            <span>Teléfono:</span><span>{{ infoBaseOC.TELEFONOS }}</span>
+          </li>
+          <li>
+            <span>Dirección:</span
+            ><span>{{ infoBaseOC.DIRECCION_CTE | titlecase }}</span>
+          </li>
+          <li>
+            <span>Ciudad:</span
+            ><span>{{ infoBaseOC.CIUDAD_CTE | titlecase }}</span>
+          </li>
         </ul>
       </div>
     </mat-card>
@@ -44,8 +43,36 @@
       </div>
       <div class="card-body">
         <ul>
-          <li>Dirección de entrega:</li>
-          <li>Ciudad a entregar:</li>
+          <li>
+            <span>Dirección de entrega:</span
+            ><span>{{ infoBaseOC.DIRECCION_ENTREGA | titlecase }}</span>
+          </li>
+          <li>
+            <span>Ciudad a entregar:</span
+            ><span>{{ infoBaseOC.CIUDAD_ENTREGA | titlecase }}</span>
+          </li>
+          <li>
+            <span>Transportadora: </span
+            ><span>
+              {{ infoBaseOC.TRANSPORTADORA  | titlecase }}
+            </span>
+          </li>
+          <li>
+            <span>Guía: </span
+            ><span>
+              <button mat-icon-button (click)="showImg(infoBaseOC.GUIA)">
+                <mat-icon>cloud_download</mat-icon>
+              </button>
+            </span>
+          </li>
+          <li>
+            <span> Cumplido: </span
+            ><span
+              ><button mat-icon-button (click)="showImg(infoBaseOC.CUMPLIDO)">
+                <mat-icon>cloud_download</mat-icon>
+              </button></span
+            >
+          </li>
         </ul>
       </div>
     </mat-card>
@@ -56,9 +83,24 @@
       </div>
       <div class="card-body">
         <ul>
-          <li>Número de orden:</li>
-          <li>Tipo de entrega:</li>
-          <li>Origen:</li>
+          <li>
+            <span>Número de orden:</span
+            ><span>{{ ordenCompra[0].PMG_PO_NUMBER }}</span>
+          </li>
+          <li>
+            <span>Tipo de entrega:</span
+            ><span>{{ infoBaseOC.TIPO_ENTREGA | titlecase }}</span>
+          </li>
+          <li>
+            <span>Proveedor:</span
+            ><span>{{ infoBaseOC.PROVEEDOR | titlecase }}</span>
+          </li>
+          <li>
+            <span>Sticker:</span><span>{{ infoBaseOC.STICKER }}</span>
+          </li>
+          <li>
+            <span>Nota pedido:</span><span>{{ infoBaseOC.NOTA_PEDIDO }}</span>
+          </li>
         </ul>
       </div>
     </mat-card>
@@ -76,14 +118,11 @@
       </div>
     </mat-card>
   </div>
-  <mat-tab-group
-    dynamicHeight
-    mat-stretch-tabs
-  >
+  <mat-tab-group dynamicHeight mat-stretch-tabs>
     <mat-tab label="SKU">
       <app-stepper-detalles></app-stepper-detalles>
     </mat-tab>
-    <mat-tab label="Second" disabled> Content 2 </mat-tab>
-    <mat-tab label="Third" disabled> Content 3 </mat-tab>
+    <mat-tab label="Tracking"><app-tracking></app-tracking></mat-tab>
+    <!-- <mat-tab label="Third" disabled> Content 3 </mat-tab> -->
   </mat-tab-group>
 </div>

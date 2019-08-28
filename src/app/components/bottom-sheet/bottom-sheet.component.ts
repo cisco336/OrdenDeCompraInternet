@@ -22,7 +22,7 @@ export class BottomSheetComponent implements OnInit {
   closeSheet(data?) {
     let response = {
       ID: data.ID || -1,
-      fecha_real: data.ID > 0 ? `${this.fechaCambioControl.value.format('DD/MM/YYYY')} ${this.horaCambioControl.value}` : null
+      fecha_real: data.ID > 0 ? `${this.fechaCambioControl.value.format('DD/MM/YYYY')} ${this.horaCambioControl.value}:00` : null
     }
     this._bottomSheetRef.dismiss(response);
   }

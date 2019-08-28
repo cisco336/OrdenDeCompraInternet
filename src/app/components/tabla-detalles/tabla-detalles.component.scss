@@ -16,7 +16,7 @@ tr.detail-row {
 tr.element-row:not(.expanded-row):hover {
   cursor: pointer;
   background: linear-gradient(to top, $HC-primary 5%, transparent 6%);
-  font-weight: bold;
+  // font-weight: bold;
 }
 
 tr.element-row:not(.expanded-row):active {

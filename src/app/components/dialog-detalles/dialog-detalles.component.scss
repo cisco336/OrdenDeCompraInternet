@@ -69,10 +69,31 @@
     }
   }
   &-body {
-    padding: 1rem;
     & ul {
       & li {
+        padding: .5rem 1rem;
         list-style: none;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-gap: 10px;
+        align-items: center;
+
+        &:not(:last-child) {
+          border-bottom: 1px solid $HC-light-gray;
+        }
+        & span {
+          font-size: 90%;
+          &:first-child {
+            font-weight: bold;
+          }
+          &:nth-child(2) {
+            color: $HC-gray;
+            display: flex;
+            & button {
+              justify-self: flex-end;
+            }
+          }
+        }
       }
     }
   }
