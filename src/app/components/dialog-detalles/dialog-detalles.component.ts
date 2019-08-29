@@ -62,7 +62,24 @@ export class DialogDetallesComponent implements OnInit {
   estados: Estado[] = [];
   mostrarCambioBotton: boolean = false;
   skus: any[] = [];
-  infoBaseOC: InfoBaseOC[] = [];
+  public infoBaseOC: InfoBaseOC = {
+    CEDULA: 0,
+    CLIENTE: '',
+    TELEFONOS: '',
+    DIRECCION_CTE: '',
+    CIUDAD_CTE: '',
+    DIRECCION_ENTREGA: '',
+    CIUDAD_ENTREGA: '',
+    PMG_PO_NUMBER: 0,
+    TIPO_ENTREGA: '',
+    STICKER: '',
+    ORIGEN: '',
+    NOTA_PEDIDO: '',
+    PROVEEDOR: '',
+    GUIA: '',
+    CUMPLIDO: '',
+    TRANSPORTADORA: ''
+  };
   numeroOrden: number = 0;
 
   constructor(
@@ -80,7 +97,7 @@ export class DialogDetallesComponent implements OnInit {
       .GetInfoBaseOc(this.ordenCompra[0].PMG_PO_NUMBER)
       .toPromise()
       .then(data => {
-        this.infoBaseOC = data['Value'][0];
+        this.infoBaseOC = { ...data['Value'][0] };
         this._componentService.setInfoBaseOC(this.infoBaseOC);
       });
     this.numeroOrden = this.ordenCompra[0].PMG_PO_NUMBER;

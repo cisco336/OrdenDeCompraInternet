@@ -41,6 +41,7 @@ import {
 } from '../../interfaces/interfaces';
 import { HostListener } from '@angular/core';
 import * as moment from 'moment';
+import * as constants from '../../constants/constants';
 
 @Component({
   selector: 'app-ordenes-compra',
@@ -77,8 +78,14 @@ import * as moment from 'moment';
       ])
     ]),
     trigger('child', [
-      state('true', style({ transform: 'translateX(0)', opacity: 1, height: '*' })),
-      state('false', style({ transform: 'translateX(200px)',opacity: 0, height: 0 })),
+      state(
+        'true',
+        style({ transform: 'translateX(0)', opacity: 1, height: '*' })
+      ),
+      state(
+        'false',
+        style({ transform: 'translateX(200px)', opacity: 0, height: 0 })
+      ),
       transition('0 => 1', animate('.5s ease-out')),
       transition('1 => 0', animate('.5s ease-out'))
     ]),
@@ -170,23 +177,11 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
   noData: boolean = false;
   render: boolean = false;
 
-  optionsInfo: string =
-    'Cambiar estado: debe seleccionar (con el checkbox) las ordenes a las que desea cambiar el estado. Generar reporte: genera un archivo .xlsx (Excel) que contiene toda la información presentada en la tabla.';
-
-  mainFilterInfo: string =
-    'La fecha final no puede ser anterior a la inicial. Todos los campos son obligatorios.';
-
-  tableFilterInfo: string =
-    'El valor indicado se utilizará como filtro en toda la información de la tabla.';
-
-  checkBoxInfo: string =
-    "Seleccione para habilitar la opción 'Cambio de Estado', puede seleccionar/deseleccionar todos con este check principal o sleccionar/deseleccionar cada orden de compra por separado";
-
-  tableFooterClick: string =
-    'Haga clic sobre el número de orden para mostrar los detalles. ';
-
-  tableFooterDblclick: string =
-    'Haga DOBLE clic sobre cualquier otra parte de la fila para mostrar más información sobre la orden.';
+  // Textos
+  tooltips = constants.tooltips;
+  matFormFieldText = constants.matFormFieldText;
+  errorMessagesText = constants.errorMessagesText;
+  strings = constants.strings;
 
   errorMessage: string = '';
 
@@ -218,7 +213,7 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
       'Ordenes_de_compra_' + this.proveedor
     );
   }
-  
+
   ngOnInit() {
     this.isLoading = true;
     this.routeSubscription = this._route.queryParams;
@@ -227,7 +222,7 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
         if (!params['token'] || !params['token'].split(';')[0]) {
           this.usr = '';
           this.isLoading = false;
-          this.errorMessage = 'Usted no tiene privilegios';
+          this.errorMessage = this.errorMessagesText.noPrivileges;
         } else {
           this.errorMessage = '';
           this.usr = params['token'].split(';')[0];
@@ -238,8 +233,9 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
       error => {
         this.isLoading = false;
         this.noData = true;
-        this.errorMessage = `Usted no tiene privilegios. ${error.statusText ||
-          error.status}`;
+        this.errorMessage = `${
+          this.errorMessagesText.noPrivileges
+        }. ${error.statusText || error.status}`;
       }
     );
   }
@@ -347,19 +343,19 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
     let toastrError;
     switch (error.status) {
       case 0:
-        toastrError = 'Error de conexión.';
+        toastrError = this.errorMessagesText.error0;
         break;
       case 401:
-        toastrError = 'Error: no autorizado.';
+        toastrError = this.errorMessagesText.error401;
         break;
       case 404:
-        toastrError = 'Error: el elemento seleccionado no existe.';
+        toastrError = this.errorMessagesText.error404;
         break;
       case 500:
-        toastrError = 'Error interno del servidor.';
+        toastrError = this.errorMessagesText.error500;
         break;
       default:
-        toastrError = 'Error desconocido.';
+        toastrError = this.errorMessagesText.errorUnknown;
         break;
     }
     this._toastr.error(toastrError);
@@ -377,7 +373,6 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
     this.isLoading = true;
     if (this.dataSource !== undefined) {
       this.dataSource.data = [];
-      // this.paginator._changePageSize(this.paginator.pageSize);
     }
     let form = this.mainFilterForm;
     let query = {
@@ -426,9 +421,7 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
     ) {
       form.get('fechaInicioControl').setErrors({ incorrect: true });
       form.get('fechaFinControl').setErrors({ incorrect: true });
-      this._toastr.error(
-        'Fecha fin no puede ser anterior a la fecha de inicio.'
-      );
+      this._toastr.error(this.errorMessagesText.startEndDateError);
     } else {
       if (this.mainFilterForm.get('fechaInicioControl').value !== '') {
         form.get('fechaInicioControl').setErrors(null);
@@ -497,7 +490,9 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
         p_transaccion: 'GD', //Actualizar orden 'UO', 'US' => actualizar SKU
         p_pmg_po_number: data.PMG_PO_NUMBER,
         p_vpc_tech_key: form.get('proveedorControl').value['ID'],
-        p_fecha_inicio: form.get('fechaInicioControl').value.format('DD/MM/YYYY'),
+        p_fecha_inicio: form
+          .get('fechaInicioControl')
+          .value.format('DD/MM/YYYY'),
         p_fecha_fin: form.get('fechaFinControl').value.format('DD/MM/YYYY'),
         p_fecha_real: '-1',
         p_id_estado: form.get('estadosControl').value.ID,
