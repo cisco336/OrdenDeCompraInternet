@@ -121,7 +121,7 @@ import * as constants from '../../constants/constants';
         )
       ])
     ])
-  ]
+  ],
 })
 export class OrdenesCompraComponent implements OnInit, OnDestroy {
   queryDetallesDialog: {

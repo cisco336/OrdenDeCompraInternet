@@ -17,6 +17,7 @@ import {
   state
 } from '@angular/animations';
 import * as moment from 'moment';
+import * as strings from '../../constants/constants';
 
 export interface Response {
   message: string;
@@ -57,6 +58,7 @@ export class DialogCambioEstadoComponent implements OnInit {
   responseMessage: Response;
   estados: Estado[] = [];
   today = moment();
+  strings = strings;
 
   constructor(
     public dialogRef: MatDialogRef<DialogCambioEstadoComponent>,
@@ -115,7 +117,6 @@ export class DialogCambioEstadoComponent implements OnInit {
       p_origen: '-1',
       p_usuario: this.data.data.usr
     };
-    debugger
     this.chips.forEach(data => {
       query.p_pmg_po_number = data.PMG_PO_NUMBER;
       this._dataService
@@ -123,7 +124,7 @@ export class DialogCambioEstadoComponent implements OnInit {
         .toPromise()
         .then(response => {
           this.responseMessage = {
-            message: response['Value'][0]['MENSAJE'],
+            message: response['Value'][0]['ID'] <= 0 ? this.strings.errorMessagesText.queryError : this.strings.successMessagesText.querySuccess,
             ID: response['Value'][0]['ID']
           };
         });

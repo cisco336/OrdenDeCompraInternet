@@ -26,7 +26,8 @@ import {
   MatListModule,
   MatLineModule,
   MatMenuModule,
-  MatBottomSheetModule
+  MatBottomSheetModule,
+  MatPaginatorIntl,
 } from '@angular/material';
 import { SatDatepickerModule, SatNativeDateModule } from 'saturn-datepicker';
 import { MatTableExporterModule } from 'mat-table-exporter';
@@ -43,6 +44,7 @@ import { RouterModule } from '@angular/router';
 import { BottomSheetComponent } from './components/bottom-sheet/bottom-sheet.component';
 import { TrackingComponent } from './components/tracking/tracking.component';
 import { BottomSheetImgComponent } from './components/bottom-sheet-img/bottom-sheet-img.component';
+import { getSpanishPaginatorIntl } from './spanishPaginator';
 
 @NgModule({
   declarations: [
@@ -110,7 +112,7 @@ import { BottomSheetImgComponent } from './components/bottom-sheet-img/bottom-sh
     // Toastr notifications
     ToastrModule.forRoot()
   ],
-  providers: [],
+  providers: [{provide: MatPaginatorIntl, useValue: getSpanishPaginatorIntl()}],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

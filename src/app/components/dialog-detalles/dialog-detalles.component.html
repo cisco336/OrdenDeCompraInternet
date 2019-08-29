@@ -1,5 +1,5 @@
 <mat-toolbar class="toolbar mat-elevation-z10" color="primary">
-  <span>Detalles</span>
+  <span>{{ strings.strings.details }}</span>
   <span>
     <button mat-icon-button (click)="closeDialog()">
       <mat-icon>close</mat-icon>
@@ -8,67 +8,71 @@
 </mat-toolbar>
 <div class="the-wrapper" mat-dialog-content>
   <div [@cardGroup]="ordenCompra !== null ? true : false" class="card-wrapper">
-    <mat-card @card class="card-first mat-elevation-z10">
+    <mat-card *ngIf="cliente" class="card-first mat-elevation-z10">
       <div class="card-title">
         <mat-icon>person</mat-icon>
-        Datos del Ciente:
+        {{ strings.strings.clientData }}:
       </div>
       <div class="card-body">
         <ul>
-          <li>
-            <span>Cédula:</span><span>{{ infoBaseOC.CEDULA }}</span>
+          <li *ngIf="infoBaseOC.CEDULA && infoBaseOC.CEDULA !== ''">
+            <span>{{ strings.strings.clientID }}:</span
+            ><span>{{ infoBaseOC.CEDULA }}</span>
           </li>
-          <li>
-            <span>Cliente:</span
+          <li *ngIf="infoBaseOC.CLIENTE && infoBaseOC.CLIENTE !== ''">
+            <span>{{ strings.strings.client }}:</span
             ><span>{{ infoBaseOC.CLIENTE | titlecase }}</span>
           </li>
-          <li>
-            <span>Teléfono:</span><span>{{ infoBaseOC.TELEFONOS }}</span>
+          <li *ngIf="infoBaseOC.TELEFONOS && infoBaseOC.TELEFONOS !== ''">
+            <span>{{ strings.strings.phone }}:</span
+            ><span>{{ infoBaseOC.TELEFONOS }}</span>
           </li>
-          <li>
-            <span>Dirección:</span
+          <li
+            *ngIf="infoBaseOC.DIRECCION_CTE && infoBaseOC.DIRECCION_CTE !== ''"
+          >
+            <span>{{ strings.strings.address }}:</span
             ><span>{{ infoBaseOC.DIRECCION_CTE | titlecase }}</span>
           </li>
-          <li>
-            <span>Ciudad:</span
+          <li *ngIf="infoBaseOC.CIUDAD_CTE && infoBaseOC.CIUDAD_CTE !== ''">
+            <span>{{ strings.strings.city }}:</span
             ><span>{{ infoBaseOC.CIUDAD_CTE | titlecase }}</span>
           </li>
         </ul>
       </div>
     </mat-card>
-    <mat-card @card class="card-second mat-elevation-z10">
+    <mat-card *ngIf="entrega" class="card-second mat-elevation-z10">
       <div class="card-title">
         <mat-icon>local_shipping</mat-icon>
-        Datos de entrega:
+        {{ strings.strings.deliveryData }}:
       </div>
       <div class="card-body">
         <ul>
-          <li>
-            <span>Dirección de entrega:</span
+          <li *ngIf="infoBaseOC.DIRECCION_ENTREGA && infoBaseOC.DIRECCION_ENTREGA !== ''">
+            <span>{{ strings.strings.deliveryAddress }}:</span
             ><span>{{ infoBaseOC.DIRECCION_ENTREGA | titlecase }}</span>
           </li>
-          <li>
-            <span>Ciudad a entregar:</span
+          <li *ngIf="infoBaseOC.CIUDAD_ENTREGA && infoBaseOC.CIUDAD_ENTREGA !== ''">
+            <span>{{ strings.strings.deliveryCity }}:</span
             ><span>{{ infoBaseOC.CIUDAD_ENTREGA | titlecase }}</span>
           </li>
-          <li>
-            <span>Transportadora: </span
+          <li *ngIf="infoBaseOC.TRANSPORTADORA && infoBaseOC.TRANSPORTADORA !== ''">
+            <span>{{ strings.strings.conveyor | titlecase }}: </span
             ><span>
-              {{ infoBaseOC.TRANSPORTADORA  | titlecase }}
+              {{ infoBaseOC.TRANSPORTADORA | titlecase }}
             </span>
           </li>
           <li>
-            <span>Guía: </span
+            <span>{{ strings.strings.guide }}: </span
             ><span>
-              <button mat-icon-button (click)="showImg(infoBaseOC.GUIA)">
+              <button mat-icon-button color="accent" [disabled]="!infoBaseOC.GUIA || infoBaseOC.GUIA === ''" (click)="showImg(infoBaseOC.GUIA)">
                 <mat-icon>cloud_download</mat-icon>
               </button>
             </span>
           </li>
           <li>
-            <span> Cumplido: </span
+            <span>{{ strings.strings.accomplished }}: </span
             ><span
-              ><button mat-icon-button (click)="showImg(infoBaseOC.CUMPLIDO)">
+              ><button mat-icon-button color="accent" [disabled]="!infoBaseOC.CUMPLIDO || infoBaseOC.CUMPLIDO === ''" (click)="showImg(infoBaseOC.CUMPLIDO)">
                 <mat-icon>cloud_download</mat-icon>
               </button></span
             >
@@ -76,45 +80,49 @@
         </ul>
       </div>
     </mat-card>
-    <mat-card @card class="card-third mat-elevation-z10">
+    <mat-card class="card-third mat-elevation-z10">
       <div class="card-title">
         <mat-icon>local_offer</mat-icon>
-        Datos de la orden:
+        {{ strings.strings.orderData }}:
       </div>
       <div class="card-body">
         <ul>
           <li>
-            <span>Número de orden:</span
+            <span>{{ strings.strings.orderNumber }}:</span
             ><span>{{ ordenCompra[0].PMG_PO_NUMBER }}</span>
           </li>
-          <li>
-            <span>Tipo de entrega:</span
+          <li *ngIf="infoBaseOC.TIPO_ENTREGA && infoBaseOC.TIPO_ENTREGA !== ''">
+            <span>{{ strings.strings.deliverType }}:</span
             ><span>{{ infoBaseOC.TIPO_ENTREGA | titlecase }}</span>
           </li>
-          <li>
-            <span>Proveedor:</span
+          <li *ngIf="infoBaseOC.PROVEEDOR && infoBaseOC.PROVEEDOR !== ''">
+            <span>{{ strings.strings.provider }}:</span
             ><span>{{ infoBaseOC.PROVEEDOR | titlecase }}</span>
           </li>
-          <li>
-            <span>Sticker:</span><span>{{ infoBaseOC.STICKER }}</span>
+          <li *ngIf="infoBaseOC.STICKER && infoBaseOC.STICKER !== ''">
+            <span>{{ strings.strings.sticker }}:</span
+            ><span>{{ infoBaseOC.STICKER }}</span>
           </li>
-          <li>
-            <span>Nota pedido:</span><span>{{ infoBaseOC.NOTA_PEDIDO }}</span>
+          <li *ngIf="infoBaseOC.NOTA_PEDIDO && infoBaseOC.NOTA_PEDIDO !== ''">
+            <span>{{ strings.strings.orderNote }}:</span
+            ><span>{{ infoBaseOC.NOTA_PEDIDO }}</span>
           </li>
         </ul>
       </div>
     </mat-card>
     <mat-card
-      [@card]="ordenCompra['observaciones']"
       class="card-fourth mat-elevation-z10"
       *ngIf="ordenCompra['observaciones']"
     >
       <div class="card-title">
         <mat-icon>insert_comment</mat-icon>
-        Observaciones:
+        {{ strings.strings.observations }}:
       </div>
       <div class="card-body">
-        {{ ordenCompra['observaciones'] || 'Sin observaciones' }}
+        {{
+          ordenCompra['observaciones'] ||
+            strings.errorMessagesText.noObservations
+        }}
       </div>
     </mat-card>
   </div>

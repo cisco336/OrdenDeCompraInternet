@@ -11,6 +11,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { ComponentsService } from 'src/app/services/components.service';
 import { DetalleOrdenDeCompra } from '../../interfaces/interfaces';
+import * as strings from '../../constants/constants';
 
 @Component({
   selector: 'app-tabla-detalles',
@@ -28,6 +29,7 @@ import { DetalleOrdenDeCompra } from '../../interfaces/interfaces';
   ]
 })
 export class TablaDetallesComponent implements OnInit, OnDestroy {
+  strings = strings;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   displayedColumns: string[] = [
     'Select',

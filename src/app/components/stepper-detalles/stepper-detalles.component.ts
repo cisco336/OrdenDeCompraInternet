@@ -6,6 +6,7 @@ import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { BottomSheetComponent } from '../bottom-sheet/bottom-sheet.component';
 import { Estado } from 'src/app/interfaces/interfaces';
 import { DataService } from 'src/app/services/data.service';
+import * as strings from '../../constants/constants';
 
 @Component({
   selector: 'app-stepper-detalles',
@@ -24,6 +25,7 @@ export class StepperDetallesComponent implements OnInit, OnDestroy {
   selectedSku;
   estadosSubscription;
   estados: Estado[] = [];
+  strings = strings;
 
   constructor(
     private _formBuilder: FormBuilder,

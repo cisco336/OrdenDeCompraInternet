@@ -274,21 +274,21 @@
                 <mat-icon mat-list-icon>today</mat-icon>
                 <span mat-line>{{strings.dispatchDate}}:</span>
                 <span mat-line>
-                  {{ element.PMG_SHIP_DATE }}
+                  {{ element.PMG_SHIP_DATE || errorMessagesText.noData }}
                 </span>
               </mat-list-item>
               <mat-list-item>
                 <mat-icon mat-list-icon>business</mat-icon>
                 <span mat-line>{{strings.deliverStore}}:</span>
                 <span mat-line>
-                  {{ element.ORIGEN }}
+                  {{ element.ORIGEN || errorMessagesText.noData | titlecase }}
                 </span>
               </mat-list-item>
               <mat-list-item>
                 <mat-icon mat-list-icon>today</mat-icon>
                 <span mat-line>{{strings.realDeliverDate}}:</span>
                 <span mat-line>
-                  {{ element['Fecha real de entrega'] }}
+                  {{ element['Fecha real de entrega'] || errorMessagesText.noData }}
                 </span>
               </mat-list-item>
               <mat-list-item>
@@ -296,7 +296,7 @@
                 <span mat-line>{{strings.value}}:</span>
                 <span mat-line>
                   {{
-                    element.PMG_TOT_PO_COST | currency: 'COP':'symbol-narrow'
+                    element.PMG_TOT_PO_COST || errorMessagesText.noData | currency: 'COP':'symbol-narrow'
                   }}
                 </span>
               </mat-list-item>
@@ -304,42 +304,42 @@
                 <mat-icon mat-list-icon>assignment</mat-icon>
                 <span mat-line>{{strings.orderNoteNumber}}:</span>
                 <span mat-line>
-                  {{ element['Consecutivo nota pedido'] }}
+                  {{ element['Consecutivo nota pedido'] || errorMessagesText.noData }}
                 </span>
               </mat-list-item>
               <mat-list-item>
                 <mat-icon mat-list-icon>assignment</mat-icon>
                 <span mat-line>{{strings.orderState}}:</span>
                 <span mat-line>
-                  {{ element.PMG_STAT_NAME }}
+                  {{ element.PMG_STAT_NAME || errorMessagesText.noData | titlecase }}
                 </span>
               </mat-list-item>
               <mat-list-item>
                 <mat-icon mat-list-icon>inbox</mat-icon>
                 <span mat-line>{{strings.deliverType}}:</span>
                 <span mat-line>
-                  {{ element['Tipo de entrega'] }}
+                  {{ element['Tipo de entrega'] || errorMessagesText.noData | titlecase }}
                 </span>
               </mat-list-item>
               <mat-list-item>
                 <mat-icon mat-list-icon>local_shipping</mat-icon>
                 <span mat-line>{{strings.operator}} ({{strings.conveyor}}):</span>
                 <span mat-line>
-                  {{ element.VENDOR_NAME }}
+                  {{ element.VENDOR_NAME || errorMessagesText.noData | titlecase }}
                 </span>
               </mat-list-item>
               <mat-list-item>
                 <mat-icon mat-list-icon>call_merge</mat-icon>
                 <span mat-line>{{strings.integrationState}}:</span>
                 <span mat-line>
-                  {{ element['null'] }}
+                  {{ element['null'] || errorMessagesText.noData }}
                 </span>
               </mat-list-item>
               <mat-list-item>
                 <mat-icon mat-list-icon>today</mat-icon>
                 <span mat-line>{{strings.integrationDate}}:</span>
                 <span mat-line>
-                  {{ element.PMG_ENTRY_DATE }}
+                  {{ element.PMG_ENTRY_DATE || errorMessagesText.noData }}
                 </span>
               </mat-list-item>
             </mat-list>

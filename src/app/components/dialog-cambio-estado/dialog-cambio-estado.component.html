@@ -1,11 +1,11 @@
 <mat-toolbar class="toolbar" color="accent"
-  ><span>Cambio de estado</span
+  ><span>{{ strings.strings.stateChange }}</span
   ><button mat-icon-button (click)="closeDialog()">
     <mat-icon>close</mat-icon>
   </button></mat-toolbar
 >
 <div class="the-wrapper">
-  <h5>Ordenes de compra a modificar:</h5>
+  <h5>{{ strings.strings.purchaseOrderToEdit }}:</h5>
   <mat-chip-list color="primary">
     <mat-chip
       *ngFor="let chip of chips"
@@ -19,18 +19,18 @@
   </mat-chip-list>
   <div class="error" *ngIf="!chips.length">
     <p>
-      Debe seleccionar al menos una orden de compra.
+      {{ strings.strings.mustSelectAnOrder }}
     </p>
     <p>
-      Esta ventana se cerrará.
+      {{ strings.strings.windowWillClose }}
     </p>
   </div>
   <form>
     <mat-form-field>
       <input
         type="text"
-        placeholder="Estados"
-        aria-label="Estados"
+        placeholder="{{ strings.strings.states }}"
+        aria-label="strings.strings.states"
         matInput
         required
         [formControl]="estadosControl"
@@ -54,7 +54,7 @@
         matInput
         required
         [matDatepicker]="dp1"
-        placeholder="Fecha del cambio"
+        placeholder="{{ strings.strings.changeDate }}"
         [formControl]="fechaCambioControl"
       />
       <mat-datepicker-toggle matSuffix [for]="dp1"></mat-datepicker-toggle>
@@ -65,7 +65,7 @@
         type="time"
         matInput
         required
-        placeholder="Hora del cambio"
+        placeholder="{{ strings.strings.changeTime }}"
         [formControl]="horaCambioControl"
         value="00:00"
       />
@@ -75,11 +75,15 @@
     mat-raised-button
     color="primary"
     [disabled]="
-      !chips.length || estadosControl.invalid || fechaCambioControl.invalid || fechaCambioControl.value > today|| horaCambioControl.invalid
+      !chips.length ||
+      estadosControl.invalid ||
+      fechaCambioControl.invalid ||
+      fechaCambioControl.value > today ||
+      horaCambioControl.invalid
     "
     (click)="cambiarEstados()"
   >
-    Cambiar estado
+    {{ strings.strings.changeState }}
   </button>
 </div>
 <div

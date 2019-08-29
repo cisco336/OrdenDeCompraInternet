@@ -3,6 +3,7 @@ import { MatBottomSheetRef } from '@angular/material/bottom-sheet';
 import { MAT_BOTTOM_SHEET_DATA } from '@angular/material';
 import { FormControl, Validators } from '@angular/forms';
 import * as moment from 'moment';
+import * as strings from '../../constants/constants';
 
 @Component({
   selector: 'app-bottom-sheet',
@@ -13,6 +14,8 @@ export class BottomSheetComponent implements OnInit {
   fechaCambioControl = new FormControl('', Validators.required);
   horaCambioControl = new FormControl('00:00', [Validators.required]);
   today = moment();
+  strings = strings;
+  
   constructor(
     private _bottomSheetRef: MatBottomSheetRef<BottomSheetComponent>,
     @Inject(MAT_BOTTOM_SHEET_DATA) public data: any
