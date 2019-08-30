@@ -4,17 +4,24 @@ table {
   // & td:not(:first-child), & td:not(:last-child) {
   //   padding: 0 16px;
   // }
-  & tr.mat-footer-row, & tr.mat-row:not(.detail-row) {
+  & tr.mat-footer-row,
+  & tr.mat-row:not(.detail-row) {
     height: 35px;
   }
+  & td, & th {
+    max-width: 100px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    &:not(:first-of-type),
+    &:not(:last-of-type) {
+      padding: 0 .3rem;
+    }
+  }
 }
+
 .check {
-  width: 50px;
-}
-td {
-  max-width: 100px;
-  white-space: initial;
-  text-overflow: ellipsis;
+  width: 10px;
 }
 
 tr.detail-row {
@@ -30,7 +37,6 @@ tr.element-row:not(.expanded-row):hover {
 tr.element-row:not(.expanded-row):active {
   background: #efefef;
 }
-
 
 .element-row td {
   border-bottom-width: 0;
@@ -48,7 +54,7 @@ tr.element-row:not(.expanded-row):active {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(150px, 250px));
     & mat-list-item {
-      transition: all .2s ease-out;
+      transition: all 0.2s ease-out;
       & span:first-child {
         font-weight: bold;
       }

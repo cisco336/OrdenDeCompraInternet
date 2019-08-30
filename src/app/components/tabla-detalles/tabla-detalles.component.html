@@ -1,7 +1,7 @@
 <table #table mat-table [dataSource]="dataSource" multiTemplateDataRows>
   <!-- Checkbox Column -->
   <ng-container matColumnDef="Select">
-    <th mat-header-cell *matHeaderCellDef class="check">
+    <th mat-header-cell *matHeaderCellDef class="check" class="check">
       <mat-checkbox
         (change)="$event ? masterToggle() : null"
         [checked]="selection.hasValue() && isAllSelected()"
@@ -29,60 +29,6 @@
     <td mat-cell *matCellDef="let element">{{ element[column] }}</td>
   </ng-container>
 
-  <!-- SKU -->
-  <!-- <ng-container matColumnDef="PRD_LVL_NUMBER">
-    <th mat-header-cell *matHeaderCellDef>
-      {{ strings.strings.sku | uppercase }}
-    </th>
-    <td mat-cell *matCellDef="let element" class="position-label">
-      {{ element.PRD_LVL_NUMBER }}
-    </td>
-  </ng-container> -->
-
-  <!-- Código de barras -->
-  <!-- <ng-container matColumnDef="PRD_UPC">
-    <th mat-header-cell *matHeaderCellDef>{{ strings.strings.barcode }}</th>
-    <td mat-cell *matCellDef="let element" class="position-label">
-      {{ element.PRD_UPC }}
-    </td>
-  </ng-container> -->
-
-  <!-- SKU descripción -->
-  <!-- <ng-container matColumnDef="PRD_NAME_FULL">
-    <th mat-header-cell *matHeaderCellDef>{{ strings.strings.description }}</th>
-    <td mat-cell *matCellDef="let element" class="position-label description">
-      {{ element.PRD_NAME_FULL }}
-    </td>
-  </ng-container> -->
-
-  <!-- ESTADO -->
-  <!-- <ng-container matColumnDef="ESTADO">
-    <th mat-header-cell *matHeaderCellDef>{{ strings.strings.state }}</th>
-    <td mat-cell *matCellDef="let element" class="position-label">
-      {{ element.ESTADO }}
-    </td>
-  </ng-container> -->
-
-  <!-- Fecha  Despacho-->
-  <!-- <ng-container matColumnDef="PMG_SHIP_DATE">
-    <th mat-header-cell *matHeaderCellDef>Fecha despacho</th>
-    <td mat-cell *matCellDef="let element">{{ element.PMG_SHIP_DATE }}</td>
-  </ng-container> -->
-
-  <!-- Fecha Entrega -->
-  <!-- <ng-container matColumnDef="PMG_SHIP_DATE1">
-    <th mat-header-cell *matHeaderCellDef>{{ strings.strings.deliverDate }}</th>
-    <td mat-cell *matCellDef="let element">{{ element.PMG_SHIP_DATE1 }}</td>
-  </ng-container> -->
-
-  <!-- FECHA_MODIFICACION -->
-  <!-- <ng-container matColumnDef="FECHA_MODIFICACION">
-    <th mat-header-cell *matHeaderCellDef>{{ strings.strings.editDate }}</th>
-    <td mat-cell *matCellDef="let element" class="position-label">
-      {{ element.FECHA_MODIFICACION }}
-    </td>
-  </ng-container> -->
-
   <!-- Detalles -->
   <ng-container matColumnDef="expandedDetail">
     <td
@@ -95,89 +41,17 @@
         [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'"
       >
         <mat-list>
-          <mat-list-item
-            ><span mat-line>{{ strings.strings.creationDate }}: </span
-            ><span mat-line>{{
-              element.FECHA_CREACION || strings.errorMessagesText.noData
-            }}</span></mat-list-item
-          >
-
-          <mat-list-item
-            ><span mat-line>{{ strings.strings.family }}: </span
-            ><span mat-line>{{
-              element.NAME_FAMILIA || strings.errorMessagesText.noData
-                | titlecase
-            }}</span></mat-list-item
-          >
-
-          <mat-list-item
-            ><span mat-line
-              >{{ strings.strings.store }} /
-              {{ strings.strings.locality }}: </span
-            ><span mat-line>{{
-              element.ORG_NAME_FULL || strings.errorMessagesText.noData
-                | titlecase
-            }}</span></mat-list-item
-          >
-
-          <mat-list-item
-            ><span mat-line>{{ strings.strings.origin }}: </span
-            ><span mat-line>{{
-              element.ORIGEN_DESC || strings.errorMessagesText.noData
-                | titlecase
-            }}</span></mat-list-item
-          >
-
-          <mat-list-item
-            ><span mat-line>{{ strings.strings.cancelationDate }}: </span
-            ><span mat-line>{{
-              element.PMG_CANCEL_DATE || strings.errorMessagesText.noData
-            }}</span></mat-list-item
-          >
-
-          <mat-list-item>
-            <span mat-line>{{ strings.strings.spectedDeliverDate }}: </span
-            ><span mat-line>{{
-              element.PMG_EXP_RCT_DATE || strings.errorMessagesText.noData
-            }}</span>
-          </mat-list-item>
-
-          <mat-list-item
-            ><span mat-line>{{ strings.strings.cost }}: </span
-            ><span mat-line>{{
-              element.PMG_SELL_COST || strings.errorMessagesText.noData
-                | currency: 'COP':'symbol-narrow'
-            }}</span></mat-list-item
-          >
-
-          <mat-list-item
-            ><span mat-line>{{ strings.strings.quantity }}: </span
-            ><span mat-line>{{
-              element.PMG_SELL_QTY || strings.errorMessagesText.noData
-            }}</span></mat-list-item
-          >
-
-          <mat-list-item
-            ><span mat-line>{{ strings.strings.orderState }}: </span
-            ><span mat-line>{{
-              element.PMG_STAT_NAME || strings.errorMessagesText.noData
-            }}</span></mat-list-item
-          >
-
-          <mat-list-item
-            ><span mat-line>{{ strings.strings.creationUser }}: </span
-            ><span mat-line>{{
-              element.USR_CREACION || strings.errorMessagesText.noData
-                | uppercase
-            }}</span></mat-list-item
-          >
-
-          <mat-list-item>
-            <span mat-line>{{ strings.strings.description }}: </span>
-            <span mat-line>{{
-              element.PRD_NAME_FULL || strings.errorMessagesText.noData
-                | titlecase
-            }}</span>
+          <mat-list-item *ngFor="let x of jsonToBeUsed">
+            <span mat-line> {{ x.key }}: </span>
+            <span mat-line *ngIf="isNumber(x.value, x.key)">
+              {{ x.value }}
+            </span>
+            <span mat-line *ngIf="!isNumber(x.value)">
+              {{ x.value | titlecase }}
+            </span>
+            <span mat-line *ngIf="isCost(x.key)">
+              {{ x.value | currency: 'COP':'symbol-narrow' }}
+            </span>
           </mat-list-item>
         </mat-list>
       </div>
@@ -190,7 +64,10 @@
     *matRowDef="let element; columns: displayedColumns"
     class="element-row"
     [class.expanded-row]="expandedElement === element"
-    (click)="expandedElement = expandedElement === element ? null : element"
+    (click)="
+      expandedElement = expandedElement === element ? null : element;
+      details(element)
+    "
   ></tr>
   <tr
     mat-row

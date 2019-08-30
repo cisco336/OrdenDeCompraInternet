@@ -3,7 +3,8 @@ import {
   OnInit,
   ViewChild,
   OnDestroy,
-  ElementRef
+  ElementRef,
+  DoCheck
 } from '@angular/core';
 import {
   animate,
@@ -35,39 +36,35 @@ import { HostListener } from '@angular/core';
     ])
   ]
 })
-export class TablaDetallesComponent implements OnInit, OnDestroy {
+export class TablaDetallesComponent implements OnInit, OnDestroy, DoCheck {
+  @ViewChild('table', { static: true }) table: ElementRef;
   screenHeight: number = 0;
   screenWidth: number = 0;
   strings = strings;
   @HostListener('window:resize', ['$event'])
   onResize(event?) {
-    this.screenHeight = window.innerHeight;
-    this.screenWidth = window.innerWidth;
-    console.log(
-      window.innerWidth,
-      this.table['_elementRef'].nativeElement.clientWidth
-    );
     let tableWidth = this.table['_elementRef'].nativeElement.clientWidth;
-    if ((tableWidth + 55) < this.screenWidth) {
-      console.log('add')
+    this.screenWidth = window.innerWidth;
+    if (tableWidth + 55 < this.screenWidth) {
       this.displayedColumns = [...this.displayedColumnsBackup];
     }
 
-    if ((tableWidth + 30) > this.screenWidth) {
-      console.log('pop')
-      this.displayedColumns.pop();
+    if (tableWidth + 30 > this.screenWidth) {
+      if (this.displayedColumns.length > 3) {
+        this.displayedColumns.pop();
+        this.elementDetails.push(this.displayedColumns.pop());
+      }
     }
   }
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
-  @ViewChild('table', { static: true }) table: ElementRef;
   displayedNames: string[] = [
-    'sku',
-    'Código de barras',
-    'SKU descripción',
-    'Estado',
-    'Fecha  Despacho',
-    'Fecha Entrega',
-    'Fecha modificaión'
+    strings.strings.sku,
+    strings.strings.barCode,
+    strings.strings.description,
+    strings.strings.state,
+    strings.strings.dispatchDate,
+    strings.strings.deliverDate,
+    strings.strings.editDate
   ];
   displayedColumnsBackup: string[] = [
     'Select',
@@ -82,16 +79,34 @@ export class TablaDetallesComponent implements OnInit, OnDestroy {
   displayedColumns: string[] = [...this.displayedColumnsBackup];
   displayedColumnsAux: string[] = this.displayedColumns.slice(1);
   dataSource;
+  elementDetails: string[] = [
+    'FECHA_CREACION',
+    'NAME_FAMILIA',
+    'ORG_NAME_FULL',
+    'ORIGEN_DESC',
+    'PMG_CANCEL_DATE',
+    'PMG_EXP_RCT_DATE',
+    'PMG_SELL_COST',
+    'PMG_SELL_QTY',
+    'PMG_STAT_NAME',
+    'USR_CREACION',
+    'PRD_NAME_FULL'
+  ];
+  jsonToBeUsed = [];
+
   expandedElement: DetalleOrdenDeCompra | null;
   selection = new SelectionModel<DetalleOrdenDeCompra>(true, []);
   constructor(private _componentService: ComponentsService) {}
 
+  ngDoCheck() {
+    this.onResize(event);
+  }
   ngOnInit() {
-    this.onResize();
     this.dataSource = new MatTableDataSource<DetalleOrdenDeCompra>();
     this._componentService.getTablaDetalles().subscribe(data => {
       this.dataSource.data = data['Value'];
       this.selection.clear();
+      this.onResize(event);
     });
     this.dataSource.data = this._componentService.getTablaDetalles().value;
     setTimeout(() => {
@@ -135,5 +150,24 @@ export class TablaDetallesComponent implements OnInit, OnDestroy {
     return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row[
       'Orden'
     ] + 1}`;
+  }
+  details(x) {
+    this.jsonToBeUsed = [];
+    for (let type in x) {
+      let item = {};
+      item['key'] = strings.detailsTable[type]
+        ? strings.detailsTable[type]
+        : null;
+      item['value'] = x[type];
+      if (item['key'] !== null) {
+        this.jsonToBeUsed.push(item);
+      }
+    }
+  }
+  isNumber(val, label) {
+    return typeof val === 'number' && !this.isCost(label);
+  }
+  isCost(val) {
+    return val === strings.strings.cost;
   }
 }
