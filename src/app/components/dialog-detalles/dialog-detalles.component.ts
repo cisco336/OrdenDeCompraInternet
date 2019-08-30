@@ -145,29 +145,6 @@ export class DialogDetallesComponent implements OnInit {
     });
   }
 
-  cambioEstado(estado) {
-    let query = {
-      p_transaccion: 'US',
-      p_pmg_po_number: null,
-      p_prd_lvl_child: null,
-      p_vpc_tech_key: '-1',
-      p_fecha_inicio: '-1',
-      p_fecha_fin: '-1',
-      p_id_estado: estado,
-      p_origen: '-1',
-      p_usuario: this.data.data.usr
-    };
-    this.skus.forEach(data => {
-      query.p_pmg_po_number = data.PMG_PO_NUMBER;
-      query.p_prd_lvl_child = data.PRD_LVL_CHILD;
-      this._dataService
-        .postTablaPrincipalOC(query)
-        .toPromise()
-        .then();
-    });
-    this.refreshTable();
-  }
-
   refreshTable() {
     this._dataService
       .postTablaPrincipalOC(this.data.data.queryDetalles)
@@ -180,26 +157,6 @@ export class DialogDetallesComponent implements OnInit {
   showImg(data) {
     console.log(data);
     window.open(data, '_blank');
-  }
-
-  openBottomSheetImg(img): void {
-    let sheet = this._bottomSheet.open(BottomSheetImgComponent, {
-      data: { img: img, minWidth: '100vw', width: '100vw' },
-      disableClose: false
-    });
-    sheet
-      .afterDismissed()
-      .toPromise()
-      .then(
-        response => {
-          if (response && response['ID'] > 0) {
-            this.cambioEstado(response);
-          }
-        },
-        error => {
-          console.log(error);
-        }
-      );
   }
 
   closeDialog() {

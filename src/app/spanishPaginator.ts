@@ -2,8 +2,9 @@ import { MatPaginatorIntl } from '@angular/material';
 import { paginator } from './constants/constants';
 
 const spanishRangeLabel = (page: number, pageSize: number, length: number) => {
+  const string = paginator;
   if (length == 0 || pageSize == 0) {
-    return `0 van ${length}`;
+    return `0 ${string.of} ${length}`;
   }
   
   length = Math.max(length, 0);
@@ -16,7 +17,7 @@ const spanishRangeLabel = (page: number, pageSize: number, length: number) => {
   ? Math.min(startIndex + pageSize, length)
   : startIndex + pageSize;
   
-  return `${startIndex + 1} - ${endIndex} de ${length}`;
+  return `${startIndex + 1} - ${endIndex} ${string.of} ${length}`;
 };
 
 export function getSpanishPaginatorIntl() {

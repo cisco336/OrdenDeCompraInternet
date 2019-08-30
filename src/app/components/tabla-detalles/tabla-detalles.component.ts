@@ -54,9 +54,9 @@ export class TablaDetallesComponent implements OnInit, OnDestroy {
       this.selection.clear();
     });
     this.dataSource.data = this._componentService.getTablaDetalles().value;
-    // setTimeout(() => {
-    //   this.dataSource.paginator = this.paginator;
-    // }, 3000);
+    setTimeout(() => {
+      this.dataSource.paginator = this.paginator;
+    }, 0);
     this.selection.onChange.subscribe(() => {
       this.setSkus(this.selection.selected);
     });

@@ -95,101 +95,87 @@
         <mat-list>
           <mat-list-item
             ><span mat-line>{{ strings.strings.creationDate }}: </span
-            ><span mat-line
-              >{{
+            ><span mat-line>{{
               element.FECHA_CREACION || strings.errorMessagesText.noData
-              }}</span
-            ></mat-list-item
+            }}</span></mat-list-item
           >
 
           <mat-list-item
             ><span mat-line>{{ strings.strings.family }}: </span
-            ><span mat-line
-              >{{
-              element.NAME_FAMILIA || strings.errorMessagesText.noData | titlecase
-              }}</span
-            ></mat-list-item
+            ><span mat-line>{{
+              element.NAME_FAMILIA || strings.errorMessagesText.noData
+                | titlecase
+            }}</span></mat-list-item
           >
 
           <mat-list-item
             ><span mat-line
               >{{ strings.strings.store }} /
               {{ strings.strings.locality }}: </span
-            ><span mat-line
-              >{{
+            ><span mat-line>{{
               element.ORG_NAME_FULL || strings.errorMessagesText.noData
-              }}</span
-            ></mat-list-item
+                | titlecase
+            }}</span></mat-list-item
           >
 
           <mat-list-item
             ><span mat-line>{{ strings.strings.origin }}: </span
-            ><span mat-line
-              >{{
+            ><span mat-line>{{
               element.ORIGEN_DESC || strings.errorMessagesText.noData
-              }}</span
-            ></mat-list-item
+                | titlecase
+            }}</span></mat-list-item
           >
 
           <mat-list-item
             ><span mat-line>{{ strings.strings.cancelationDate }}: </span
-            ><span mat-line
-              >{{
+            ><span mat-line>{{
               element.PMG_CANCEL_DATE || strings.errorMessagesText.noData
-              }}</span
-            ></mat-list-item
+            }}</span></mat-list-item
           >
 
           <mat-list-item>
             <span mat-line>{{ strings.strings.spectedDeliverDate }}: </span
-            ><span mat-line
-              >{{ element.PMG_EXP_RCT_DATE || strings.errorMessagesText.noData
-              }}</span
-            >
+            ><span mat-line>{{
+              element.PMG_EXP_RCT_DATE || strings.errorMessagesText.noData
+            }}</span>
           </mat-list-item>
 
           <mat-list-item
             ><span mat-line>{{ strings.strings.cost }}: </span
-            ><span mat-line
-              >{{
+            ><span mat-line>{{
               element.PMG_SELL_COST || strings.errorMessagesText.noData
-              | currency: 'COP':'symbol-narrow' }}</span
-            ></mat-list-item
+                | currency: 'COP':'symbol-narrow'
+            }}</span></mat-list-item
           >
 
           <mat-list-item
             ><span mat-line>{{ strings.strings.quantity }}: </span
-            ><span mat-line
-              >{{
+            ><span mat-line>{{
               element.PMG_SELL_QTY || strings.errorMessagesText.noData
-              }}</span
-            ></mat-list-item
+            }}</span></mat-list-item
           >
 
           <mat-list-item
             ><span mat-line>{{ strings.strings.orderState }}: </span
-            ><span mat-line
-              >{{
+            ><span mat-line>{{
               element.PMG_STAT_NAME || strings.errorMessagesText.noData
-              }}</span
-            ></mat-list-item
+            }}</span></mat-list-item
           >
 
           <mat-list-item
             ><span mat-line>{{ strings.strings.creationUser }}: </span
-            ><span mat-line
-              >{{
-              element.USR_CREACION || strings.errorMessagesText.noData | uppercase
-              }}</span
-            ></mat-list-item
+            ><span mat-line>{{
+              element.USR_CREACION || strings.errorMessagesText.noData
+                | uppercase
+            }}</span></mat-list-item
           >
 
           <mat-list-item>
             <span mat-line>{{ strings.strings.description }}: </span>
-            <span mat-line
-              >{{ element.PRD_NAME_FULL || strings.errorMessagesText.noData | titlecase
-              }}</span
-            >
+            <span mat-line>{{
+              element.PRD_NAME_FULL || strings.errorMessagesText.noData
+                | titlecase
+            }}</span>
           </mat-list-item>
         </mat-list>
       </div>
@@ -211,7 +197,7 @@
   ></tr>
 </table>
 
-<!-- <mat-paginator
+<mat-paginator
   [pageSizeOptions]="[5, 10, 20, 50, 100]"
   showFirstLastButtons
-></mat-paginator> -->
+></mat-paginator>
