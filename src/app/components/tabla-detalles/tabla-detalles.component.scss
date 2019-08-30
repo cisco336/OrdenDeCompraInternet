@@ -8,6 +8,14 @@ table {
     height: 35px;
   }
 }
+.check {
+  width: 50px;
+}
+td {
+  max-width: 100px;
+  white-space: initial;
+  text-overflow: ellipsis;
+}
 
 tr.detail-row {
   height: 0;

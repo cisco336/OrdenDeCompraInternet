@@ -1,4 +1,10 @@
-import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  OnDestroy,
+  ElementRef
+} from '@angular/core';
 import {
   animate,
   state,
@@ -12,6 +18,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { ComponentsService } from 'src/app/services/components.service';
 import { DetalleOrdenDeCompra } from '../../interfaces/interfaces';
 import * as strings from '../../constants/constants';
+import { HostListener } from '@angular/core';
 
 @Component({
   selector: 'app-tabla-detalles',
@@ -29,25 +36,58 @@ import * as strings from '../../constants/constants';
   ]
 })
 export class TablaDetallesComponent implements OnInit, OnDestroy {
+  screenHeight: number = 0;
+  screenWidth: number = 0;
   strings = strings;
+  @HostListener('window:resize', ['$event'])
+  onResize(event?) {
+    this.screenHeight = window.innerHeight;
+    this.screenWidth = window.innerWidth;
+    console.log(
+      window.innerWidth,
+      this.table['_elementRef'].nativeElement.clientWidth
+    );
+    let tableWidth = this.table['_elementRef'].nativeElement.clientWidth;
+    if ((tableWidth + 55) < this.screenWidth) {
+      console.log('add')
+      this.displayedColumns = [...this.displayedColumnsBackup];
+    }
+
+    if ((tableWidth + 30) > this.screenWidth) {
+      console.log('pop')
+      this.displayedColumns.pop();
+    }
+  }
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
-  displayedColumns: string[] = [
+  @ViewChild('table', { static: true }) table: ElementRef;
+  displayedNames: string[] = [
+    'sku',
+    'Código de barras',
+    'SKU descripción',
+    'Estado',
+    'Fecha  Despacho',
+    'Fecha Entrega',
+    'Fecha modificaión'
+  ];
+  displayedColumnsBackup: string[] = [
     'Select',
     'PRD_LVL_NUMBER',
     'PRD_UPC',
     'PRD_NAME_FULL',
     'ESTADO',
-    // 'FECHA_CREACION',
     'PMG_SHIP_DATE',
     'PMG_SHIP_DATE1',
     'FECHA_MODIFICACION'
   ];
+  displayedColumns: string[] = [...this.displayedColumnsBackup];
+  displayedColumnsAux: string[] = this.displayedColumns.slice(1);
   dataSource;
   expandedElement: DetalleOrdenDeCompra | null;
   selection = new SelectionModel<DetalleOrdenDeCompra>(true, []);
   constructor(private _componentService: ComponentsService) {}
 
   ngOnInit() {
+    this.onResize();
     this.dataSource = new MatTableDataSource<DetalleOrdenDeCompra>();
     this._componentService.getTablaDetalles().subscribe(data => {
       this.dataSource.data = data['Value'];
