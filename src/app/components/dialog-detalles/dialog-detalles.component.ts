@@ -155,7 +155,6 @@ export class DialogDetallesComponent implements OnInit {
   }
 
   showImg(data) {
-    console.log(data);
     window.open(data, '_blank');
   }
 

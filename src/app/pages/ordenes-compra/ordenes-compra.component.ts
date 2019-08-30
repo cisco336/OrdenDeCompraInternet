@@ -392,7 +392,6 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
       .toPromise()
       .then(
         data => {
-          console.log(data);
           this.tableMessage = '';
           this.dataSource = new MatTableDataSource();
           if (data['Value'] && data['Value'][0]['Código']) {
