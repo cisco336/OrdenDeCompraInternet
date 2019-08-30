@@ -7,6 +7,13 @@ import { BottomSheetComponent } from '../bottom-sheet/bottom-sheet.component';
 import { Estado } from 'src/app/interfaces/interfaces';
 import { DataService } from 'src/app/services/data.service';
 import * as strings from '../../constants/constants';
+import {
+  trigger,
+  state,
+  style,
+  transition,
+  animate
+} from '@angular/animations';
 
 @Component({
   selector: 'app-stepper-detalles',
@@ -17,6 +24,20 @@ import * as strings from '../../constants/constants';
       provide: STEPPER_GLOBAL_OPTIONS,
       useValue: { displayDefaultIndicatorType: false }
     }
+  ],
+  animations: [
+    trigger('show', [
+      state(
+        'true',
+        style({ transformOrigin: '50% 0%' ,opacity: 1, height: '*' })
+      ),
+      state(
+        'false',
+        style({ transformOrigin: '50% 0%' ,opacity: 0, height: 0 })
+      ),
+      transition('0 => 1', animate('.5s ease-out')),
+      transition('1 => 0', animate('.5s ease-out'))
+    ])
   ]
 })
 export class StepperDetallesComponent implements OnInit, OnDestroy {
@@ -26,12 +47,14 @@ export class StepperDetallesComponent implements OnInit, OnDestroy {
   estadosSubscription;
   estados: Estado[] = [];
   strings = strings;
+  queryResponse: string = '';
+  showQueryResponse: boolean = false;
 
   constructor(
     private _formBuilder: FormBuilder,
     private _componentService: ComponentsService,
     private _bottomSheet: MatBottomSheet,
-    private _dataService:  DataService
+    private _dataService: DataService
   ) {}
 
   ngOnInit() {
@@ -57,16 +80,24 @@ export class StepperDetallesComponent implements OnInit, OnDestroy {
   }
   openBottomSheet(): void {
     let sheet = this._bottomSheet.open(BottomSheetComponent, {
-      data: { estados: this.estados, minWidth: '95vw' }, disableClose: false
+      data: { estados: this.estados, minWidth: '95vw' },
+      disableClose: false
     });
-    sheet.afterDismissed().toPromise().then(response => {
-      if (response && response["ID"] > 0) {
-        this.cambioEstado(response);
-      }
-    },
-      error => {
-        console.log(error);
-    })
+    sheet
+      .afterDismissed()
+      .toPromise()
+      .then(
+        response => {
+          if (response && response['ID'] > 0) {
+            this.cambioEstado(response);
+          }
+        },
+        error => {
+          this.showQueryResponse = true;
+          this.queryResponse = strings.errorMessagesText.errorUnknown;
+          setTimeout(() => this.showQueryResponse = false, 2000)
+        }
+      );
   }
 
   cambioEstado(response) {
@@ -88,9 +119,21 @@ export class StepperDetallesComponent implements OnInit, OnDestroy {
       this._dataService
         .postTablaPrincipalOC(query)
         .toPromise()
-        .then();
+        .then(
+          resolve => {
+            this.showQueryResponse = true;
+            this.queryResponse = resolve["Mensaje"];
+            setTimeout(() => this.showQueryResponse = false, 5000);
+            this.refreshTable();
+          },
+          reject => {
+            this.showQueryResponse = true;
+            this.queryResponse = reject["Mensaje"];
+            setTimeout(() => this.showQueryResponse = false, 5000);
+            this.refreshTable();
+          }
+        );
     });
-    this.refreshTable();
   }
 
   refreshTable() {

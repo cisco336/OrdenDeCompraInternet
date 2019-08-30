@@ -6,6 +6,12 @@ mat-horizontal-stepper {
   border-top: 1px solid darken($HC-light-gray, 10);
   padding: 0!important;
 }
+.query-response {
+  color: $HC-white;
+  background: $HC-primary;
+  padding: .5rem 1rem;
+  font-weight: 600;
+}
 .stepper-buttons {
   margin-top: 1rem;
   display: grid;

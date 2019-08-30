@@ -10,6 +10,7 @@
       </mat-form-field>
       <ng-template matStepLabel>{{ strings.strings.skuList }}</ng-template>
       <app-tabla-detalles></app-tabla-detalles>
+      <div [@show]="showQueryResponse" class="query-response">{{ queryResponse }}</div>
       <div class="stepper-buttons">
         <button
           mat-raised-button

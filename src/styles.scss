@@ -44,11 +44,11 @@ html,
 body {
   background: $HC-background;
   & * {
-    &::-webkit-scrollbar {
+    &::-webkit-scrollbar, &::-moz-scrollbar {
       width: 6px;
       background-color: $HC-scrollbar-background;
     }
-    &::-webkit-scrollbar-thumb {
+    &::-webkit-scrollbar-thumb, &::-moz-scrollbar-thumb {
       background: $HC-primary;
     }
   }
