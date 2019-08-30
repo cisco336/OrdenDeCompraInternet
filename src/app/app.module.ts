@@ -28,6 +28,7 @@ import {
   MatMenuModule,
   MatBottomSheetModule,
   MatPaginatorIntl,
+  MAT_DATE_LOCALE
 } from '@angular/material';
 import { SatDatepickerModule, SatNativeDateModule } from 'saturn-datepicker';
 import { MatTableExporterModule } from 'mat-table-exporter';
@@ -112,7 +113,10 @@ import { getSpanishPaginatorIntl } from './spanishPaginator';
     // Toastr notifications
     ToastrModule.forRoot()
   ],
-  providers: [{provide: MatPaginatorIntl, useValue: getSpanishPaginatorIntl()}],
+  providers: [
+    { provide: MatPaginatorIntl, useValue: getSpanishPaginatorIntl() },
+    { provide: MAT_DATE_LOCALE, useValue: 'es-ES' }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

@@ -35,7 +35,7 @@ export const successMessagesText = {
   querySuccess: 'La solicitud se ejecutó de forma exitosa.'
 };
 export const paginator = {
-  itemsPerPageLabel: 'Elemntos por página',
+  itemsPerPageLabel: 'Elementos por página',
   nextPageLabel: 'Página siguiente',
   previousPageLabel: 'Página anterior',
   firstPageLabel: 'Primera página',
