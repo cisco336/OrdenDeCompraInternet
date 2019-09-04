@@ -12,6 +12,8 @@ export class ComponentsService {
   user = new BehaviorSubject<string>('');
   queryDetalles = new BehaviorSubject<any>('');
   infoBaseOC = new BehaviorSubject<any>('');
+  ordenGuia = new BehaviorSubject<any>('');
+
 
   constructor() { }
 
@@ -61,5 +63,13 @@ export class ComponentsService {
 
   getInfoBaseOC() {
     return this.infoBaseOC;
+  }
+
+  setQueryOrdenGuia(data) {
+    return this.ordenGuia.next(data);
+  }
+
+  getOrdenGuia() {
+    return this.ordenGuia;
   }
 }

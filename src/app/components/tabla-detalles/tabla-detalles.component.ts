@@ -2,7 +2,6 @@ import {
   Component,
   OnInit,
   ViewChild,
-  OnDestroy,
   ElementRef,
   DoCheck
 } from '@angular/core';
@@ -36,26 +35,7 @@ import { HostListener } from '@angular/core';
     ])
   ]
 })
-export class TablaDetallesComponent implements OnInit, OnDestroy, DoCheck {
-  @ViewChild('table', { static: true }) table: ElementRef;
-  screenHeight: number = 0;
-  screenWidth: number = 0;
-  strings = strings;
-  @HostListener('window:resize', ['$event'])
-  onResize(event?) {
-    let tableWidth = this.table['_elementRef'].nativeElement.clientWidth;
-    this.screenWidth = window.innerWidth;
-    if (tableWidth + 55 < this.screenWidth) {
-      this.displayedColumns = [...this.displayedColumnsBackup];
-    }
-
-    if (tableWidth + 30 > this.screenWidth) {
-      if (this.displayedColumns.length > 3) {
-        this.displayedColumns.pop();
-        this.elementDetails.push(this.displayedColumns.pop());
-      }
-    }
-  }
+export class TablaDetallesComponent implements OnInit, DoCheck {
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   displayedNames: string[] = [
     strings.strings.sku,
@@ -96,30 +76,45 @@ export class TablaDetallesComponent implements OnInit, OnDestroy, DoCheck {
 
   expandedElement: DetalleOrdenDeCompra | null;
   selection = new SelectionModel<DetalleOrdenDeCompra>(true, []);
+  @ViewChild('table', { static: true }) table: ElementRef;
+  screenHeight = 0;
+  screenWidth = 0;
+  strings = strings;
+  @HostListener('window:resize', ['$event'])
+  onResize(event?) {
+    const tableWidth = this.table['_elementRef'].nativeElement.clientWidth;
+    this.screenWidth = window.innerWidth;
+    if (tableWidth + 55 < this.screenWidth) {
+      this.displayedColumns = [...this.displayedColumnsBackup];
+    }
+
+    if (tableWidth + 30 > this.screenWidth) {
+      if (this.displayedColumns.length > 3) {
+        this.displayedColumns.pop();
+        this.elementDetails.push(this.displayedColumns.pop());
+      }
+    }
+  }
+
   constructor(private _componentService: ComponentsService) {}
 
   ngDoCheck() {
-    this.onResize(event);
+    this.onResize();
   }
   ngOnInit() {
     this.dataSource = new MatTableDataSource<DetalleOrdenDeCompra>();
     this._componentService.getTablaDetalles().subscribe(data => {
       this.dataSource.data = data['Value'];
       this.selection.clear();
-      this.onResize(event);
+      this.onResize();
     });
     this.dataSource.data = this._componentService.getTablaDetalles().value;
     setTimeout(() => {
       this.dataSource.paginator = this.paginator;
     }, 0);
-    this.selection.onChange.subscribe(() => {
+    this.selection.changed.subscribe(() => {
       this.setSkus(this.selection.selected);
     });
-  }
-
-  ngOnDestroy() {
-    // this._componentService.getTablaDetalles().unsubscribe();
-    // this.selection.onChange.unsubscribe();
   }
 
   setSkus(data) {
@@ -153,14 +148,16 @@ export class TablaDetallesComponent implements OnInit, OnDestroy, DoCheck {
   }
   details(x) {
     this.jsonToBeUsed = [];
-    for (let type in x) {
-      let item = {};
-      item['key'] = strings.detailsTable[type]
-        ? strings.detailsTable[type]
-        : null;
-      item['value'] = x[type];
-      if (item['key'] !== null) {
-        this.jsonToBeUsed.push(item);
+    for (const type in x) {
+      if (x) {
+        const item = {};
+        item['key'] = strings.detailsTable[type]
+          ? strings.detailsTable[type]
+          : null;
+        item['value'] = x[type];
+        if (item['key'] !== null) {
+          this.jsonToBeUsed.push(item);
+        }
       }
     }
   }

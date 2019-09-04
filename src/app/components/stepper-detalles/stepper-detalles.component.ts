@@ -14,6 +14,7 @@ import {
   transition,
   animate
 } from '@angular/animations';
+import { Subscription, Subscriber } from 'rxjs';
 
 @Component({
   selector: 'app-stepper-detalles',
@@ -44,11 +45,13 @@ export class StepperDetallesComponent implements OnInit, OnDestroy {
   firstFormGroup: FormGroup;
   secondFormGroup: FormGroup;
   selectedSku;
-  estadosSubscription;
+  estadosSubscription: Subscription;
+  getSelectedSkuSubscription: Subscription;
+  sheet: Subscription;
   estados: Estado[] = [];
   strings = strings;
-  queryResponse: string = '';
-  showQueryResponse: boolean = false;
+  queryResponse = '';
+  showQueryResponse = false;
 
   constructor(
     private _formBuilder: FormBuilder,
@@ -67,7 +70,7 @@ export class StepperDetallesComponent implements OnInit, OnDestroy {
     this.secondFormGroup = this._formBuilder.group({
       secondCtrl: ['', Validators.required]
     });
-    this._componentService.getSelectedSku().subscribe(data => {
+    this.getSelectedSkuSubscription = this._componentService.getSelectedSku().subscribe(data => {
       this.selectedSku = data;
       if (this.selectedSku.length > 0) {
         this.firstFormGroup.get('selectedSkuControl').setErrors(null);
@@ -79,14 +82,13 @@ export class StepperDetallesComponent implements OnInit, OnDestroy {
     });
   }
   openBottomSheet(): void {
-    let sheet = this._bottomSheet.open(BottomSheetComponent, {
+    const sheet = this._bottomSheet.open(BottomSheetComponent, {
       data: { estados: this.estados, minWidth: '95vw' },
       disableClose: false
     });
-    sheet
+    this.sheet = sheet
       .afterDismissed()
-      .toPromise()
-      .then(
+      .subscribe(
         response => {
           if (response && response['ID'] > 0) {
             this.cambioEstado(response);
@@ -101,7 +103,7 @@ export class StepperDetallesComponent implements OnInit, OnDestroy {
   }
 
   cambioEstado(response) {
-    let query = {
+    const query = {
       p_transaccion: 'US',
       p_pmg_po_number: null,
       p_prd_lvl_child: null,
@@ -116,7 +118,7 @@ export class StepperDetallesComponent implements OnInit, OnDestroy {
     this.selectedSku.forEach(data => {
       query.p_pmg_po_number = data.PMG_PO_NUMBER;
       query.p_prd_lvl_child = data.PRD_LVL_CHILD;
-      this._dataService
+      const postTablaPrincipalOC = this._dataService
         .postTablaPrincipalOC(query)
         .toPromise()
         .then(
@@ -146,6 +148,8 @@ export class StepperDetallesComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.estadosSubscription.unsubscribe();
+    // this.estadosSubscription.unsubscribe();
+    // this.getSelectedSkuSubscription.unsubscribe();
+    // this.sheet.unsubscribe();
   }
 }

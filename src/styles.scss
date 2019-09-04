@@ -116,6 +116,9 @@ body {
     margin: 0;
     font-family: Helvetica, Arial, sans-serif;
   }
+  & mat-toolbar {
+    height: 50px !important;
+  }
   & *:not(button span) {
     color: #333 !important;
   }
@@ -124,7 +127,7 @@ body {
       border-radius: 0 !important;
     }
     & span {
-      font-size: 21px;
+      // font-size: 21px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -134,8 +137,8 @@ body {
     }
   }
   .dialog-detalles {
-    overflow-y: overlay;
     mat-dialog-container {
+      // overflow-y: hidden;
       padding: 0;
       border-radius: 0;
     }
@@ -146,4 +149,8 @@ body {
   background: $HC-success;
 }
 
-
+table {
+  & td {
+    font-size: 12px !important;
+  }
+}

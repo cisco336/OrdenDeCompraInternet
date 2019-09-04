@@ -1,16 +1,14 @@
-<mat-horizontal-stepper [linear]="true" #stepper>
-  <mat-step [stepControl]="firstFormGroup" state="tab">
-    <form [formGroup]="firstFormGroup">
+<mat-horizontal-stepper [linear]="false" #stepperDetalles>
+  <mat-step state="tab">
+    <form>
       <mat-form-field class="no-show">
-        <input
-          matInput
-          formControlName="selectedSkuControl"
-          [value]="selectedSku.length"
-        />
+        <input matInput [value]="selectedSku.length" />
       </mat-form-field>
       <ng-template matStepLabel>{{ strings.strings.skuList }}</ng-template>
       <app-tabla-detalles></app-tabla-detalles>
-      <div [@show]="showQueryResponse" class="query-response">{{ queryResponse }}</div>
+      <div [@show]="showQueryResponse" class="query-response">
+        {{ queryResponse }}
+      </div>
       <div class="stepper-buttons">
         <button
           mat-raised-button
@@ -26,10 +24,12 @@
       </div>
     </form>
   </mat-step>
-  <mat-step [stepControl]="secondFormGroup" state="widgets" disabled>
-    <form [formGroup]="secondFormGroup">
+
+  <mat-step state="widgets">
+    <form>
       <div class="step-container">
         <ng-template matStepLabel>{{ strings.strings.packConfig }}</ng-template>
+        <app-packages-config></app-packages-config>
       </div>
       <div class="stepper-buttons">
         <button mat-stroked-button color="warn" matStepperPrevious>
@@ -41,12 +41,15 @@
       </div>
     </form>
   </mat-step>
-  <mat-step [stepControl]="secondFormGroup" state="location" disabled>
-    <form [formGroup]="secondFormGroup">
-      <ng-template matStepLabel>{{
-        strings.strings.originDeliverAddress
-      }}</ng-template>
-      <p></p>
+
+  <mat-step state="location">
+    <form>
+      <div class="step-container">
+        <ng-template matStepLabel>{{
+          strings.strings.originDeliverAddress
+        }}</ng-template>
+        <app-origin-deliver-address></app-origin-deliver-address>
+      </div>
       <div class="stepper-buttons">
         <button mat-stroked-button color="warn" matStepperPrevious>
           <mat-icon>navigate_before</mat-icon>{{ strings.strings.back }}
@@ -57,10 +60,14 @@
       </div>
     </form>
   </mat-step>
+
   <mat-step state="shipping">
-    <ng-template matStepLabel>{{
-      strings.strings.confirmGuideGeneration
-    }}</ng-template>
+    <div class="step-container">
+      <ng-template matStepLabel>{{
+        strings.strings.confirmGuideGeneration
+      }}</ng-template>
+      <app-confirm-generate-guide></app-confirm-generate-guide>
+    </div>
     <div class="stepper-buttons">
       <button mat-stroked-button color="warn" matStepperPrevious>
         <mat-icon>navigate_before</mat-icon>{{ strings.strings.back }}

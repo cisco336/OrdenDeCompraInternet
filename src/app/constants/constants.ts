@@ -29,7 +29,9 @@ export const errorMessagesText = {
   queryError: 'La solicitud no pudo ejecutarse.',
   mustSelectAnOrder: 'Debe seleccionar al menos una orden de compra.',
   noObservations: 'Sin observaciones.',
-  noData: 'Sin datos'
+  noData: 'Sin datos',
+  statesError: 'Error al obtener los estados.',
+  providersError: 'Error al obtener los proveedores.'
 };
 export const successMessagesText = {
   querySuccess: 'La solicitud se ejecutó de forma exitosa.'
@@ -82,7 +84,10 @@ export const strings = {
   client: 'Cliente',
   phone: 'Teléfono',
   address: 'Dirección',
+  originAddress: 'Dirección origen',
+  destinyAddress: 'Dirección destino',
   city: 'Ciudad',
+  cities: 'Ciudades',
   deliveryData: 'Datos de entrega',
   deliveryAddress: 'Dirección de entrega',
   deliveryCity: 'Ciudad a entregar',
@@ -112,7 +117,13 @@ export const strings = {
   quantity: 'Cantidad',
   creationUser: 'Usuario creación',
   editUser: 'Usuario modificación',
-  stateID: 'Estado ID'
+  stateID: 'Estado ID',
+  unities: 'Unidades',
+  generatePackages: 'Generar Bultos',
+  weight: 'Peso',
+  volumne: 'Volumen',
+  declared: 'Declarado',
+  actions: 'Acciones'
 };
 
 export const detailsTable = {
@@ -146,4 +157,10 @@ export const detailsTable = {
   PMG_PO_NUMBER: null,
   PMG_SEQ_NUM: null,
   PMG_DTL_TECH_KEY: null
+};
+
+export const longMessages = {
+  generateOrderGuideAlert:
+    'Al continuar con el proceso de generación de guía, usted estará afectando los skus internos que conforman esta orden de compra.',
+  generateOrderGuideTitle: 'Generación de guía para orden de compra.'
 };

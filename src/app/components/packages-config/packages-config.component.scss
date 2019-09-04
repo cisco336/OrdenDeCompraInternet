@@ -1,0 +1,41 @@
+.wrapper {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-gap: 1rem;
+  & form {
+    display: flex;
+    flex-flow: column nowrap;
+    & mat-form-field {
+      padding-top: 12px;
+    }
+    & button {
+      margin: 1rem 0;
+    }
+  }
+  & table {
+    width: 100%;
+    & td,
+    & th {
+      text-align: right;
+    }
+    & + div {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 120%;
+      font-weight: 600;
+    }
+  }
+}
+
+@media screen and (max-width: 640px) {
+  .wrapper {
+    grid-template-columns: 1fr;
+    & form {
+      & button {
+        max-width: 250px;
+        align-self: end;
+      }
+    }
+  }
+}

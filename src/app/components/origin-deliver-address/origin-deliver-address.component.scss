@@ -1,0 +1,28 @@
+form {
+  grid-template-columns: repeat(auto-fit, minmax(180px,  1fr));
+  max-width: 900px;
+  // margin: 0 auto;
+
+  &,
+  & mat-card-content {
+    display: grid;
+    grid-gap: 1rem;
+  }
+
+  & mat-card {
+    padding: 2rem;
+  }
+
+  & .mat-card-header {
+    margin: 0 !important;
+    font-weight: 600;
+    font-size: 105%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  & mat-card-content {
+    grid-template-columns: 1fr;
+  }
+}

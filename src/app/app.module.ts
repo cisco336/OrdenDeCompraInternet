@@ -46,6 +46,10 @@ import { BottomSheetComponent } from './components/bottom-sheet/bottom-sheet.com
 import { TrackingComponent } from './components/tracking/tracking.component';
 import { BottomSheetImgComponent } from './components/bottom-sheet-img/bottom-sheet-img.component';
 import { getSpanishPaginatorIntl } from './spanishPaginator';
+import { PackagesConfigComponent } from './components/packages-config/packages-config.component';
+import { OriginDeliverAddressComponent } from './components/origin-deliver-address/origin-deliver-address.component';
+import { ConfirmGenerateGuideComponent } from './components/confirm-generate-guide/confirm-generate-guide.component';
+import { GenerateOrderGuideComponent } from './components/generate-order-guide/generate-order-guide.component';
 
 @NgModule({
   declarations: [
@@ -57,13 +61,18 @@ import { getSpanishPaginatorIntl } from './spanishPaginator';
     TablaDetallesComponent,
     BottomSheetComponent,
     TrackingComponent,
-    BottomSheetImgComponent
+    BottomSheetImgComponent,
+    PackagesConfigComponent,
+    OriginDeliverAddressComponent,
+    ConfirmGenerateGuideComponent,
+    GenerateOrderGuideComponent
   ],
   entryComponents: [
     DialogDetallesComponent,
     DialogCambioEstadoComponent,
     BottomSheetComponent,
-    BottomSheetImgComponent
+    BottomSheetImgComponent,
+    GenerateOrderGuideComponent
   ],
   imports: [
     BrowserModule,

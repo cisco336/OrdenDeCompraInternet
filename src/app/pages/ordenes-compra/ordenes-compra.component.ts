@@ -42,6 +42,7 @@ import {
 import { HostListener } from '@angular/core';
 import * as moment from 'moment';
 import * as constants from '../../constants/constants';
+import { GenerateOrderGuideComponent } from 'src/app/components/generate-order-guide/generate-order-guide.component';
 
 @Component({
   selector: 'app-ordenes-compra',
@@ -121,11 +122,16 @@ import * as constants from '../../constants/constants';
         )
       ])
     ])
-  ],
+  ]
 })
 export class OrdenesCompraComponent implements OnInit, OnDestroy {
+  @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
+  mainFilterForm: FormGroup;
+  proveedores: Proveedores[] = [];
+  estados: Estado[] = [];
+  expandedElement: OrdenDeCompra;
   queryDetallesDialog: {
-    p_transaccion: string; //Actualizar orden 'UO', 'US' => actualizar SKU
+    p_transaccion: string;
     p_pmg_po_number: string;
     p_vpc_tech_key: string;
     p_fecha_inicio: string;
@@ -135,55 +141,50 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
     p_origen: string;
     p_usuario: string;
   };
-  aux: any;
-  @HostListener('window:resize', ['$event'])
-  onResize(event?) {
-    this.screenHeight = window.innerHeight;
-    this.screenWidth = window.innerWidth;
-  }
-  @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
-  mainFilterForm: FormGroup;
-  proveedores: Proveedores[] = [];
-  estados: Estado[] = [];
-  expandedElement: OrdenDeCompra;
   displayedColumns: string[] = [
     'Select',
     'PMG_PO_NUMBER',
     'ESTADO',
     'FECHA_CREACION',
-    'PMG_EXP_RCT_DATE'
+    'PMG_EXP_RCT_DATE',
+    'ACTIONS'
   ];
-  screenHeight: number = 0;
-  screenWidth: number = 0;
+  aux: any;
+  screenHeight = 0;
+  screenWidth = 0;
   dataSource;
   selection = new SelectionModel<OrdenDeCompra>(true, []);
 
   proveedor: string;
-  tableMessage: string = '';
+  tableMessage = '';
   date: any;
   filteredProveedores: Observable<Proveedores[]>;
   filteredEstados: Observable<Estado[]>;
-
   fechaInicioSubscription;
   fechaFinSubscription;
   routeSubscription;
   proveedoresControlSubscription;
 
-  usr: string = '';
-  key: string = '';
-  TOKEN: string = '';
+  usr = '';
+  key = '';
+  TOKEN = '';
 
-  isLoading: boolean = true;
-  noData: boolean = false;
-  render: boolean = false;
+  isLoading = true;
+  noData = false;
+  render = false;
 
   // Textos
   tooltips = constants.tooltips;
   matFormFieldText = constants.matFormFieldText;
   errorMessagesText = constants.errorMessagesText;
   strings = constants.strings;
+  errorMessage = '';
 
-  errorMessage: string = '';
+  @HostListener('window:resize', ['$event'])
+  onResize(event?) {
+    this.screenHeight = window.innerHeight;
+    this.screenWidth = window.innerWidth;
+  }
 
   constructor(
     public _dialog: MatDialog,
@@ -246,9 +247,14 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
       .getProveedores()
       .toPromise()
       .then(
-        data => {
-          if (!data['Estado'] || !data['Value'][0]['Código']) {
-            this.proveedores = data['Value'];
+        getProveedoresData => {
+          if (
+            !getProveedoresData['Estado'] ||
+            getProveedoresData['Value'][0]['Código']
+          ) {
+            this.errorHandling(this.errorMessagesText.providersError);
+          } else {
+            this.proveedores = getProveedoresData['Value'];
             this.filteredProveedores = this.mainFilterForm
               .get('proveedorControl')
               .valueChanges.pipe(
@@ -280,7 +286,14 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
               .toPromise()
               .then(
                 data => {
-                  if (!data['Estado'] || !data['Value'][0]['Código']) {
+                  if (
+                    !data['Estado'] ||
+                    data['Value'][0]['Código'] ||
+                    data['Value'][0]['ID_ERROR']
+                  ) {
+                    this.errorHandling(this.errorMessagesText.statesError);
+                    this.render = false;
+                  } else {
                     this._componentService.setEstados(data['Value']);
                     this.estados = data['Value'];
                     this.mainFilterForm
@@ -301,8 +314,22 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
                             : this.estados.slice()
                         )
                       );
-                  } else {
-                    throw throwError(Error);
+                    const form = this.mainFilterForm;
+                    this.queryDetallesDialog = {
+                      p_transaccion: 'GD',
+                      p_pmg_po_number: null,
+                      p_vpc_tech_key: form.get('proveedorControl').value['ID'],
+                      p_fecha_inicio: form
+                        .get('fechaInicioControl')
+                        .value.format('DD/MM/YYYY'),
+                      p_fecha_fin: form
+                        .get('fechaFinControl')
+                        .value.format('DD/MM/YYYY'),
+                      p_fecha_real: '-1',
+                      p_id_estado: form.get('estadosControl').value.ID,
+                      p_origen: '-1',
+                      p_usuario: this.usr
+                    };
                   }
                 },
                 error => {
@@ -325,8 +352,6 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
               });
 
             this.render = true;
-          } else {
-            throw throwError('Error');
           }
         },
         error => {
@@ -354,6 +379,9 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
       case 500:
         toastrError = this.errorMessagesText.error500;
         break;
+      case undefined:
+        toastrError = error;
+        break;
       default:
         toastrError = this.errorMessagesText.errorUnknown;
         break;
@@ -374,8 +402,8 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
     if (this.dataSource !== undefined) {
       this.dataSource.data = [];
     }
-    let form = this.mainFilterForm;
-    let query = {
+    const form = this.mainFilterForm;
+    const queryConsultar = {
       p_transaccion: 'GE',
       p_pmg_po_number: -1,
       p_prd_lvl_child: -1,
@@ -388,7 +416,7 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
       p_usuario: this.usr
     };
     this._dataService
-      .postTablaPrincipalOC(query)
+      .postTablaPrincipalOC(queryConsultar)
       .toPromise()
       .then(
         data => {
@@ -413,7 +441,7 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
   }
 
   compareDates() {
-    let form = this.mainFilterForm;
+    const form = this.mainFilterForm;
     if (
       this.mainFilterForm &&
       new Date(form.get('fechaFinControl').value) <
@@ -482,32 +510,22 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
 
   // Cuando se actualiza el SKU se debe enviar PRD_LVL_CHILD
   // EL SKU ES EL PRD_LVL_NUMBER
-  getOrdenDetalle(data, event) {
+  getOrdenDetalle(element, guiaOrden?) {
     if (!this.aux) {
       this.aux = true;
-      let form = this.mainFilterForm;
-      let query = {
-        p_transaccion: 'GD', //Actualizar orden 'UO', 'US' => actualizar SKU
-        p_pmg_po_number: data.PMG_PO_NUMBER,
-        p_vpc_tech_key: form.get('proveedorControl').value['ID'],
-        p_fecha_inicio: form
-          .get('fechaInicioControl')
-          .value.format('DD/MM/YYYY'),
-        p_fecha_fin: form.get('fechaFinControl').value.format('DD/MM/YYYY'),
-        p_fecha_real: '-1',
-        p_id_estado: form.get('estadosControl').value.ID,
-        p_origen: '-1',
-        p_usuario: this.usr
-      };
-      this.queryDetallesDialog = query;
+      this.queryDetallesDialog.p_pmg_po_number = element;
       this._dataService
-        .postTablaPrincipalOC(query)
+        .postTablaPrincipalOC(this.queryDetallesDialog)
         .toPromise()
         .then(
           result => {
             this.aux = false;
             if (result) {
-              this.openDialogDetalles(result['Value']);
+              if (guiaOrden) {
+                this.generateGuide(result['Value']);
+              } else {
+                this.openDialogDetalles(result['Value']);
+              }
             }
           },
           error => {
@@ -522,7 +540,7 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
     const dialogRef = this._dialog.open(DialogDetallesComponent, {
       maxWidth: '95vw',
       width: '95vw',
-      maxHeight: '95vh',
+      maxHeight: '90vh',
       data: {
         data: {
           queryDetalles: this.queryDetallesDialog,
@@ -559,7 +577,34 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
         }
       },
       panelClass: 'dialog-detalles',
-      disableClose: true
+      disableClose: false
+    });
+
+    return dialogRef.afterClosed();
+  }
+
+  generateGuide(data) {
+    this.openDialogGenerarGuiaOrden(data)
+      .toPromise()
+      .then(response => console.log(response))
+      .catch(error => console.log(error));
+  }
+
+  openDialogGenerarGuiaOrden(data): Observable<any> {
+    this._componentService.setQueryOrdenGuia(this.queryDetallesDialog);
+    const dialogRef = this._dialog.open(GenerateOrderGuideComponent, {
+      maxWidth: '95vw',
+      width: '95vw',
+      maxHeight: '95vh',
+      data: {
+        data: {
+          queryDetalles: null,
+          ordenCompra: data,
+          usr: this.usr
+        }
+      },
+      panelClass: 'dialog-detalles',
+      disableClose: false
     });
 
     return dialogRef.afterClosed();

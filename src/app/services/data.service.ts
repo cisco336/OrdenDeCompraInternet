@@ -1,13 +1,14 @@
-import { Injectable } from "@angular/core";
-import { HttpClient, HttpHeaders, HttpResponse } from "@angular/common/http";
-import { BehaviorSubject, Observable } from "rxjs";
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: "root"
+  providedIn: 'root'
 })
 export class DataService {
   // API Local
-  API = "http://localhost/Abastecimiento/Servicios/OrdenCompra/api";
+  API = 'http://localhost/Abastecimiento/Servicios/OrdenCompra/api';
+  apiGuia = 'http://localhost/Abastecimiento/Servicios/Transportadoras/api';
 
   // API INTERNA
   // DEV
@@ -27,37 +28,38 @@ export class DataService {
   // AUTH = "https://apim-dev-proxy.sodhc.co/logisticaSeguridadAutenticacion/authenticated";
   // AUTH = "https://apim-qa-proxy.sodhc.co/logisticaSeguridadAutenticacion/authenticated";
   AUTH =
-    "https://apim-prod-proxy.sodhc.co/logisticaSeguridadAutenticacion/authenticated";
+    'https://apim-prod-proxy.sodhc.co/logisticaSeguridadAutenticacion/authenticated';
 
   // Subscription keys
   // DEV
-  subscriptionKey = "dfeb9e69860f45258647cc7ba45fb040";
+  subscriptionKey = 'dfeb9e69860f45258647cc7ba45fb040';
   // QA
   // subscriptionKey = "442c55ae313642028c9eb69dc4220dad";
   // PROD
   // subscriptionKey = "209fa70e5b0c4b5c8bddaf0aa54b8e19";
 
-  token = new BehaviorSubject<string>("");
+  token = new BehaviorSubject<string>('');
 
   // Calls
-  getDatosProveedorCall = "/Configuracion/GetDatosProveedor";
-  getProveedoresCall = "/Configuracion/GetProveedores";
-  getEstadosCall = "/Configuracion/GetEstados";
-  postTablaPrincipalOCCall = "/Configuracion/GetOc";
-  getInfoBaseOcCall = "/Configuracion/GetInfoBaseOc?id=";
+  getDatosProveedorCall = '/Configuracion/GetDatosProveedor';
+  getProveedoresCall = '/Configuracion/GetProveedores';
+  getEstadosCall = '/Configuracion/GetEstados';
+  postTablaPrincipalOCCall = '/Configuracion/GetOc';
+  getInfoBaseOcCall = '/Configuracion/GetInfoBaseOc?id=';
+  getGuiaCall = '/Guia/GetGuia?transportadora=';
 
   constructor(private http: HttpClient) {}
 
   protected generateBasicHeadersJWT(): HttpHeaders {
     return new HttpHeaders({
-      "Content-Type": "application/json",
-      "Ocp-Apim-Subscription-Key": this.subscriptionKey,
-      Authorization: "Bearer " + this.token.value
+      'Content-Type': 'application/json'
+      // 'Ocp-Apim-Subscription-Key': this.subscriptionKey,
+      // Authorization: 'Bearer ' + this.token.value
     });
   }
 
   getDatosProveedor(data) {
-    return this.http.get(this.API + this.getDatosProveedorCall + "/" + data, {
+    return this.http.get(this.API + this.getDatosProveedorCall + '/' + data, {
       headers: this.generateBasicHeadersJWT()
     });
   }
@@ -79,11 +81,15 @@ export class DataService {
       headers: this.generateBasicHeadersJWT()
     });
   }
-  
+
   GetInfoBaseOc(data) {
     return this.http.get(this.API + this.getInfoBaseOcCall + data, {
       headers: this.generateBasicHeadersJWT()
     });
+  }
+
+  GetGuia(data) {
+    return this.http.get(this.apiGuia + this.getGuiaCall + data);
   }
 
   setToken(data) {

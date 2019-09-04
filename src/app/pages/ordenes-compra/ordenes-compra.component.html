@@ -206,7 +206,7 @@
           mat-cell
           *matCellDef="let element"
           class="position-label"
-          (click)="getOrdenDetalle(element, $event)"
+          (click)="getOrdenDetalle(element.PMG_PO_NUMBER)"
           matRipple
           [matRippleColor]="primary"
         >
@@ -256,6 +256,16 @@
         </td>
       </ng-container>
 
+      <!-- Acciones -->
+      <ng-container matColumnDef="ACTIONS">
+        <th mat-header-cell *matHeaderCellDef>{{ strings.generateGuide }}</th>
+        <td mat-cell *matCellDef="let element">
+          <button mat-icon-button color="warn" (click)="getOrdenDetalle(element.PMG_PO_NUMBER, 1)">
+            <mat-icon>local_shipping</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
       <!-- Detalles -->
       <ng-container matColumnDef="expandedDetail">
         <td
@@ -272,72 +282,88 @@
             <mat-list>
               <mat-list-item>
                 <mat-icon mat-list-icon>today</mat-icon>
-                <span mat-line>{{strings.dispatchDate}}:</span>
+                <span mat-line>{{ strings.dispatchDate }}:</span>
                 <span mat-line>
                   {{ element.PMG_SHIP_DATE || errorMessagesText.noData }}
                 </span>
               </mat-list-item>
               <mat-list-item>
                 <mat-icon mat-list-icon>business</mat-icon>
-                <span mat-line>{{strings.deliverStore}}:</span>
+                <span mat-line>{{ strings.deliverStore }}:</span>
                 <span mat-line>
                   {{ element.ORIGEN || errorMessagesText.noData | titlecase }}
                 </span>
               </mat-list-item>
               <mat-list-item>
                 <mat-icon mat-list-icon>today</mat-icon>
-                <span mat-line>{{strings.realDeliverDate}}:</span>
+                <span mat-line>{{ strings.realDeliverDate }}:</span>
                 <span mat-line>
-                  {{ element['Fecha real de entrega'] || errorMessagesText.noData }}
+                  {{
+                    element['Fecha real de entrega'] || errorMessagesText.noData
+                  }}
                 </span>
               </mat-list-item>
               <mat-list-item>
                 <mat-icon mat-list-icon>attach_money</mat-icon>
-                <span mat-line>{{strings.value}}:</span>
+                <span mat-line>{{ strings.value }}:</span>
                 <span mat-line>
                   {{
-                    element.PMG_TOT_PO_COST || errorMessagesText.noData | currency: 'COP':'symbol-narrow'
+                    element.PMG_TOT_PO_COST || errorMessagesText.noData
+                      | currency: 'COP':'symbol-narrow'
                   }}
                 </span>
               </mat-list-item>
               <mat-list-item>
                 <mat-icon mat-list-icon>assignment</mat-icon>
-                <span mat-line>{{strings.orderNoteNumber}}:</span>
+                <span mat-line>{{ strings.orderNoteNumber }}:</span>
                 <span mat-line>
-                  {{ element['Consecutivo nota pedido'] || errorMessagesText.noData }}
+                  {{
+                    element['Consecutivo nota pedido'] ||
+                      errorMessagesText.noData
+                  }}
                 </span>
               </mat-list-item>
               <mat-list-item>
                 <mat-icon mat-list-icon>assignment</mat-icon>
-                <span mat-line>{{strings.orderState}}:</span>
+                <span mat-line>{{ strings.orderState }}:</span>
                 <span mat-line>
-                  {{ element.PMG_STAT_NAME || errorMessagesText.noData | titlecase }}
+                  {{
+                    element.PMG_STAT_NAME || errorMessagesText.noData
+                      | titlecase
+                  }}
                 </span>
               </mat-list-item>
               <mat-list-item>
                 <mat-icon mat-list-icon>inbox</mat-icon>
-                <span mat-line>{{strings.deliverType}}:</span>
+                <span mat-line>{{ strings.deliverType }}:</span>
                 <span mat-line>
-                  {{ element['Tipo de entrega'] || errorMessagesText.noData | titlecase }}
+                  {{
+                    element['Tipo de entrega'] || errorMessagesText.noData
+                      | titlecase
+                  }}
                 </span>
               </mat-list-item>
               <mat-list-item>
                 <mat-icon mat-list-icon>local_shipping</mat-icon>
-                <span mat-line>{{strings.operator}} ({{strings.conveyor}}):</span>
+                <span mat-line
+                  >{{ strings.operator }} ({{ strings.conveyor }}):</span
+                >
                 <span mat-line>
-                  {{ element.VENDOR_NAME || errorMessagesText.noData | titlecase }}
+                  {{
+                    element.VENDOR_NAME || errorMessagesText.noData | titlecase
+                  }}
                 </span>
               </mat-list-item>
               <mat-list-item>
                 <mat-icon mat-list-icon>call_merge</mat-icon>
-                <span mat-line>{{strings.integrationState}}:</span>
+                <span mat-line>{{ strings.integrationState }}:</span>
                 <span mat-line>
                   {{ element['null'] || errorMessagesText.noData }}
                 </span>
               </mat-list-item>
               <mat-list-item>
                 <mat-icon mat-list-icon>today</mat-icon>
-                <span mat-line>{{strings.integrationDate}}:</span>
+                <span mat-line>{{ strings.integrationDate }}:</span>
                 <span mat-line>
                   {{ element.PMG_ENTRY_DATE || errorMessagesText.noData }}
                 </span>
