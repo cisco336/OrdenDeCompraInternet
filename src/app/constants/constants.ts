@@ -30,6 +30,8 @@ export const errorMessagesText = {
   mustSelectAnOrder: 'Debe seleccionar al menos una orden de compra.',
   noObservations: 'Sin observaciones.',
   noData: 'Sin datos',
+  statesError: 'Error al obtener los estados.',
+  providersError: 'Error al obtener los proveedores.'
 };
 export const successMessagesText = {
   querySuccess: 'La solicitud se ejecutó de forma exitosa.'
@@ -82,7 +84,10 @@ export const strings = {
   client: 'Cliente',
   phone: 'Teléfono',
   address: 'Dirección',
+  originAddress: 'Dirección origen',
+  destinyAddress: 'Dirección destino',
   city: 'Ciudad',
+  cities: 'Ciudades',
   deliveryData: 'Datos de entrega',
   deliveryAddress: 'Dirección de entrega',
   deliveryCity: 'Ciudad a entregar',
@@ -93,7 +98,7 @@ export const strings = {
   sticker: 'Sticker',
   observations: 'Observaciones',
   skuList: 'Lista de SKU',
-  sku: 'sku',
+  sku: 'Sku',
   next: 'Siguiente',
   packConfig: 'Configuracion de Bultos',
   back: 'Volver',
@@ -111,4 +116,51 @@ export const strings = {
   cost: 'Costo',
   quantity: 'Cantidad',
   creationUser: 'Usuario creación',
+  editUser: 'Usuario modificación',
+  stateID: 'Estado ID',
+  unities: 'Unidades',
+  generatePackages: 'Generar Bultos',
+  weight: 'Peso',
+  volumne: 'Volumen',
+  declared: 'Declarado',
+  actions: 'Acciones'
+};
+
+export const detailsTable = {
+  FECHA_CREACION: strings.creationDate,
+  NAME_FAMILIA: strings.family,
+  ORG_NAME_FULL: strings.locality,
+  ORIGEN_DESC: strings.origin,
+  PMG_CANCEL_DATE: strings.cancelationDate,
+  PMG_EXP_RCT_DATE: strings.spectedDeliverDate,
+  PMG_SELL_COST: strings.cost,
+  PMG_SELL_QTY: strings.quantity,
+  PMG_STAT_NAME: strings.orderState,
+  USR_CREACION: strings.creationUser,
+  PRD_NAME_FULL: strings.description,
+  FECHA_MODIFICACION: strings.editDate,
+  USR_MODIFICACION: strings.editUser,
+  PRD_LVL_NUMBER: strings.sku,
+  PRD_UPC: strings.barCode,
+  ESTADO: strings.state,
+  PMG_SHIP_DATE: strings.dispatchDate,
+  PMG_SHIP_DATE1: strings.deliverDate,
+  PMG_TOT_DTL_COST: null,
+  ID_ESTADO: null,
+  PMG_RETAIL: null,
+  PMG_PAY_DATE: null,
+  PMG_PACK_COST: null,
+  PMG_PACK_QTY: null,
+  PMG_STATUS: null,
+  PMG_DTL_TYPE: null,
+  ORG_LVL_CHILD: null,
+  PMG_PO_NUMBER: null,
+  PMG_SEQ_NUM: null,
+  PMG_DTL_TECH_KEY: null
+};
+
+export const longMessages = {
+  generateOrderGuideAlert:
+    'Al continuar con el proceso de generación de guía, usted estará afectando los skus internos que conforman esta orden de compra.',
+  generateOrderGuideTitle: 'Generación de guía para orden de compra.'
 };

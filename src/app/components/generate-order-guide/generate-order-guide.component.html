@@ -1,0 +1,73 @@
+<mat-toolbar class="toolbar mat-elevation-z10" color="primary" mat-dialog-title>
+  <span>{{ strings.longMessages.generateOrderGuideTitle }} {{ oc }}</span>
+  <span>
+    <button mat-icon-button (click)="closeDialog()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </span>
+</mat-toolbar>
+<mat-horizontal-stepper
+  linear="true"
+  #stepperOC
+  class="the-wrapper"
+  mat-dialog-content
+>
+  <mat-step [stepControl]="stepSkus">
+    <form [formGroup]="stepSkus">
+      <ng-template matStepLabel>Skus</ng-template>
+      <div class="content">
+        <p>
+          {{ strings.longMessages.generateOrderGuideAlert }}
+        </p>
+        <mat-checkbox formControlName="skusContinue" required>Continuar.</mat-checkbox>
+      </div>
+      <mat-chip-list>
+        <mat-chip
+          color="accent"
+          *ngFor="let sku of skus"
+          matTooltip="{{ sku.description }}"
+          >{{ sku.sku }}</mat-chip
+        >
+      </mat-chip-list>
+      <div class="step-buttons">
+        <button mat-raised-button matStepperNext [disabled]="stepSkus.invalid">
+          Next
+        </button>
+      </div>
+    </form>
+  </mat-step>
+
+  <mat-step [stepControl]="stepBultos">
+    <form [formGroup]="stepBultos">
+      <ng-template matStepLabel>Bultos</ng-template>
+      <app-packages-config></app-packages-config>
+      <div class="step-buttons">
+        <button mat-raised-button matStepperPrevious>Back</button>
+        <button mat-raised-button matStepperNext>Next</button>
+      </div>
+    </form>
+  </mat-step>
+
+   <mat-step>
+    <form>
+      <ng-template matStepLabel>Dirección</ng-template>
+      <app-origin-deliver-address></app-origin-deliver-address>
+      <div class="step-buttons">
+        <button mat-raised-button matStepperPrevious>Back</button>
+        <button mat-raised-button matStepperNext>Next</button>
+      </div>
+    </form>
+  </mat-step>
+
+  <mat-step>
+    <form>
+      <ng-template matStepLabel>Confirmar</ng-template>
+      <app-confirm-generate-guide></app-confirm-generate-guide>
+      <div class="step-buttons">
+        <button mat-raised-button matStepperPrevious>Back</button>
+        <button mat-raised-button matStepperNext>Next</button>
+      </div>
+    </form>
+  </mat-step>
+
+</mat-horizontal-stepper>

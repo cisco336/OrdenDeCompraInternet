@@ -12,6 +12,13 @@ mat-horizontal-stepper {
   padding: .5rem 1rem;
   font-weight: 600;
 }
+mat-step {
+  &:nth-child(2) {
+    form {
+      padding: 0 1rem;
+    }
+  }
+}
 .stepper-buttons {
   margin-top: 1rem;
   display: grid;

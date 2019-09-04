@@ -66,7 +66,7 @@ export class DialogDetallesComponent implements OnInit {
   color: string;
   ordenCompra: DetalleOrdenDeCompra[] = [];
   estados: Estado[] = [];
-  mostrarCambioBotton: boolean = false;
+  mostrarCambioBotton = false;
   skus: any[] = [];
   public infoBaseOC: InfoBaseOC = {
     CEDULA: 0,
@@ -86,7 +86,7 @@ export class DialogDetallesComponent implements OnInit {
     CUMPLIDO: '',
     TRANSPORTADORA: ''
   };
-  numeroOrden: number = 0;
+  numeroOrden = 0;
   strings = strings;
   cliente: boolean;
   entrega: boolean;

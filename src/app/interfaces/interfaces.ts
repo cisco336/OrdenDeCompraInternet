@@ -105,3 +105,25 @@ export interface InfoBaseOC {
   CUMPLIDO: string;
   TRANSPORTADORA: string;
 }
+
+export interface Bultos {
+  PESO: number;
+  VOLUMEN: number;
+  DECLARADO: number;
+}
+
+export interface Envia {
+  State: boolean;
+  Message: string;
+  Value: {
+    respuesta: string;
+    k_cobrados: number;
+    valor_flete: number;
+    valor_costom: number;
+    valor_otros: number;
+    dias_entrega: number;
+    guia: string;
+    urlguia: string;
+    num_ordens: string;
+  };
+}

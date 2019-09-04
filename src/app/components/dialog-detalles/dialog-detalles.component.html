@@ -1,4 +1,4 @@
-<mat-toolbar class="toolbar mat-elevation-z10" color="primary">
+<mat-toolbar class="toolbar mat-elevation-z10" color="primary"  mat-dialog-title>
   <span>{{ strings.strings.details }}</span>
   <span>
     <button mat-icon-button (click)="closeDialog()">
@@ -61,7 +61,7 @@
               {{ infoBaseOC.TRANSPORTADORA | titlecase }}
             </span>
           </li>
-          <li>
+          <!-- <li>
             <span>{{ strings.strings.guide }}: </span
             ><span>
               <button mat-icon-button color="accent" [disabled]="!infoBaseOC.GUIA || infoBaseOC.GUIA === ''" (click)="showImg(infoBaseOC.GUIA)">
@@ -76,7 +76,7 @@
                 <mat-icon>cloud_download</mat-icon>
               </button></span
             >
-          </li>
+          </li> -->
         </ul>
       </div>
     </mat-card>

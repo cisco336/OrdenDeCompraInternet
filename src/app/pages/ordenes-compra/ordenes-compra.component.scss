@@ -45,13 +45,13 @@
       & > div {
         display: grid;
         grid-gap: 1rem;
-        grid-template-columns: repeat(auto-fit, minmax(180px, auto));
+        grid-template-columns: repeat(auto-fit, minmax(100px, auto));
         padding-bottom: 1rem;
       }
       & > div:nth-child(2) {
         & button {
           align-self: flex-start;
-          max-width: 250px;
+          max-width: 150px;
         }
         & mat-icon {
           align-self: center;
@@ -78,9 +78,14 @@
           }
         }
         & > div {
+          justify-content: end;
           display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(180px, auto));
+          grid-template-columns: repeat(auto-fit, minmax(150px, 150px));
           grid-gap: 1rem;
+          & button {
+            max-width: 150px;
+            justify-self: flex-end; 
+          }
         }
       }
       & .filter {
