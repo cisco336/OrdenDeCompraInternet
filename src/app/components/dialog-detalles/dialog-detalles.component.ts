@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, OnDestroy, ViewChild } from '@angular/core';
 import {
   MatDialog,
   MatDialogRef,
@@ -61,7 +61,8 @@ import * as strings from '../../constants/constants';
     ])
   ]
 })
-export class DialogDetallesComponent implements OnInit {
+export class DialogDetallesComponent implements OnInit, OnDestroy {
+  @ViewChild('stepper', { static: false }) stepper;
   background: string;
   color: string;
   ordenCompra: DetalleOrdenDeCompra[] = [];
@@ -91,6 +92,7 @@ export class DialogDetallesComponent implements OnInit {
   cliente: boolean;
   entrega: boolean;
   observaciones: boolean;
+  GetInfoBaseOcSubscription;
 
   constructor(
     public dialogRef: MatDialogRef<DialogDetallesComponent>,
@@ -103,11 +105,13 @@ export class DialogDetallesComponent implements OnInit {
   ngOnInit() {
     this.estados = this.data.data.estados;
     this.ordenCompra = this.data.data.ordenCompra;
-    this._dataService
-      .GetInfoBaseOc(this.ordenCompra[0].PMG_PO_NUMBER)
+    const ordenNumber = this.ordenCompra[0].PMG_PO_NUMBER;
+    this._componentService.setTablaDetalles(this.ordenCompra);
+    this.GetInfoBaseOcSubscription = this._dataService
+      .GetInfoBaseOc(ordenNumber)
       .toPromise()
       .then(data => {
-        this.infoBaseOC = { ...data['Value'][0] };
+        this.infoBaseOC = data['Value'][0];
         if (this.infoBaseOC['Código'] === '4') {
           this.cliente = false;
           this.entrega = false;
@@ -128,15 +132,15 @@ export class DialogDetallesComponent implements OnInit {
               ? false
               : true;
         }
-        this._componentService.setInfoBaseOC(this.infoBaseOC);
       });
+    this._componentService.setInfoBaseOC(this.infoBaseOC);
     this.numeroOrden = this.ordenCompra[0].PMG_PO_NUMBER;
-    this._componentService.setTablaDetalles(this.ordenCompra);
     this.background = this.background ? '' : 'primary';
     this.color = this.color ? '' : 'accent';
-    this._componentService.getSelectedSku().subscribe(data => {
-      this.skus = data;
-    });
+    this.skus = this._componentService.getSelectedSku().value;
+  }
+
+  ngOnDestroy() {
   }
 
   openBottomSheet(): void {

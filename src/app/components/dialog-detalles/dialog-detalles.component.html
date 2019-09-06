@@ -1,11 +1,12 @@
-<mat-toolbar class="toolbar mat-elevation-z10" color="primary"  mat-dialog-title>
-  <span>{{ strings.strings.details }}</span>
+<mat-toolbar class="toolbar mat-elevation-z10" color="primary" mat-dialog-title>
+  <span>{{ strings.longMessages.orderDetailTitle }} {{ numeroOrden }}</span>
   <span>
     <button mat-icon-button (click)="closeDialog()">
       <mat-icon>close</mat-icon>
     </button>
   </span>
 </mat-toolbar>
+
 <div class="the-wrapper" mat-dialog-content>
   <div [@cardGroup]="ordenCompra !== null ? true : false" class="card-wrapper">
     <mat-card *ngIf="cliente" class="card-first mat-elevation-z10">
@@ -40,6 +41,7 @@
         </ul>
       </div>
     </mat-card>
+
     <mat-card *ngIf="entrega" class="card-second mat-elevation-z10">
       <div class="card-title">
         <mat-icon>local_shipping</mat-icon>
@@ -47,15 +49,28 @@
       </div>
       <div class="card-body">
         <ul>
-          <li *ngIf="infoBaseOC.DIRECCION_ENTREGA && infoBaseOC.DIRECCION_ENTREGA !== ''">
+          <li
+            *ngIf="
+              infoBaseOC.DIRECCION_ENTREGA &&
+              infoBaseOC.DIRECCION_ENTREGA !== ''
+            "
+          >
             <span>{{ strings.strings.deliveryAddress }}:</span
             ><span>{{ infoBaseOC.DIRECCION_ENTREGA | titlecase }}</span>
           </li>
-          <li *ngIf="infoBaseOC.CIUDAD_ENTREGA && infoBaseOC.CIUDAD_ENTREGA !== ''">
+          <li
+            *ngIf="
+              infoBaseOC.CIUDAD_ENTREGA && infoBaseOC.CIUDAD_ENTREGA !== ''
+            "
+          >
             <span>{{ strings.strings.deliveryCity }}:</span
             ><span>{{ infoBaseOC.CIUDAD_ENTREGA | titlecase }}</span>
           </li>
-          <li *ngIf="infoBaseOC.TRANSPORTADORA && infoBaseOC.TRANSPORTADORA !== ''">
+          <li
+            *ngIf="
+              infoBaseOC.TRANSPORTADORA && infoBaseOC.TRANSPORTADORA !== ''
+            "
+          >
             <span>{{ strings.strings.conveyor | titlecase }}: </span
             ><span>
               {{ infoBaseOC.TRANSPORTADORA | titlecase }}
@@ -80,6 +95,7 @@
         </ul>
       </div>
     </mat-card>
+
     <mat-card class="card-third mat-elevation-z10">
       <div class="card-title">
         <mat-icon>local_offer</mat-icon>
@@ -110,6 +126,7 @@
         </ul>
       </div>
     </mat-card>
+
     <mat-card
       class="card-fourth mat-elevation-z10"
       *ngIf="ordenCompra['observaciones']"
@@ -126,10 +143,13 @@
       </div>
     </mat-card>
   </div>
+
   <mat-tab-group dynamicHeight mat-stretch-tabs>
     <mat-tab label="SKU">
-      <app-stepper-detalles></app-stepper-detalles>
+      <app-stepper-detalles [details]="true"></app-stepper-detalles>
     </mat-tab>
-    <mat-tab label="Tracking"><app-tracking></app-tracking></mat-tab>
+    <mat-tab label="Tracking">
+      <app-tracking></app-tracking>
+    </mat-tab>
   </mat-tab-group>
 </div>

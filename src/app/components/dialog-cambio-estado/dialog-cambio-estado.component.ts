@@ -14,7 +14,9 @@ import {
   animate,
   style,
   animateChild,
-  state
+  state,
+  stagger,
+  group
 } from '@angular/animations';
 import * as moment from 'moment';
 import * as strings from '../../constants/constants';
@@ -39,6 +41,40 @@ export interface Response {
         style({ opacity: 0 }),
         animate('.2s ease-out', style({ opacity: 1 }))
       ])
+    ]),
+    trigger('chip', [
+      transition('* <=> *', [
+        group([
+          query(
+            ':enter',
+            [
+              stagger(100, [
+                animate(
+                  '.5s ease-out',
+                  style({
+                    opacity: 1,
+                    transform: 'translateY(0)'
+                  })
+                )
+              ])
+            ],
+            { optional: true }
+          ),
+          query('mat-chip-list', animateChild(), { optional: true })
+        ]),
+        query(
+          ':leave',
+          [
+            stagger(100, [
+              animate(
+                '.5s ease-in-out',
+                style({ opacity: 0, transform: 'translateY(-50px)' })
+              )
+            ])
+          ],
+          { optional: true }
+        )
+      ])
     ])
   ]
 })
@@ -47,11 +83,11 @@ export class DialogCambioEstadoComponent implements OnInit {
   background: string;
   color: string;
   chips: any[] = [];
-  visible: boolean = true;
-  selectable: boolean = true;
-  removable: boolean = true;
-  addOnBlur: boolean = true;
-  isLoading: boolean = false;
+  visible = true;
+  selectable = true;
+  removable = true;
+  addOnBlur = true;
+  isLoading = false;
   estadosControl = new FormControl('', [Validators.required, RequireMatch]);
   fechaCambioControl = new FormControl(moment(), [Validators.required]);
   horaCambioControl = new FormControl('00:00:00', [Validators.required]);
@@ -112,7 +148,9 @@ export class DialogCambioEstadoComponent implements OnInit {
       p_vpc_tech_key: '-1',
       p_fecha_inicio: '-1',
       p_fecha_fin: '-1',
-      p_fecha_real: `${this.fechaCambioControl.value.format('DD/MM/YYYY')} ${this.horaCambioControl.value}:00`,
+      p_fecha_real: `${this.fechaCambioControl.value.format('DD/MM/YYYY')} ${
+        this.horaCambioControl.value
+      }:00`,
       p_id_estado: this.estadosControl.value.ID,
       p_origen: '-1',
       p_usuario: this.data.data.usr
@@ -124,7 +162,10 @@ export class DialogCambioEstadoComponent implements OnInit {
         .toPromise()
         .then(response => {
           this.responseMessage = {
-            message: response['Value'][0]['ID'] <= 0 ? this.strings.errorMessagesText.queryError : this.strings.successMessagesText.querySuccess,
+            message:
+              response['Value'][0]['ID'] <= 0
+                ? this.strings.errorMessagesText.queryError
+                : this.strings.successMessagesText.querySuccess,
             ID: response['Value'][0]['ID']
           };
         });

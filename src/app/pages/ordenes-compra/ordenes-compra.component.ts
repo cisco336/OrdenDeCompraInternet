@@ -43,6 +43,7 @@ import { HostListener } from '@angular/core';
 import * as moment from 'moment';
 import * as constants from '../../constants/constants';
 import { GenerateOrderGuideComponent } from 'src/app/components/generate-order-guide/generate-order-guide.component';
+import { DialogService } from 'src/app/services/dialog.service';
 
 @Component({
   selector: 'app-ordenes-compra',
@@ -164,6 +165,9 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
   fechaFinSubscription;
   routeSubscription;
   proveedoresControlSubscription;
+  cambioEstadoSubscription;
+  detallesSubscription;
+  guiaSubscription;
 
   usr = '';
   key = '';
@@ -193,7 +197,8 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
     private _route: ActivatedRoute,
     private _dataService: DataService,
     private _excelExport: ExportAsExcelFileService,
-    private _componentService: ComponentsService
+    private _componentService: ComponentsService,
+    private _dialogService: DialogService
   ) {
     // Validators
     this.mainFilterForm = _formBuilder.group({
@@ -395,6 +400,10 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
     this.fechaInicioSubscription.unsubscribe();
     this.fechaFinSubscription.unsubscribe();
     this.proveedoresControlSubscription.unsubscribe();
+    this.routeSubscription.unsubscribe();
+    // this.cambioEstadoSubscription.unsubscribe();
+    // this.detallesSubscription.unsubscribe();
+    // this.guiaSubscription.unsubscribe();
   }
 
   consultar() {
@@ -460,21 +469,18 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
     }
   }
 
-  /** Whether the number of selected elements matches the total number of rows. */
   isAllSelected() {
     const numSelected = this.selection.selected.length;
     const numRows = this.dataSource.data.length;
     return numSelected === numRows;
   }
 
-  /** Selects all rows if they are not all selected; otherwise clear selection. */
   masterToggle() {
     this.isAllSelected()
       ? this.selection.clear()
       : this.dataSource.data.forEach(row => this.selection.select(row));
   }
 
-  /** The label for the checkbox on the passed row */
   checkboxLabel(row?: OrdenDeCompra): string {
     if (!row) {
       return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
@@ -487,12 +493,15 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
   applyFilter(filterValue: string) {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
+
   displayProveedor(data?: Proveedores): string | undefined {
     return data ? data.DESCRIPCION : undefined;
   }
+
   displayEstados(data?: Estado): string | undefined {
     return data ? data.DESCRIPCION : undefined;
   }
+
   private _filterProveedor(DESCRIPCION: string): Proveedores[] {
     const filterValue = DESCRIPCION.toLowerCase();
 
@@ -500,6 +509,7 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
       option => option.DESCRIPCION.toLowerCase().indexOf(filterValue) >= 0
     );
   }
+
   private _filterEstados(DESCRIPCION: string): Estado[] {
     const filterValue = DESCRIPCION.toLowerCase();
 
@@ -508,8 +518,6 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
     );
   }
 
-  // Cuando se actualiza el SKU se debe enviar PRD_LVL_CHILD
-  // EL SKU ES EL PRD_LVL_NUMBER
   getOrdenDetalle(element, guiaOrden?) {
     if (!this.aux) {
       this.aux = true;
@@ -521,10 +529,11 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
           result => {
             this.aux = false;
             if (result) {
+              this._componentService.setDetalleOC(result['Value']);
               if (guiaOrden) {
-                this.generateGuide(result['Value']);
+                this.generateGuide();
               } else {
-                this.openDialogDetalles(result['Value']);
+                this.openDialogDetalles();
               }
             }
           },
@@ -535,40 +544,37 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
         );
     }
   }
-  openDialogDetalles(data): Observable<any> {
+  openDialogDetalles() {
     this._componentService.setQueryDetalles(this.queryDetallesDialog);
-    const dialogRef = this._dialog.open(DialogDetallesComponent, {
-      maxWidth: '95vw',
+    const dialogData = {
+      maxWidth: '900px',
       width: '95vw',
       maxHeight: '90vh',
       data: {
         data: {
           queryDetalles: this.queryDetallesDialog,
-          ordenCompra: data,
+          ordenCompra: this._componentService.getDetalleOC().value,
           usr: this.usr,
           estados: this.estados
         }
       },
       panelClass: 'dialog-detalles',
       disableClose: false
-    });
-
-    return dialogRef.afterClosed();
+    };
+    this.detallesSubscription = this._dialogService
+      .openDetalle(dialogData)
+      .toPromise().then(
+        () => {},
+        error => {
+          this._toastr.error(error);
+        }
+      );
   }
-
   cambioEstadoDialog() {
-    this.openDialogCambioEstado()
-      .toPromise()
-      .then(() => {
-        this.consultar();
-        this.selection.clear();
-      });
-  }
-
-  openDialogCambioEstado(): Observable<any> {
-    const dialogRef = this._dialog.open(DialogCambioEstadoComponent, {
-      maxWidth: '90vw',
-      maxHeight: '90vh',
+    const dialogData = {
+      maxWidth: '900px',
+      width: '95vw',
+      maxHeight: '95vh',
       data: {
         data: {
           selected: this.selection.selected,
@@ -578,35 +584,36 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
       },
       panelClass: 'dialog-detalles',
       disableClose: false
-    });
-
-    return dialogRef.afterClosed();
+    };
+    this.cambioEstadoSubscription = this._dialogService
+      .openCambioEstado(dialogData)
+      .toPromise().then(
+        () => {
+          this.consultar();
+          this.selection.clear();
+        },
+        error => {
+          this._toastr.error(error);
+        }
+      );
   }
-
-  generateGuide(data) {
-    this.openDialogGenerarGuiaOrden(data)
-      .toPromise()
-      .then(response => console.log(response))
-      .catch(error => console.log(error));
-  }
-
-  openDialogGenerarGuiaOrden(data): Observable<any> {
-    this._componentService.setQueryOrdenGuia(this.queryDetallesDialog);
-    const dialogRef = this._dialog.open(GenerateOrderGuideComponent, {
-      maxWidth: '95vw',
+  generateGuide() {
+    const dialogData = {
+      maxWidth: '900px',
       width: '95vw',
       maxHeight: '95vh',
       data: {
         data: {
           queryDetalles: null,
-          ordenCompra: data,
+          ordenCompra: this._componentService.getDetalleOC().value,
           usr: this.usr
         }
       },
       panelClass: 'dialog-detalles',
       disableClose: false
-    });
-
-    return dialogRef.afterClosed();
+    };
+    this.guiaSubscription = this._dialogService
+      .openGuiaOrden(dialogData)
+      .toPromise().then(() => {}, error => this._toastr.error(error));
   }
 }

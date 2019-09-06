@@ -1,15 +1,23 @@
-import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
+import { Component, OnInit, Inject, OnDestroy, ViewChild } from '@angular/core';
 import * as strings from '../../constants/constants';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { filter } from 'rxjs/operators';
 import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
 
 @Component({
   selector: 'app-generate-order-guide',
   templateUrl: './generate-order-guide.component.html',
-  styleUrls: ['./generate-order-guide.component.scss']
+  styleUrls: ['./generate-order-guide.component.scss'],
+  providers: [
+    {
+      provide: STEPPER_GLOBAL_OPTIONS,
+      useValue: { displayDefaultIndicatorType: false }
+    }
+  ],
 })
 export class GenerateOrderGuideComponent implements OnInit, OnDestroy {
+  @ViewChild('stepper', { static: true }) stepper;
   strings = strings;
   alert: string;
   skus: number[];
@@ -37,7 +45,6 @@ export class GenerateOrderGuideComponent implements OnInit, OnDestroy {
           description: number['PRD_NAME_FULL']
         })
     );
-    console.log(this.skus);
   }
 
   ngOnDestroy() {

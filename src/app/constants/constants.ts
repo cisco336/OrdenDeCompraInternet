@@ -123,7 +123,8 @@ export const strings = {
   weight: 'Peso',
   volumne: 'Volumen',
   declared: 'Declarado',
-  actions: 'Acciones'
+  actions: 'Acciones',
+  dateGuideGeneration: 'Fecha generación guía',
 };
 
 export const detailsTable = {
@@ -145,6 +146,8 @@ export const detailsTable = {
   ESTADO: strings.state,
   PMG_SHIP_DATE: strings.dispatchDate,
   PMG_SHIP_DATE1: strings.deliverDate,
+  FECHA_GENERAION_GUIA: strings.dateGuideGeneration,
+  URL_GUIA: strings.guide,
   PMG_TOT_DTL_COST: null,
   ID_ESTADO: null,
   PMG_RETAIL: null,
@@ -162,5 +165,6 @@ export const detailsTable = {
 export const longMessages = {
   generateOrderGuideAlert:
     'Al continuar con el proceso de generación de guía, usted estará afectando los skus internos que conforman esta orden de compra.',
-  generateOrderGuideTitle: 'Generación de guía para orden de compra.'
+  generateOrderGuideTitle: 'Generación de guía para orden de compra',
+  orderDetailTitle: 'Detalles de la orden de compra',
 };
