@@ -84,7 +84,7 @@
           grid-gap: 1rem;
           & button {
             max-width: 150px;
-            justify-self: flex-end; 
+            justify-self: flex-end;
           }
         }
       }
@@ -97,14 +97,6 @@
       }
       & table {
         width: 100%;
-        & .position-label {
-          color: $HC-primary;
-          transition: all 0.2s ease-out;
-          &:hover {
-            text-decoration: underline;
-            cursor: pointer;
-          }
-        }
         & tr.mat-footer-row,
         tr.mat-row {
           height: 35px;
@@ -116,18 +108,26 @@
           height: 0;
         }
 
-        & tr.element-row:not(.expanded-row):hover {
+        &.element-row:not(.expanded-row):hover {
           cursor: pointer;
-          background: linear-gradient(to top, $HC-primary 5%, transparent 6%);
-          font-weight: bold;
+          // background: linear-gradient(to top, $HC-primary 5%, transparent 6%);
+          // font-weight: bold;
+          background: rgba($HC-light-gray, 0.5);
+          & td {
+            position: relative;
+            &:first-child::after {
+              position: absolute;
+              content: '';
+              height: 100%;
+              width: 100%;
+              top: 0;
+              left: 0;
+              border-left: 5px solid $HC-primary;
+            }
+          }
         }
-
-        & tr.element-row:not(.expanded-row):active {
+        &.element-row:not(.expanded-row):active {
           background: #efefef;
-        }
-
-        & .element-row td {
-          border-bottom-width: 0;
         }
 
         & .element-row.expanded-row + .detail-row .element-detail {
@@ -156,6 +156,49 @@
             }
           }
         }
+        .element-row td,
+        th {
+          padding-left: 1rem !important;
+          padding-right: 1rem !important;
+          & ul {
+            padding: 10px 0;
+            & li {
+              white-space: normal;
+              text-overflow: ellipsis;
+              list-style: none;
+              & span {
+                &:first-child {
+                  margin-right: 5px;
+                }
+                &:last-child {
+                  color: $HC-gray;
+                  font-weight: lighter;
+                }
+              }
+              &:first-child {
+                font-weight: lighter;
+                color: $HC-primary;
+                font-size: 15px;
+                margin-bottom: 0.5rem;
+              }
+              &:nth-child(2) {
+                font-weight: bold;
+                & .info {
+                  color: $HC-primary !important;
+                }
+                & .success {
+                  color: $HC-success !important;
+                }
+                & .warning {
+                  color: $HC-warning !important;
+                }
+                & .danger {
+                  color: $HC-danger !important;
+                }
+              }
+            }
+          }
+        }
         & .element-description {
           padding: 16px;
         }
@@ -174,10 +217,11 @@ input {
   text-overflow: ellipsis !important;
 }
 .header-orden {
-  text-decoration: underline;
   color: $HC-primary;
   font-weight: 600;
-  cursor: pointer;
+  & p {
+    color: $HC-gray;
+  }
 }
 .no-privileges {
   margin: 1rem 0;
@@ -237,25 +281,34 @@ input {
       }
     }
     & table {
-      & th, & td {
-        text-align: center;
-      }
-      & * {
-        // font-size: 85%;
-      }
-      & tr.element-row.mat-row:not(.expanded-row) + tr.detail-row div.element-detail {
+      &
+        tr.element-row.mat-row:not(.expanded-row)
+        + tr.detail-row
+        div.element-detail {
         padding: 0;
       }
       & tr.detail-row * {
         // font-size: 100%;
         text-align: left;
       }
-      & td.mat-cell:first-of-type, & td.mat-footer-cell:first-of-type, & th.mat-header-cell:first-of-type {
+      & td.mat-cell:first-of-type,
+      & td.mat-footer-cell:first-of-type,
+      & th.mat-header-cell:first-of-type {
         padding-left: 10px;
       }
-      & td.mat-cell:last-of-type, & td.mat-footer-cell:last-of-type, & th.mat-header-cell:last-of-type {
+      & td.mat-cell:last-of-type,
+      & td.mat-footer-cell:last-of-type,
+      & th.mat-header-cell:last-of-type {
         padding-right: 10px;
       }
-    } 
+    }
   }
+}
+tr:not(.detail-row) td:last-child,
+th:last-child {
+  text-align: end !important;
+}
+
+.check {
+  width: 10px;
 }

@@ -165,7 +165,7 @@
       <mat-icon mat-list-icon>info_outline</mat-icon>
       <!-- Checkbox Column -->
       <ng-container matColumnDef="Select">
-        <th mat-header-cell *matHeaderCellDef>
+        <th mat-header-cell *matHeaderCellDef class="check">
           <mat-checkbox
             (change)="$event ? masterToggle() : null"
             [checked]="selection.hasValue() && isAllSelected()"
@@ -177,7 +177,7 @@
           >
           </mat-checkbox>
         </th>
-        <td mat-cell *matCellDef="let row">
+        <td mat-cell *matCellDef="let row" class="check">
           <mat-checkbox
             (click)="$event.stopPropagation()"
             (change)="$event ? selection.toggle(row) : null"
@@ -190,77 +190,63 @@
 
       <!-- Orden -->
       <ng-container matColumnDef="PMG_PO_NUMBER">
-        <th
-          mat-header-cell
-          *matHeaderCellDef
-          class="header-orden"
-          matTooltip="{{ tooltips.tableFooterClick }}{{
-            tooltips.tableFooterDblclick
-          }}"
-          [matTooltipPosition]="'right'"
-          matTooltipClass="mat-elevation-z8 HC-tooltip-success"
-        >
-          # {{ strings.order }}
+        <th mat-header-cell *matHeaderCellDef class="header-orden">
+          # {{ strings.order }}:
+          <p>{{ longMessages.tableClick }}</p>
         </th>
         <td
           mat-cell
           *matCellDef="let element"
           class="position-label"
-          (click)="getOrdenDetalle(element.PMG_PO_NUMBER)"
+          (click)="
+            expandedElement = expandedElement === element ? null : element
+          "
           matRipple
           [matRippleColor]="primary"
         >
-          {{ element.PMG_PO_NUMBER }}
-        </td>
-      </ng-container>
-
-      <!-- Estado orden -->
-      <ng-container matColumnDef="ESTADO">
-        <th mat-header-cell *matHeaderCellDef>{{ strings.orderState }}</th>
-        <td
-          mat-cell
-          *matCellDef="let element"
-          (click)="
-            expandedElement = expandedElement === element ? null : element
-          "
-        >
-          {{ element.ESTADO }}
-        </td>
-      </ng-container>
-
-      <!-- Fecha Creación -->
-      <ng-container matColumnDef="FECHA_CREACION">
-        <th mat-header-cell *matHeaderCellDef>{{ strings.creationDate }}</th>
-        <td
-          mat-cell
-          *matCellDef="let element"
-          (click)="
-            expandedElement = expandedElement === element ? null : element
-          "
-        >
-          {{ element.FECHA_CREACION }}
-        </td>
-      </ng-container>
-
-      <!-- Fecha Entrega -->
-      <ng-container matColumnDef="PMG_EXP_RCT_DATE">
-        <th mat-header-cell *matHeaderCellDef>{{ strings.deliverDate }}</th>
-        <td
-          mat-cell
-          *matCellDef="let element"
-          (click)="
-            expandedElement = expandedElement === element ? null : element
-          "
-        >
-          {{ element.PMG_EXP_RCT_DATE }}
+          <!-- {{ element.PMG_PO_NUMBER }} -->
+          <ul>
+            <li>{{ strings.order }}: {{ element.PMG_PO_NUMBER }}</li>
+            <li *ngIf="element.ESTADO">
+              <span>{{ strings.orderState }}:</span
+              ><span
+                [ngClass]="{
+                  info: element.ESTADO === 'EN TRANSPORTE',
+                  success: element.ESTADO === 'ESTADO FINAL',
+                  warning: element.ESTADO === 'PREPARADO',
+                  danger: element.ESTADO === 'PENDIENTE'
+                }"
+                >{{ element.ESTADO | titlecase }}</span
+              >
+            </li>
+            <li *ngIf="element.FECHA_CREACION">
+              <span>{{ strings.creationDate }}:</span
+              ><span>{{ element.FECHA_CREACION }}</span>
+            </li>
+            <li *ngIf="element.PMG_EXP_RCT_DATE">
+              <span>{{ strings.deliverDate }}:</span
+              ><span>{{ element.PMG_EXP_RCT_DATE }}</span>
+            </li>
+          </ul>
         </td>
       </ng-container>
 
       <!-- Acciones -->
       <ng-container matColumnDef="ACTIONS">
-        <th mat-header-cell *matHeaderCellDef>{{ strings.generateGuide }}</th>
+        <th mat-header-cell *matHeaderCellDef>{{ strings.actions }}</th>
         <td mat-cell *matCellDef="let element">
-          <button mat-icon-button color="warn" (click)="getOrdenDetalle(element.PMG_PO_NUMBER, 1)">
+          <button
+            mat-icon-button
+            color="primary"
+            (click)="getOrdenDetalle(element.PMG_PO_NUMBER)"
+          >
+            <mat-icon>assignment</mat-icon>
+          </button>
+          <button
+            mat-icon-button
+            color="warn"
+            (click)="getOrdenDetalle(element.PMG_PO_NUMBER, 1)"
+          >
             <mat-icon>local_shipping</mat-icon>
           </button>
         </td>

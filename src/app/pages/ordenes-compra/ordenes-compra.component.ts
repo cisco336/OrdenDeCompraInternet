@@ -145,9 +145,9 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
   displayedColumns: string[] = [
     'Select',
     'PMG_PO_NUMBER',
-    'ESTADO',
-    'FECHA_CREACION',
-    'PMG_EXP_RCT_DATE',
+    // 'ESTADO',
+    // 'FECHA_CREACION',
+    // 'PMG_EXP_RCT_DATE',
     'ACTIONS'
   ];
   aux: any;
@@ -182,6 +182,7 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
   matFormFieldText = constants.matFormFieldText;
   errorMessagesText = constants.errorMessagesText;
   strings = constants.strings;
+  longMessages = constants.longMessages;
   errorMessage = '';
 
   @HostListener('window:resize', ['$event'])
