@@ -13,6 +13,7 @@ export class ComponentsService {
   queryDetalles = new BehaviorSubject<any>('');
   infoBaseOC = new BehaviorSubject<any>('');
   ordenGuia = new BehaviorSubject<any>('');
+  detalleOC = new BehaviorSubject<any>('');
 
 
   constructor() { }
@@ -71,5 +72,12 @@ export class ComponentsService {
 
   getOrdenGuia() {
     return this.ordenGuia;
+  }
+  setDetalleOC(data) {
+    return this.detalleOC.next(data);
+  }
+
+  getDetalleOC() {
+    return this.detalleOC;
   }
 }

@@ -1,16 +1,28 @@
-<mat-horizontal-stepper [linear]="false" #stepperDetalles>
+<mat-horizontal-stepper [linear]="false" #stepper>
   <mat-step state="tab">
     <form>
       <mat-form-field class="no-show">
-        <input matInput [value]="selectedSku.length" />
+        <input matInput [value]="selectedSku?.length || null" />
       </mat-form-field>
       <ng-template matStepLabel>{{ strings.strings.skuList }}</ng-template>
-      <app-tabla-detalles></app-tabla-detalles>
+      <div *ngIf="!details" class="chips">
+        {{ strings.longMessages.generateOrderGuideAlert }}
+        <mat-chip-list>
+          <mat-chip
+            color="accent"
+            *ngFor="let sku of skus"
+            matTooltip="{{ sku.description }}"
+            >{{ sku.sku }}</mat-chip
+          >
+        </mat-chip-list>
+      </div>
+      <app-tabla-detalles *ngIf="details"></app-tabla-detalles>
       <div [@show]="showQueryResponse" class="query-response">
         {{ queryResponse }}
       </div>
       <div class="stepper-buttons">
         <button
+          *ngIf="details"
           mat-raised-button
           color="accent"
           [disabled]="!selectedSku.length"
@@ -72,13 +84,12 @@
       <button mat-stroked-button color="warn" matStepperPrevious>
         <mat-icon>navigate_before</mat-icon>{{ strings.strings.back }}
       </button>
-      <button mat-raised-button color="primary" (click)="stepper.reset()">
+      <button mat-raised-button color="primary">
         <mat-icon>description</mat-icon>{{ strings.strings.generateGuide }}
       </button>
     </div>
   </mat-step>
 
-  <!-- Template Icons -->
   <ng-template matStepperIcon="tab">
     <mat-icon>table_chart</mat-icon>
   </ng-template>

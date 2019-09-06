@@ -3,7 +3,8 @@ import {
   OnInit,
   ViewChild,
   ElementRef,
-  DoCheck
+  DoCheck,
+  OnDestroy
 } from '@angular/core';
 import {
   animate,
@@ -35,7 +36,7 @@ import { HostListener } from '@angular/core';
     ])
   ]
 })
-export class TablaDetallesComponent implements OnInit, DoCheck {
+export class TablaDetallesComponent implements OnInit, DoCheck, OnDestroy {
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   displayedNames: string[] = [
     strings.strings.sku,
@@ -70,7 +71,9 @@ export class TablaDetallesComponent implements OnInit, DoCheck {
     'PMG_SELL_QTY',
     'PMG_STAT_NAME',
     'USR_CREACION',
-    'PRD_NAME_FULL'
+    'PRD_NAME_FULL',
+    'FECHA_GENERAION_GUIA',
+    'URL_GUIA'
   ];
   jsonToBeUsed = [];
 
@@ -103,18 +106,19 @@ export class TablaDetallesComponent implements OnInit, DoCheck {
   }
   ngOnInit() {
     this.dataSource = new MatTableDataSource<DetalleOrdenDeCompra>();
-    this._componentService.getTablaDetalles().subscribe(data => {
-      this.dataSource.data = data['Value'];
-      this.selection.clear();
-      this.onResize();
-    });
     this.dataSource.data = this._componentService.getTablaDetalles().value;
+    this.selection.clear();
+    this.onResize();
     setTimeout(() => {
       this.dataSource.paginator = this.paginator;
     }, 0);
     this.selection.changed.subscribe(() => {
       this.setSkus(this.selection.selected);
     });
+  }
+
+  ngOnDestroy() {
+    this.selection.changed.unsubscribe();
   }
 
   setSkus(data) {

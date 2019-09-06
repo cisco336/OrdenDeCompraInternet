@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
 import { ComponentsService } from 'src/app/services/components.service';
@@ -14,7 +14,7 @@ import {
   transition,
   animate
 } from '@angular/animations';
-import { Subscription, Subscriber } from 'rxjs';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-stepper-detalles',
@@ -30,11 +30,11 @@ import { Subscription, Subscriber } from 'rxjs';
     trigger('show', [
       state(
         'true',
-        style({ transformOrigin: '50% 0%' ,opacity: 1, height: '*' })
+        style({ transformOrigin: '50% 0%', opacity: 1, height: '*' })
       ),
       state(
         'false',
-        style({ transformOrigin: '50% 0%' ,opacity: 0, height: 0 })
+        style({ transformOrigin: '50% 0%', opacity: 0, height: 0 })
       ),
       transition('0 => 1', animate('.5s ease-out')),
       transition('1 => 0', animate('.5s ease-out'))
@@ -42,16 +42,19 @@ import { Subscription, Subscriber } from 'rxjs';
   ]
 })
 export class StepperDetallesComponent implements OnInit, OnDestroy {
+  @Input() details: boolean;
   firstFormGroup: FormGroup;
   secondFormGroup: FormGroup;
   selectedSku;
   estadosSubscription: Subscription;
   getSelectedSkuSubscription: Subscription;
-  sheet: Subscription;
   estados: Estado[] = [];
   strings = strings;
   queryResponse = '';
   showQueryResponse = false;
+  oc: any;
+  skus: any;
+  selectedSkuSubscription: Subscription;
 
   constructor(
     private _formBuilder: FormBuilder,
@@ -61,6 +64,14 @@ export class StepperDetallesComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
+    if (this.details) {
+      this.hasDetails();
+    } else {
+      this.noDetails();
+    }
+  }
+
+  hasDetails() {
     this.estadosSubscription = this._componentService
       .getEstados()
       .subscribe(estados => (this.estados = estados));
@@ -70,25 +81,29 @@ export class StepperDetallesComponent implements OnInit, OnDestroy {
     this.secondFormGroup = this._formBuilder.group({
       secondCtrl: ['', Validators.required]
     });
-    this.getSelectedSkuSubscription = this._componentService.getSelectedSku().subscribe(data => {
-      this.selectedSku = data;
-      if (this.selectedSku.length > 0) {
-        this.firstFormGroup.get('selectedSkuControl').setErrors(null);
-      } else {
-        this.firstFormGroup
-          .get('selectedSkuControl')
-          .setErrors({ incorrect: true });
-      }
-    });
+    this.selectedSkuSubscription = this._componentService.getSelectedSku().subscribe(skus => this.selectedSku = skus);
+  }
+
+  noDetails() {
+    const detalleOC = this._componentService.getDetalleOC().value;
+    this.oc = detalleOC[0]['PMG_PO_NUMBER'];
+    this.skus = detalleOC.map(
+      number =>
+        (number = {
+          sku: number['PRD_LVL_NUMBER'],
+          description: number['PRD_NAME_FULL']
+        })
+    );
   }
   openBottomSheet(): void {
     const sheet = this._bottomSheet.open(BottomSheetComponent, {
       data: { estados: this.estados, minWidth: '95vw' },
       disableClose: false
     });
-    this.sheet = sheet
+    sheet
       .afterDismissed()
-      .subscribe(
+      .toPromise()
+      .then(
         response => {
           if (response && response['ID'] > 0) {
             this.cambioEstado(response);
@@ -97,7 +112,7 @@ export class StepperDetallesComponent implements OnInit, OnDestroy {
         error => {
           this.showQueryResponse = true;
           this.queryResponse = strings.errorMessagesText.errorUnknown;
-          setTimeout(() => this.showQueryResponse = false, 2000)
+          setTimeout(() => (this.showQueryResponse = false), 2000);
         }
       );
   }
@@ -124,14 +139,14 @@ export class StepperDetallesComponent implements OnInit, OnDestroy {
         .then(
           resolve => {
             this.showQueryResponse = true;
-            this.queryResponse = resolve["Mensaje"];
-            setTimeout(() => this.showQueryResponse = false, 5000);
+            this.queryResponse = resolve['Mensaje'];
+            setTimeout(() => (this.showQueryResponse = false), 5000);
             this.refreshTable();
           },
           reject => {
             this.showQueryResponse = true;
-            this.queryResponse = reject["Mensaje"];
-            setTimeout(() => this.showQueryResponse = false, 5000);
+            this.queryResponse = reject['Mensaje'];
+            setTimeout(() => (this.showQueryResponse = false), 5000);
             this.refreshTable();
           }
         );
@@ -148,8 +163,9 @@ export class StepperDetallesComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    // this.estadosSubscription.unsubscribe();
-    // this.getSelectedSkuSubscription.unsubscribe();
-    // this.sheet.unsubscribe();
+    if (this.estadosSubscription) {
+      this.estadosSubscription.unsubscribe();
+      this.selectedSkuSubscription.unsubscribe();
+    }
   }
 }

@@ -3,7 +3,7 @@
 // @import "~@angular/material/prebuilt-themes/indigo-pink.css";
 
 // Theming
-@import "~@angular/material/theming";
+@import '~@angular/material/theming';
 // Plus imports for other components in your app.
 
 // Include the common styles for Angular Material. We include this here so that you only
@@ -44,11 +44,13 @@ html,
 body {
   background: $HC-background;
   & * {
-    &::-webkit-scrollbar, &::-moz-scrollbar {
+    &::-webkit-scrollbar,
+    &::-moz-scrollbar {
       width: 6px;
       background-color: $HC-scrollbar-background;
     }
-    &::-webkit-scrollbar-thumb, &::-moz-scrollbar-thumb {
+    &::-webkit-scrollbar-thumb,
+    &::-moz-scrollbar-thumb {
       background: $HC-primary;
     }
   }
@@ -65,7 +67,7 @@ $sd-secondary: (
   2: $HC-light-gray,
   contrast: (
     1: $HC-white,
-    2: $HC-gray,
+    2: $HC-gray
   )
 );
 $sd-success: (
@@ -138,9 +140,21 @@ body {
   }
   .dialog-detalles {
     mat-dialog-container {
-      // overflow-y: hidden;
+      overflow-y: hidden;
       padding: 0;
       border-radius: 0;
+    }
+    & .mat-dialog-container {
+      height: auto !important;
+      & .mat-dialog-title {
+        margin-bottom: 0 !important;
+      }
+      & .mat-dialog-content {
+        max-height: 70vh !important;
+        padding-top: 1.5rem;
+        margin: 0;
+        overflow: auto;
+      }
     }
   }
 }
@@ -152,5 +166,16 @@ body {
 table {
   & td {
     font-size: 12px !important;
+  }
+}
+
+.mat-chip-list-wrapper {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 100px));
+  & .mat-chip.mat-standard-chip {
+    background: $HC-primary;
+    color: $HC-white;
+    justify-content: center;
+    box-shadow: 0px 6px 6px -3px rgba(0, 0, 0, 0.2), 0px 10px 14px 1px rgba(0, 0, 0, 0.14), 0px 4px 18px 3px rgba(0, 0, 0, 0.12);
   }
 }

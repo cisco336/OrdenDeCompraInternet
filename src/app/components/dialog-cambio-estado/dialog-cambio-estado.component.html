@@ -1,14 +1,15 @@
-<mat-toolbar class="toolbar" color="accent"
+<mat-toolbar class="toolbar mat-elevation-z10" color="accent" mat-dialog-title
   ><span>{{ strings.strings.stateChange }}</span
   ><button mat-icon-button (click)="closeDialog()">
     <mat-icon>close</mat-icon>
   </button></mat-toolbar
 >
-<div class="the-wrapper">
+<div class="the-wrapper" mat-dialog-content>
   <h5>{{ strings.strings.purchaseOrderToEdit }}:</h5>
-  <mat-chip-list color="primary">
+  <mat-chip-list color="primary" [@chip]="chips?.length">
     <mat-chip
       *ngFor="let chip of chips"
+      [@chip]="chip"
       [selectable]="selectable"
       [removable]="removable"
       (removed)="remove(chip)"
@@ -87,7 +88,6 @@
   </button>
 </div>
 <div
-  mat-dialog-actions
   [@show]="responseMessage.message !== ''"
   class="response-message"
   [ngClass]="{

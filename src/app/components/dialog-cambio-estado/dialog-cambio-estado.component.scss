@@ -1,8 +1,6 @@
 @import '../../../assets/css/vars';
 .loading {
   position: relative;
-  // width: 100vw;
-  // height: 100vh;
   background: rgba(0, 0, 0, 0.3);
   z-index: 100;
   display: flex;
@@ -10,7 +8,6 @@
   justify-content: center;
 }
 .toolbar {
-  margin-bottom: 1rem;
   display: flex;
   flex-flow: row nowrap;
   align-items: center;
@@ -24,30 +21,27 @@
   }
 }
 .the-wrapper {
-  padding: 1rem;
-  max-width: 700px;
   display: grid;
   grid-gap: 1rem;
   grid-template-columns: 1fr 1fr;
   grid-template-rows: auto auto auto auto;
   grid-template-areas:
-    'titulo titulo'
-    'chips selector'
-    'chips .'
-    'chips boton';
-    // 'responseMessage responseMessage';
+  'titulo titulo'
+  'chips selector'
+  'chips .'
+  'chips boton';
   @include custom-media-query-1 {
     grid-template-columns: 1fr;
     grid-template-rows: repeat(5, auto);
     grid-template-areas:
-      'titulo'
-      '.'
-      'chips'
-      'selector'
-      'boton';
-      // 'responseMessage';
+    'titulo'
+    '.'
+    'chips'
+    'selector'
+    'boton';
   }
   & h5 {
+    padding-top: 1rem;
     grid-area: titulo;
   }
   & mat-chip-list {
@@ -72,7 +66,7 @@
   }
 }
 div.response-message {
-  padding: .2rem 1rem;
+  grid-area: responseMessage;
   font-size: 70%;
   margin: 0 !important;
   display: flex;
@@ -80,12 +74,14 @@ div.response-message {
   justify-content: center;
   grid-area: responseMessage;
   font-weight: 600;
-  &.error {
+  &.error, &.success {
+    padding: 0.2rem 1rem;
     color: $HC-white;
+  }
+  &.error {
     background: $HC-success;
   }
   &.success {
-    color: $HC-white;
     background: $HC-danger;
   }
 }
