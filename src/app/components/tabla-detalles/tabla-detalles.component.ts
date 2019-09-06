@@ -50,12 +50,12 @@ export class TablaDetallesComponent implements OnInit, DoCheck, OnDestroy {
   displayedColumnsBackup: string[] = [
     'Select',
     'PRD_LVL_NUMBER',
-    'PRD_UPC',
-    'PRD_NAME_FULL',
-    'ESTADO',
-    'PMG_SHIP_DATE',
-    'PMG_SHIP_DATE1',
-    'FECHA_MODIFICACION'
+    // 'PRD_UPC',
+    // 'PRD_NAME_FULL',
+    // 'ESTADO',
+    // 'PMG_SHIP_DATE',
+    // 'PMG_SHIP_DATE1',
+    // 'FECHA_MODIFICACION'
   ];
   displayedColumns: string[] = [...this.displayedColumnsBackup];
   displayedColumnsAux: string[] = this.displayedColumns.slice(1);

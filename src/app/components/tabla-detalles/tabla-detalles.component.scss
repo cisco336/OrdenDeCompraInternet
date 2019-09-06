@@ -24,22 +24,81 @@ table {
   width: 10px;
 }
 
-tr.detail-row {
-  height: 0;
+tr {
+  &.detail-row {
+    height: 0;
+  }
+  &.element-row {
+    transition: all .2s ease-in-out;
+  }
+  &.element-row:not(.expanded-row):hover {
+    cursor: pointer;
+    // background: linear-gradient(to top, $HC-primary 5%, transparent 6%);
+    // font-weight: bold;
+    background: rgba($HC-light-gray, .5);
+    & td {
+      position: relative;
+      &:first-child::after {
+        position: absolute;
+        content: '';
+        height: 100%;
+        width: 100%;
+        top: 0;
+        left: 0;
+        border-left: 5px solid $HC-primary;
+      }
+    }
+  }
+  &.element-row:not(.expanded-row):active {
+    background: #efefef;
+  }
 }
 
-tr.element-row:not(.expanded-row):hover {
-  cursor: pointer;
-  background: linear-gradient(to top, $HC-primary 5%, transparent 6%);
-  // font-weight: bold;
-}
 
-tr.element-row:not(.expanded-row):active {
-  background: #efefef;
-}
-
-.element-row td {
-  border-bottom-width: 0;
+.element-row td, th {
+  padding-left: 1rem !important;
+  padding-right: 1rem !important;
+  & ul {
+    padding: 10px 0;
+    & li {
+      white-space: normal;
+      text-overflow: ellipsis;
+      list-style: none;
+      & span {
+        &:first-child {
+          margin-right: 5px;
+        }
+        &:last-child {
+          color: $HC-gray;
+          font-weight: lighter;
+        }
+      }
+      &:first-child {
+        font-weight: lighter;
+        color: $HC-primary;
+        font-size: 15px;
+        margin-bottom: .5rem;
+        &::before {
+          content: 'Sku: ';
+        }
+      }
+      &:nth-child(4) {
+        font-weight: bold;
+        & .info {
+          color: $HC-primary !important;
+        }
+        & .success {
+          color: $HC-success !important;
+        }
+        & .warning {
+          color: $HC-warning !important;
+        }
+        & .danger {
+          color: $HC-danger !important;
+        }
+      }
+    }
+  }
 }
 
 .element-row.expanded-row + .detail-row .element-detail {

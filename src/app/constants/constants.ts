@@ -167,4 +167,5 @@ export const longMessages = {
     'Al continuar con el proceso de generación de guía, usted estará afectando los skus internos que conforman esta orden de compra.',
   generateOrderGuideTitle: 'Generación de guía para orden de compra',
   orderDetailTitle: 'Detalles de la orden de compra',
+  tableClick: 'Haga clic sobre la fila para ver los detalles.',
 };
