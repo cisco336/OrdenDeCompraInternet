@@ -16,7 +16,8 @@ export const tooltips = {
 
   tableFooterDblclick:
     'Haga DOBLE clic sobre cualquier otra parte de la fila para mostrar más información sobre la orden.',
-  noGuideTooltip: 'El registro no posee guía.'
+  noGuideTooltip: 'El registro no posee guía.',
+  noLabelTooltip: 'El resitro no posee rotulo.',
 };
 export const matFormFieldText = {};
 export const errorMessagesText = {
@@ -138,6 +139,7 @@ export const strings = {
   height: 'Alto',
   yes: 'Si',
   no: 'No',
+  label: 'Rotulo'
 };
 
 export const detailsTable = {
