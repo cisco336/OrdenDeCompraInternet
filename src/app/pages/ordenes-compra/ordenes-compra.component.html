@@ -61,7 +61,7 @@
             *ngFor="let option of filteredEstados | async"
             [value]="option"
           >
-            {{ option.DESCRIPCION }}
+            {{ option.DESCRIPCION | titlecase }}
           </mat-option>
         </mat-autocomplete>
         <mat-error>{{ strings.requiredField }}</mat-error>

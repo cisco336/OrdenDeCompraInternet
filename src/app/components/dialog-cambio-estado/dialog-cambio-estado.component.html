@@ -45,7 +45,7 @@
           *ngFor="let estado of filteredEstados | async"
           [value]="estado"
         >
-          {{ estado.DESCRIPCION }}
+          {{ estado.DESCRIPCION | titlecase }}
         </mat-option>
       </mat-autocomplete>
     </mat-form-field>
@@ -95,7 +95,7 @@
     success: responseMessage.ID < 0
   }"
 >
-  {{ responseMessage.message }}
+  {{ responseMessage.message | titlecase }}
 </div>
 <div class="loading" *ngIf="isLoading" [@fade]>
   <mat-spinner mode="indeterminate" [diameter]="60"></mat-spinner>

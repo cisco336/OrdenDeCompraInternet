@@ -302,9 +302,11 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
                   } else {
                     this._componentService.setEstados(data['Value']);
                     this.estados = data['Value'];
-                    this.mainFilterForm
-                      .get('estadosControl')
-                      .setValue(this.estados[0]);
+                    const x = this.estados[0];
+                    x.DESCRIPCION =
+                      x.DESCRIPCION.charAt(0).toUpperCase() +
+                      x.DESCRIPCION.substr(1).toLowerCase();
+                    this.mainFilterForm.get('estadosControl').setValue(x);
                     this.isLoading = false;
                     this._componentService.setEstados(this.estados);
                     this.filteredEstados = this.mainFilterForm

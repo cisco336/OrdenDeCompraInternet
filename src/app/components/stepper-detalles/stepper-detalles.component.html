@@ -17,8 +17,8 @@
         </mat-chip-list>
       </div>
       <app-tabla-detalles *ngIf="details"></app-tabla-detalles>
-      <div [@show]="showQueryResponse" class="query-response">
-        {{ queryResponse }}
+      <div [@show]="showQueryResponse" class="query-response" [ngClass]="{'error': error < 0}">
+        {{ queryResponse | titlecase }}
       </div>
       <div class="stepper-buttons">
         <button

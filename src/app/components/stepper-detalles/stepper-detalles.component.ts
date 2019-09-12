@@ -61,6 +61,7 @@ export class StepperDetallesComponent implements OnInit, OnDestroy {
   estados: Estado[] = [];
   strings = strings;
   queryResponse = '';
+  error: number;
   showQueryResponse = false;
   oc: any;
   skus: any;
@@ -199,8 +200,10 @@ export class StepperDetallesComponent implements OnInit, OnDestroy {
         .toPromise()
         .then(
           resolve => {
+            debugger
             this.showQueryResponse = true;
-            this.queryResponse = resolve['Mensaje'];
+            this.queryResponse = resolve['Value'][0]['MENSAJE'];
+            this.error = resolve['Value'][0]['ID'];
             setTimeout(() => (this.showQueryResponse = false), 5000);
             this.refreshTable();
           },

@@ -162,10 +162,7 @@ export class DialogCambioEstadoComponent implements OnInit {
         .toPromise()
         .then(response => {
           this.responseMessage = {
-            message:
-              response['Value'][0]['ID'] <= 0
-                ? this.strings.errorMessagesText.queryError
-                : this.strings.successMessagesText.querySuccess,
+            message: response['Value'][0]['MENSAJE'],
             ID: response['Value'][0]['ID']
           };
         });

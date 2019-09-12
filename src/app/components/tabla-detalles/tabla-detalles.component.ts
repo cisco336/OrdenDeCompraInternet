@@ -149,7 +149,6 @@ export class TablaDetallesComponent implements OnInit, OnDestroy {
   }
 
   toolTip(element: string, type: boolean) {
-    debugger;
     const a = type ? 'noGuideTooltip' : 'noLabelTooltip';
     const b = type ? 'guide' : 'label';
 

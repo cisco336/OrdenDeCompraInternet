@@ -211,14 +211,14 @@ export class Constants {
   static readonly GUIA = 'http://200.69.100.66/ServicioLiquidacionRESTpruebas/Service1.svc/Generacion';
 
   // DEV
-  // static readonly APIGUIA = 'http://10.23.14.164:9001/Servicios/Transportadora_1.0.0/api';
+  static readonly APIGUIA = 'http://10.23.14.164:9001/Servicios/Transportadora_1.0.0/api';
   // QA
   // static readonly APIGUIA = 'http://10.23.14.163:9001/Servicios/Transportadora_1.0.0/api';
   // PROD
   // static readonly APIGUIA = 'http://10.23.18.163:9001/Servicios/Transportadora_1.0.0/api';
 
   // Local
-  static readonly APIGUIA = 'http://localhost/Abastecimiento/Servicios/Transportadoras/api';
+  // static readonly APIGUIA = 'http://localhost/Abastecimiento/Servicios/Transportadoras/api';
   // DEV
   static readonly SUBSCRIPTIONKEY = 'dfeb9e69860f45258647cc7ba45fb040';
   // QA
