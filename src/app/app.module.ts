@@ -50,6 +50,7 @@ import { PackagesConfigComponent } from './components/packages-config/packages-c
 import { OriginDeliverAddressComponent } from './components/origin-deliver-address/origin-deliver-address.component';
 import { ConfirmGenerateGuideComponent } from './components/confirm-generate-guide/confirm-generate-guide.component';
 import { GenerateOrderGuideComponent } from './components/generate-order-guide/generate-order-guide.component';
+import { PackageUpdateConfirmComponent } from './components/package-update-confirm/package-update-confirm.component';
 
 @NgModule({
   declarations: [
@@ -65,14 +66,16 @@ import { GenerateOrderGuideComponent } from './components/generate-order-guide/g
     PackagesConfigComponent,
     OriginDeliverAddressComponent,
     ConfirmGenerateGuideComponent,
-    GenerateOrderGuideComponent
+    GenerateOrderGuideComponent,
+    PackageUpdateConfirmComponent
   ],
   entryComponents: [
     DialogDetallesComponent,
     DialogCambioEstadoComponent,
     BottomSheetComponent,
     BottomSheetImgComponent,
-    GenerateOrderGuideComponent
+    GenerateOrderGuideComponent,
+    PackageUpdateConfirmComponent
   ],
   imports: [
     BrowserModule,

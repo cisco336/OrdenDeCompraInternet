@@ -11,10 +11,29 @@
           formControlName="originAddress"
         ></textarea>
       </mat-form-field>
-      <mat-form-field>
-        <input matInput placeholder="{{ strings.strings.cities }}" />
+      <mat-form-field class="example-full-width">
+        <input
+          type="text"
+          placeholder="{{ strings.strings.cities }}"
+          aria-label="strings.strings.cities"
+          matInput
+          required
+          formControlName="originCity"
+          [matAutocomplete]="ciudadOrigen"
+        />
+        <mat-autocomplete
+          #ciudadOrigen="matAutocomplete"
+          [displayWith]="displayOrigen"
+        >
+          <mat-option
+            *ngFor="let option of filteredOrigen | async"
+            [value]="option"
+          >
+            {{ option.DESCRIPCION }}
+          </mat-option>
+        </mat-autocomplete>
+        <!-- <mat-error>{{ strings.requiredField }}</mat-error> -->
       </mat-form-field>
-      <mat-checkbox>Default</mat-checkbox>
     </mat-card-content>
   </mat-card>
   <mat-card class="mat-elevation-z0">
@@ -23,18 +42,24 @@
     </div>
     <mat-card-content>
       <mat-form-field>
-        <textarea
+        <input
           type="text"
           placeholder="{{ strings.strings.address }}"
           aria-label="strings.provider"
           matInput
-          required
-          formControlName="originCity"
-        ></textarea>
+          disabled
+          #direccionDestino
+        />
       </mat-form-field>
       <mat-form-field>
-        <input matInput placeholder="{{ strings.strings.cities }}" />
+        <input
+          matInput
+          placeholder="{{ strings.strings.cities }}"
+          disabled
+          #ciudadDestino
+        />
       </mat-form-field>
     </mat-card-content>
   </mat-card>
 </form>
+<div *ngIf="error !== ''">{{ error }}</div>

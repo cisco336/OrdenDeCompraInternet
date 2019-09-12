@@ -564,8 +564,14 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
     };
     this.detallesSubscription = this._dialogService
       .openDetalle(dialogData)
-      .toPromise().then(
-        () => {},
+      .toPromise()
+      .then(
+        () => {
+          if (this._componentService.closeDialog().value) {
+            this.consultar();
+            this.applyFilter('');
+          }
+        },
         error => {
           this._toastr.error(error);
         }
@@ -588,7 +594,8 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
     };
     this.cambioEstadoSubscription = this._dialogService
       .openCambioEstado(dialogData)
-      .toPromise().then(
+      .toPromise()
+      .then(
         () => {
           this.consultar();
           this.selection.clear();
@@ -615,6 +622,15 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
     };
     this.guiaSubscription = this._dialogService
       .openGuiaOrden(dialogData)
-      .toPromise().then(() => {}, error => this._toastr.error(error));
+      .toPromise()
+      .then(
+        () => {
+          if (this._componentService.closeDialog().value) {
+            this.consultar();
+            this.applyFilter('');
+          }
+        },
+        error => this._toastr.error(error)
+      );
   }
 }

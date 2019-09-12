@@ -1,4 +1,4 @@
-<div class="no-data-grid" *ngIf="isLoading" [@fade] (keyup.esc)="closeDialog()">
+<div class="no-data-grid" *ngIf="isLoading" [@fade]>
   <mat-spinner mode="indeterminate" [diameter]="60"></mat-spinner>
 </div>
 <div class="the-wrapper" [@entering]="render">
@@ -294,8 +294,8 @@
                 <span mat-line>{{ strings.value }}:</span>
                 <span mat-line>
                   {{
-                    element.PMG_TOT_PO_COST || errorMessagesText.noData
-                      | currency: 'COP':'symbol-narrow'
+                    element.PMG_TOT_PO_COST | currency: 'COP':'symbol-narrow' || errorMessagesText.noData
+                      
                   }}
                 </span>
               </mat-list-item>

@@ -1,43 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { Constants } from '../constants/constants';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DataService {
-  // API Local
-  API = 'http://localhost/Abastecimiento/Servicios/OrdenCompra/api';
-  apiGuia = 'http://localhost/Abastecimiento/Servicios/Transportadoras/api';
-
-  // API INTERNA
-  // DEV
-  // API = "http://10.23.14.95:8996/Servicios/HUB_OC_2.0.0/";
-
-  // QA
-  // API = "http://10.23.14.94:8996/Servicios/HUB_OC_2.0.0/";
-
-  // PROD
-  // API = "http://10.23.14.164:8996/Servicios/HUB_OC_2.0.0/";
-
-  // API Externa Azure
-  // API = "https://apim-dev-proxy.sodhc.co/inventario/api";
-  // API = "https://apim-qa-proxy.sodhc.co/inventario/api"
-  // API = "https://apim-prod-proxy.sodhc.co/inventario/api";
-
-  // AUTH = "https://apim-dev-proxy.sodhc.co/logisticaSeguridadAutenticacion/authenticated";
-  // AUTH = "https://apim-qa-proxy.sodhc.co/logisticaSeguridadAutenticacion/authenticated";
-  AUTH =
-    'https://apim-prod-proxy.sodhc.co/logisticaSeguridadAutenticacion/authenticated';
-
-  // Subscription keys
-  // DEV
-  subscriptionKey = 'dfeb9e69860f45258647cc7ba45fb040';
-  // QA
-  // subscriptionKey = "442c55ae313642028c9eb69dc4220dad";
-  // PROD
-  // subscriptionKey = "209fa70e5b0c4b5c8bddaf0aa54b8e19";
-
   token = new BehaviorSubject<string>('');
 
   // Calls
@@ -47,49 +16,91 @@ export class DataService {
   postTablaPrincipalOCCall = '/Configuracion/GetOc';
   getInfoBaseOcCall = '/Configuracion/GetInfoBaseOc?id=';
   getGuiaCall = '/Guia/GetGuia?transportadora=';
+  getCiudadesCall = '/Guia/GetCursor?tag=';
+  postInfoGuiaCall = '/Guia/GetInfoGuia';
+  putSetDatosGuiaCall = '/Guia/SetDatosGuia';
+
+  postBultosCall = '/Guia/ConfiguracionBultos';
 
   constructor(private http: HttpClient) {}
 
   protected generateBasicHeadersJWT(): HttpHeaders {
     return new HttpHeaders({
-      'Content-Type': 'application/json'
-      // 'Ocp-Apim-Subscription-Key': this.subscriptionKey,
-      // Authorization: 'Bearer ' + this.token.value
+      'Content-Type': 'application/json',
+      'Ocp-Apim-Subscription-Key': Constants.SUBSCRIPTIONKEY,
+      Authorization: 'Bearer ' + this.token.value
+    });
+  }
+
+  protected generateGuideHeaders(): HttpHeaders {
+    return new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: 'Basic ' + btoa(Constants.USRPASSWD)
     });
   }
 
   getDatosProveedor(data) {
-    return this.http.get(this.API + this.getDatosProveedorCall + '/' + data, {
+    return this.http.get(Constants.APIORDENDECOMPRA + this.getDatosProveedorCall + '/' + data, {
       headers: this.generateBasicHeadersJWT()
     });
   }
 
   getProveedores() {
-    return this.http.get(this.API + this.getProveedoresCall, {
+    return this.http.get(Constants.APIORDENDECOMPRA + this.getProveedoresCall, {
       headers: this.generateBasicHeadersJWT()
     });
   }
 
   getEstados() {
-    return this.http.get(this.API + this.getEstadosCall, {
+    return this.http.get(Constants.APIORDENDECOMPRA + this.getEstadosCall, {
       headers: this.generateBasicHeadersJWT()
     });
   }
 
   postTablaPrincipalOC(data) {
-    return this.http.post(this.API + this.postTablaPrincipalOCCall, data, {
+    return this.http.post(Constants.APIORDENDECOMPRA + this.postTablaPrincipalOCCall, data, {
       headers: this.generateBasicHeadersJWT()
     });
   }
 
   GetInfoBaseOc(data) {
-    return this.http.get(this.API + this.getInfoBaseOcCall + data, {
+    return this.http.get(Constants.APIORDENDECOMPRA + this.getInfoBaseOcCall + data, {
       headers: this.generateBasicHeadersJWT()
     });
   }
 
   GetGuia(data) {
-    return this.http.get(this.apiGuia + this.getGuiaCall + data);
+    return this.http.get(Constants.APIGUIA + this.getGuiaCall + data);
+  }
+
+  PostBultos(data) {
+    return this.http.post(Constants.APIGUIA + this.postBultosCall, data, {
+      headers: this.generateBasicHeadersJWT()
+    });
+  }
+
+  GetCiudades(data) {
+    return this.http.get(Constants.APIGUIA + this.getCiudadesCall + data, {
+      headers: this.generateBasicHeadersJWT()
+    });
+  }
+
+  PostInfoGuia(data) {
+    return this.http.post(Constants.APIGUIA + this.postInfoGuiaCall, data, {
+      headers: this.generateBasicHeadersJWT()
+    });
+  }
+
+  SetDatosGuia(data) {
+    return this.http.put(Constants.APIGUIA + this.putSetDatosGuiaCall, data, {
+      headers: this.generateGuideHeaders()
+    });
+  }
+
+  PostSolicitarGuia(data) {
+    return this.http.post(Constants.GUIA, data, {
+      headers: this.generateGuideHeaders()
+    });
   }
 
   setToken(data) {

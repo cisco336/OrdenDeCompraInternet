@@ -1,6 +1,6 @@
 .wrapper {
   display: grid;
-  grid-template-columns: auto 1fr;
+  grid-template-columns: 1fr;
   grid-gap: 1rem;
   & form {
     display: flex;
@@ -17,6 +17,9 @@
     & td,
     & th {
       text-align: right;
+      &:not(:first-of-type), &:not(:last-of-type) {
+        padding: 0 10px;
+      }
     }
     & + div {
       display: flex;
@@ -28,7 +31,29 @@
   }
 }
 
-@media screen and (max-width: 640px) {
+.no-data-grid {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+}
+
+::ng-deep table {
+  input {
+    text-align: end;
+    border: red;
+    max-width: 100px;
+    margin-right: -21px;
+    outline: none;
+    &:after {
+      content: none;
+      display: none !important;
+    }
+  }
+}
+
+@media screen and (max-width: 830px) {
   .wrapper {
     grid-template-columns: 1fr;
     & form {
