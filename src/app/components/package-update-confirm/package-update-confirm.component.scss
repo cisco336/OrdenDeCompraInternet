@@ -1,0 +1,13 @@
+.the-wrapper {
+    display: grid;
+    grid-gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(80px, 150px));
+    justify-items: center;
+    & h3 {
+        grid-column: 1 / -1;
+        grid-row: 1;
+    }
+    & button {
+        grid-row: 2;
+    }
+}

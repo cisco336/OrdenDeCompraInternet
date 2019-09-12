@@ -1,0 +1,33 @@
+.wrapper {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-gap: 2rem;
+  padding: 1rem;
+  & div {
+    justify-content: center;
+    align-items: center;
+    &:first-child {
+      display: flex;
+      flex-flow: column nowrap;
+      & mat-form-field {
+        width: 100%;
+      }
+    }
+    &:last-child {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 200px));
+      grid-gap: 10px;
+      & button:not([mat-icon-button]) {
+        & span {
+          font-size: 15px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          & mat-icon {
+            margin-right: 10px;
+          }
+        }
+      }
+    }
+  }
+}

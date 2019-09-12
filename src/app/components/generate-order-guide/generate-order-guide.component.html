@@ -1,0 +1,11 @@
+<mat-toolbar class="toolbar mat-elevation-z10" color="primary" mat-dialog-title>
+  <span>{{ strings.longMessages.generateOrderGuideTitle }} {{ oc }}</span>
+  <span>
+    <button mat-icon-button (click)="closeDialog()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </span>
+</mat-toolbar>
+<div mat-dialog-content>
+  <app-stepper-detalles [details]="false"></app-stepper-detalles>
+</div>

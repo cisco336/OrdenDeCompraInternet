@@ -1,6 +1,13 @@
-@import "../../../assets/css/vars";
+@import '../../../assets/css/vars';
+.loading {
+  position: relative;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 .toolbar {
-  margin-bottom: 1rem;
   display: flex;
   flex-flow: row nowrap;
   align-items: center;
@@ -14,34 +21,35 @@
   }
 }
 .the-wrapper {
-  padding: 1rem;
-  max-width: 700px;
   display: grid;
   grid-gap: 1rem;
   grid-template-columns: 1fr 1fr;
   grid-template-rows: auto auto auto auto;
   grid-template-areas:
-    "chips titulo"
-    "chips selector"
-    "chips ."
-    "chips boton";
+  'titulo titulo'
+  'chips selector'
+  'chips .'
+  'chips boton';
   @include custom-media-query-1 {
     grid-template-columns: 1fr;
     grid-template-rows: repeat(5, auto);
     grid-template-areas:
-      "titulo"
-      "."
-      "chips"
-      "selector"
-      "boton";
+    'titulo'
+    '.'
+    'chips'
+    'selector'
+    'boton';
   }
   & h5 {
+    padding-top: 1rem;
     grid-area: titulo;
   }
   & mat-chip-list {
     grid-area: chips;
   }
-  & mat-form-field {
+  & form {
+    display: flex;
+    flex-flow: column nowrap;
     grid-area: selector;
   }
   & button {
@@ -49,10 +57,31 @@
   }
   & div.error {
     display: flex;
+    flex-direction: column;
     grid-area: chips;
     align-items: center;
     justify-content: center;
     color: red;
     text-align: center;
+  }
+}
+div.response-message {
+  grid-area: responseMessage;
+  font-size: 70%;
+  margin: 0 !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  grid-area: responseMessage;
+  font-weight: 600;
+  &.error, &.success {
+    padding: 0.2rem 1rem;
+    color: $HC-white;
+  }
+  &.error {
+    background: $HC-success;
+  }
+  &.success {
+    background: $HC-danger;
   }
 }

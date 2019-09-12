@@ -1,0 +1,57 @@
+@import '../../../assets/css/vars';
+form {
+  padding-top: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 300px));
+  max-width: 900px;
+  // margin: 0 auto;
+
+  &,
+  & mat-card-content {
+    display: grid;
+    grid-gap: 1rem;
+  }
+
+  & mat-card {
+    padding: 2rem;
+    &:first-child {
+      padding: 0;
+      & .mat-card {
+        &-header {
+          border-top-left-radius: 5px;
+          border-top-right-radius: 5px;
+          padding: 2rem 2rem 1rem 2rem;
+          background: $primary-gradient;
+          color: $HC-white;
+        }
+        &-content {
+          padding: 1rem 2rem 2rem 2rem;
+          border: 1px solid $HC-primary;
+          border-top-color: transparent;
+          border-bottom-left-radius: 5px;
+          border-bottom-right-radius: 5px;
+        }
+      }
+      border: 1px solid $primary-gradient;
+    }
+    &:last-child {
+      border: 1px solid $HC-primary;
+      & .mat-card-header {
+        color: $HC-primary;
+        padding-bottom: 2rem;
+      }
+    }
+  }
+
+  & .mat-card-header {
+    margin: 0 !important;
+    font-weight: 600;
+    font-size: 105%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  & mat-card-content {
+    grid-template-columns: 1fr;
+  }
+}

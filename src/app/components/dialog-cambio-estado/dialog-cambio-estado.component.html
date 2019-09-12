@@ -1,54 +1,102 @@
-<mat-toolbar class="toolbar" color="accent"
-  ><span>Cambio de estado</span
+<mat-toolbar class="toolbar mat-elevation-z10" color="accent" mat-dialog-title
+  ><span>{{ strings.strings.stateChange }}</span
   ><button mat-icon-button (click)="closeDialog()">
     <mat-icon>close</mat-icon>
   </button></mat-toolbar
 >
-<div class="the-wrapper">
-  <h5>Ordenes de compra a modificar:</h5>
-  <mat-chip-list color="primary">
+<div class="the-wrapper" mat-dialog-content>
+  <h5>{{ strings.strings.purchaseOrderToEdit }}:</h5>
+  <mat-chip-list color="primary" [@chip]="chips?.length">
     <mat-chip
       *ngFor="let chip of chips"
+      [@chip]="chip"
       [selectable]="selectable"
       [removable]="removable"
       (removed)="remove(chip)"
       color="primary"
-      >{{ chip.Orden
+      >{{ chip.PMG_PO_NUMBER
       }}<mat-icon *ngIf="removable" matChipRemove>cancel</mat-icon></mat-chip
     >
   </mat-chip-list>
   <div class="error" *ngIf="!chips.length">
-    Debe seleccionar al menos una orden de compra.
+    <p>
+      {{ strings.strings.mustSelectAnOrder }}
+    </p>
+    <p>
+      {{ strings.strings.windowWillClose }}
+    </p>
   </div>
-  <mat-form-field>
-    <!-- <mat-label>Estados</mat-label>
-    <mat-select>
-      <mat-option *ngFor="let estado of estados" [value]="estado.value">
-        {{ estado.viewValue }}
-      </mat-option>
-    </mat-select> -->
-    <input
-      type="text"
-      placeholder="Estados"
-      aria-label="Estados"
-      matInput
-      required
-      [matAutocomplete]="estados"
-      [formControl]="estadosControl"
-    />
-    <mat-autocomplete
-      #estados="matAutocomplete"
-      [displayWith]="displayProveedor"
-    >
-      <mat-option
-        *ngFor="let estado of filteredEstados | async"
-        [value]="estado"
+  <form>
+    <mat-form-field>
+      <input
+        type="text"
+        placeholder="{{ strings.strings.states }}"
+        aria-label="strings.strings.states"
+        matInput
+        required
+        [formControl]="estadosControl"
+        [matAutocomplete]="estados"
+      />
+      <mat-autocomplete
+        #estados="matAutocomplete"
+        [displayWith]="displayEstados"
       >
-        {{ estado.DESCRIPCION }}
-      </mat-option>
-    </mat-autocomplete>
-  </mat-form-field>
-  <button mat-raised-button color="primary" [disabled]="!chips.length">
-    Cambiar
+        <mat-option
+          *ngFor="let estado of filteredEstados | async"
+          [value]="estado"
+        >
+          {{ estado.DESCRIPCION }}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+    <mat-form-field>
+      <input
+        type="datetime"
+        matInput
+        required
+        [matDatepicker]="dp1"
+        placeholder="{{ strings.strings.changeDate }}"
+        [formControl]="fechaCambioControl"
+      />
+      <mat-datepicker-toggle matSuffix [for]="dp1"></mat-datepicker-toggle>
+      <mat-datepicker #dp1></mat-datepicker>
+    </mat-form-field>
+    <mat-form-field>
+      <input
+        type="time"
+        matInput
+        required
+        placeholder="{{ strings.strings.changeTime }}"
+        [formControl]="horaCambioControl"
+        value="00:00"
+      />
+    </mat-form-field>
+  </form>
+  <button
+    mat-raised-button
+    color="primary"
+    [disabled]="
+      !chips.length ||
+      estadosControl.invalid ||
+      fechaCambioControl.invalid ||
+      fechaCambioControl.value > today ||
+      horaCambioControl.invalid
+    "
+    (click)="cambiarEstados()"
+  >
+    {{ strings.strings.changeState }}
   </button>
+</div>
+<div
+  [@show]="responseMessage.message !== ''"
+  class="response-message"
+  [ngClass]="{
+    error: responseMessage.ID >= 0,
+    success: responseMessage.ID < 0
+  }"
+>
+  {{ responseMessage.message }}
+</div>
+<div class="loading" *ngIf="isLoading" [@fade]>
+  <mat-spinner mode="indeterminate" [diameter]="60"></mat-spinner>
 </div>

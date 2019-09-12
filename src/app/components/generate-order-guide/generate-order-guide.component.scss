@@ -1,0 +1,11 @@
+@import '../../../assets/css/vars';
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between !important;
+}
+.mat-dialog-content {
+  margin: 0;
+  padding: 0;
+}
+

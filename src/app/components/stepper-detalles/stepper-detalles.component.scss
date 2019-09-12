@@ -1,10 +1,23 @@
-@import "../../../assets/css/vars";
+@import '../../../assets/css/vars';
 mat-horizontal-stepper {
-    // margin-top: 1rem;
+  // margin-top: 1rem;
 }
 ::ng-deep .mat-horizontal-content-container {
   border-top: 1px solid darken($HC-light-gray, 10);
-  padding: 0!important;
+  padding: 0 !important;
+}
+.query-response {
+  color: $HC-white;
+  background: $HC-primary;
+  padding: 0.5rem 1rem;
+  font-weight: 600;
+}
+mat-step {
+  &:nth-child(2) {
+    form {
+      padding: 0 1rem;
+    }
+  }
 }
 .stepper-buttons {
   margin-top: 1rem;
@@ -14,5 +27,36 @@ mat-horizontal-stepper {
   grid-template-columns: max-content max-content;
   & button {
     max-width: 200px;
+  }
+}
+
+.no-show {
+  display: none;
+}
+
+.step-container {
+  padding: 1rem;
+  &:nth-child(1), &:last-of-type {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-gap: 1rem;
+    justify-content: center;
+    & span:last-of-type {
+      display: flex;
+      & div:first-child {
+        margin-right: 1rem;
+      }
+    }
+  }
+}
+
+.chips {
+  padding: 1rem;
+  display: grid;
+  grid-gap: 1rem;
+  & .mat-chip-list-wrapper {
+    display: grid;
+    grid-gap: 0.1rem;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 100px));
   }
 }
