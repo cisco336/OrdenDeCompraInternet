@@ -45,12 +45,11 @@ export class TablaDetallesComponent implements OnInit, OnDestroy {
     strings.strings.deliverDate,
     strings.strings.editDate
   ];
-  displayedColumns: string[] = [
-    'Select',
-    'PRD_LVL_NUMBER',
-    'guia'
-  ];
-  displayedColumnsAux: string[] = this.displayedColumns.slice(1, this.displayedColumns.length - 1);
+  displayedColumns: string[] = ['Select', 'PRD_LVL_NUMBER', 'guia'];
+  displayedColumnsAux: string[] = this.displayedColumns.slice(
+    1,
+    this.displayedColumns.length - 1
+  );
   dataSource;
   elementDetails: string[] = [
     'FECHA_CREACION',
@@ -76,8 +75,8 @@ export class TablaDetallesComponent implements OnInit, OnDestroy {
   screenWidth = 0;
   strings = strings;
 
-  constructor(private _componentService: ComponentsService) { }
-  
+  constructor(private _componentService: ComponentsService) {}
+
   ngOnInit() {
     this.dataSource = new MatTableDataSource<DetalleOrdenDeCompra>();
     this.dataSource.data = this._componentService.getTablaDetalles().value;
@@ -147,5 +146,19 @@ export class TablaDetallesComponent implements OnInit, OnDestroy {
 
   openLink(element) {
     window.open(element, '_blank');
+  }
+
+  toolTip(element: string, type: boolean) {
+    debugger;
+    const a = type ? 'noGuideTooltip' : 'noLabelTooltip';
+    const b = type ? 'guide' : 'label';
+
+    return element === '--' ||
+      element === 'NA' ||
+      !element ||
+      element === undefined ||
+      element === null
+      ? strings.tooltips[a]
+      : strings.strings[b];
   }
 }
