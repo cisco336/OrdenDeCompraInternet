@@ -1,5 +1,5 @@
-<mat-horizontal-stepper [linear]="false" #stepper>
-  <mat-step state="tab">
+<mat-horizontal-stepper [linear]="true" #stepper>
+  <mat-step state="tab" [completed]="stepOne">
     <form>
       <mat-form-field class="no-show">
         <input matInput [value]="selectedSku?.length || null" />
@@ -37,7 +37,7 @@
     </form>
   </mat-step>
 
-  <mat-step state="widgets">
+  <mat-step state="widgets" [completed]="stepTwo">
     <form>
       <div class="step-container">
         <ng-template matStepLabel>{{ strings.strings.packConfig }}</ng-template>
@@ -47,44 +47,57 @@
         <button mat-stroked-button color="warn" matStepperPrevious>
           <mat-icon>navigate_before</mat-icon>{{ strings.strings.back }}
         </button>
-        <button mat-raised-button color="primary" matStepperNext>
+        <button
+          mat-raised-button
+          color="primary"
+          (click)="sendPackages(stepper)"
+        >
           <mat-icon>navigate_next</mat-icon>{{ strings.strings.next }}
         </button>
       </div>
     </form>
   </mat-step>
 
-  <mat-step state="location">
+  <mat-step state="location" [completed]="stepThree">
     <form>
       <div class="step-container">
         <ng-template matStepLabel>{{
           strings.strings.originDeliverAddress
         }}</ng-template>
         <app-origin-deliver-address></app-origin-deliver-address>
+        <span *ngIf="stepThreeMessg !== '' || isLoading">
+          <div *ngIf="isLoading" [@fade]>
+            <mat-spinner mode="indeterminate" [diameter]="20"></mat-spinner>
+          </div>
+          {{ stepThreeMessg }}
+        </span>
       </div>
       <div class="stepper-buttons">
         <button mat-stroked-button color="warn" matStepperPrevious>
           <mat-icon>navigate_before</mat-icon>{{ strings.strings.back }}
         </button>
-        <button mat-raised-button color="primary" matStepperNext>
+        <button mat-raised-button color="primary" (click)="buildBody(stepper)">
           <mat-icon>navigate_next</mat-icon>{{ strings.strings.next }}
         </button>
       </div>
     </form>
   </mat-step>
 
-  <mat-step state="shipping">
+  <mat-step state="shipping" [completed]="stepFour">
     <div class="step-container">
       <ng-template matStepLabel>{{
         strings.strings.confirmGuideGeneration
       }}</ng-template>
-      <app-confirm-generate-guide></app-confirm-generate-guide>
+      {{ finalMessg }}
+      <div *ngIf="isLoading" [@fade]>
+        <mat-spinner mode="indeterminate" [diameter]="20"></mat-spinner>
+      </div>
     </div>
     <div class="stepper-buttons">
       <button mat-stroked-button color="warn" matStepperPrevious>
         <mat-icon>navigate_before</mat-icon>{{ strings.strings.back }}
       </button>
-      <button mat-raised-button color="primary">
+      <button mat-raised-button color="primary" (click)="generarGuia(stepper)" [disabled]="guideQuery?.length">
         <mat-icon>description</mat-icon>{{ strings.strings.generateGuide }}
       </button>
     </div>

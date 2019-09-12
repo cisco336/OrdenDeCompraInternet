@@ -9,6 +9,9 @@
 
 <div class="the-wrapper" mat-dialog-content>
   <div [@cardGroup]="ordenCompra !== null ? true : false" class="card-wrapper">
+    <div *ngIf="error === ''">
+      {{ error }}
+    </div>
     <mat-card *ngIf="cliente" class="card-first mat-elevation-z10">
       <div class="card-title">
         <mat-icon>person</mat-icon>
@@ -55,16 +58,12 @@
               infoBaseOC.DIRECCION_ENTREGA !== ''
             "
           >
-            <span>{{ strings.strings.deliveryAddress }}:</span
-            ><span>{{ infoBaseOC.DIRECCION_ENTREGA | titlecase }}</span>
+            <span>{{ strings.strings.address }}:</span
+            ><span>{{ direccionDestino | titlecase }}</span>
           </li>
-          <li
-            *ngIf="
-              infoBaseOC.CIUDAD_ENTREGA && infoBaseOC.CIUDAD_ENTREGA !== ''
-            "
-          >
-            <span>{{ strings.strings.deliveryCity }}:</span
-            ><span>{{ infoBaseOC.CIUDAD_ENTREGA | titlecase }}</span>
+          <li *ngIf="ciudad">
+            <span>{{ strings.strings.city }}:</span
+            ><span>{{ ciudad | titlecase }}</span>
           </li>
           <li
             *ngIf="
@@ -76,22 +75,6 @@
               {{ infoBaseOC.TRANSPORTADORA | titlecase }}
             </span>
           </li>
-          <!-- <li>
-            <span>{{ strings.strings.guide }}: </span
-            ><span>
-              <button mat-icon-button color="accent" [disabled]="!infoBaseOC.GUIA || infoBaseOC.GUIA === ''" (click)="showImg(infoBaseOC.GUIA)">
-                <mat-icon>cloud_download</mat-icon>
-              </button>
-            </span>
-          </li>
-          <li>
-            <span>{{ strings.strings.accomplished }}: </span
-            ><span
-              ><button mat-icon-button color="accent" [disabled]="!infoBaseOC.CUMPLIDO || infoBaseOC.CUMPLIDO === ''" (click)="showImg(infoBaseOC.CUMPLIDO)">
-                <mat-icon>cloud_download</mat-icon>
-              </button></span
-            >
-          </li> -->
         </ul>
       </div>
     </mat-card>

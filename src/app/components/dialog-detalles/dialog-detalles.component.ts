@@ -93,6 +93,9 @@ export class DialogDetallesComponent implements OnInit, OnDestroy {
   entrega: boolean;
   observaciones: boolean;
   GetInfoBaseOcSubscription;
+  ciudad;
+  direccionDestino;
+  error: string;
 
   constructor(
     public dialogRef: MatDialogRef<DialogDetallesComponent>,
@@ -101,8 +104,18 @@ export class DialogDetallesComponent implements OnInit, OnDestroy {
     private _dataService: DataService,
     private _bottomSheet: MatBottomSheet
   ) {}
-
   ngOnInit() {
+    this._componentService.setCloseDialog(false);
+    this._componentService.setSteps({
+      two: false,
+      three: false,
+      four: false
+    });
+    this._componentService.closeDialog().subscribe(close => {
+      if (close) {
+        setTimeout(() => this.closeDialog(), 3000);
+      }
+    });
     this.estados = this.data.data.estados;
     this.ordenCompra = this.data.data.ordenCompra;
     const ordenNumber = this.ordenCompra[0].PMG_PO_NUMBER;
@@ -111,6 +124,24 @@ export class DialogDetallesComponent implements OnInit, OnDestroy {
       .GetInfoBaseOc(ordenNumber)
       .toPromise()
       .then(data => {
+        this.direccionDestino = data['Value'][0]['DIRECCION_ENTREGA'];
+        this._dataService
+          .GetCiudades('DANESAPS')
+          .toPromise()
+          .then(ciudades => {
+            this.ciudad = ciudades;
+            this.ciudad = this.ciudad.filter(
+              s => s.ID === data['Value'][0]['CODIGO_DANE_DESTINO']
+            )[0]['DESCRIPCION'];
+          })
+          .catch(() => {
+            this.error = strings.errorMessagesText.citiesError;
+            setTimeout(
+              () => (this.error = ''),
+              3000
+            );
+          });
+        this._componentService.setInfoBaseOC(data['Value'][0]);
         this.infoBaseOC = data['Value'][0];
         if (this.infoBaseOC['Código'] === '4') {
           this.cliente = false;
@@ -133,15 +164,13 @@ export class DialogDetallesComponent implements OnInit, OnDestroy {
               : true;
         }
       });
-    this._componentService.setInfoBaseOC(this.infoBaseOC);
     this.numeroOrden = this.ordenCompra[0].PMG_PO_NUMBER;
     this.background = this.background ? '' : 'primary';
     this.color = this.color ? '' : 'accent';
     this.skus = this._componentService.getSelectedSku().value;
   }
 
-  ngOnDestroy() {
-  }
+  ngOnDestroy() {}
 
   openBottomSheet(): void {
     this._bottomSheet.open(BottomSheetComponent, {

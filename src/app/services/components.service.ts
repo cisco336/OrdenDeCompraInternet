@@ -5,7 +5,6 @@ import { BehaviorSubject } from 'rxjs';
   providedIn: 'root'
 })
 export class ComponentsService {
-
   selectedSku = new BehaviorSubject<any>('');
   estados = new BehaviorSubject<any>('');
   tablaDetalle = new BehaviorSubject<any>('');
@@ -14,9 +13,30 @@ export class ComponentsService {
   infoBaseOC = new BehaviorSubject<any>('');
   ordenGuia = new BehaviorSubject<any>('');
   detalleOC = new BehaviorSubject<any>('');
+  bulto = new BehaviorSubject<any>('');
+  hasDetails = new BehaviorSubject<boolean>(false);
+  resetBultos = new BehaviorSubject<boolean>(false);
+  steps = new BehaviorSubject<{ two: false; three: false; four: false }>({
+    two: false,
+    three: false,
+    four: false
+  });
+  magnitudes = new BehaviorSubject<any[]>([]);
+  dataSourceBackup = new BehaviorSubject<any[]>([]);
+  idBulto = new BehaviorSubject<any>('');
+  idBultoPost = new BehaviorSubject<any>('');
+  direccionOrigen = new BehaviorSubject<{
+    direccion: string;
+    ciudad: string;
+  }>({
+    direccion: '',
+    ciudad: ''
+  });
+  bultos = new BehaviorSubject<any>([]);
+  clearSkus = new BehaviorSubject<any>('');
+  closeDialogBJ = new BehaviorSubject<boolean>(false);
 
-
-  constructor() { }
+  constructor() {}
 
   setSelectedSku(data) {
     this.selectedSku.next(data);
@@ -79,5 +99,78 @@ export class ComponentsService {
 
   getDetalleOC() {
     return this.detalleOC;
+  }
+
+  setBulto(data) {
+    return this.bulto.next(data);
+  }
+  getBulto() {
+    return this.bulto;
+  }
+  setHasDetails(data) {
+    return this.hasDetails.next(data);
+  }
+  getHasDetails() {
+    return this.hasDetails;
+  }
+  setSteps(data) {
+    return this.steps.next({ ...data });
+  }
+  getSteps() {
+    return this.steps;
+  }
+  setMagnitudes(data) {
+    return this.magnitudes.next(data);
+  }
+  getMagnitudes() {
+    return this.magnitudes;
+  }
+  setDataSourceBackup(data) {
+    return this.dataSourceBackup.next(data);
+  }
+  getDataSourceBackup() {
+    return this.dataSourceBackup;
+  }
+  setResetBultos(data) {
+    return this.resetBultos.next(data);
+  }
+  getResetBultos() {
+    return this.resetBultos;
+  }
+  setIdBulto(data) {
+    return this.idBulto.next(data);
+  }
+  getIdBulto() {
+    return this.idBulto;
+  }
+  setIdBultoPost(data) {
+    return this.idBultoPost.next(data);
+  }
+  getIdBultoPost() {
+    return this.idBultoPost;
+  }
+  setBultos(data) {
+    return this.bultos.next(data);
+  }
+  getBultos() {
+    return this.bultos;
+  }
+  setClearSkus(data) {
+    return this.clearSkus.next(data);
+  }
+  getClearSkus() {
+    return this.clearSkus;
+  }
+  setDireccionOrigen(data) {
+    return this.direccionOrigen.next(data);
+  }
+  getDireccionOrigen() {
+    return this.direccionOrigen;
+  }
+  setCloseDialog(data) {
+    return this.closeDialogBJ.next(data);
+  }
+  closeDialog() {
+    return this.closeDialogBJ;
   }
 }

@@ -64,17 +64,14 @@ export interface Proveedor {
   NOMBRE_PROVEEDOR: string;
   PROVEEDOR_ID: number;
 }
-
 export interface Estado {
   ID: number;
   DESCRIPCION: string;
 }
-
 export interface Proveedores {
   ID: number;
   DESCRIPCION: string;
 }
-
 export interface TrackingObject {
   ORIGEN: string;
   OBJECT_ID: number;
@@ -105,13 +102,11 @@ export interface InfoBaseOC {
   CUMPLIDO: string;
   TRANSPORTADORA: string;
 }
-
 export interface Bultos {
   PESO: number;
   VOLUMEN: number;
   DECLARADO: number;
 }
-
 export interface Envia {
   State: boolean;
   Message: string;
@@ -127,3 +122,35 @@ export interface Envia {
     num_ordens: string;
   };
 }
+export interface QueryMagnitudes {
+  cantidad: number;
+  IdDetalle: number;
+  largo: number;
+  ancho: number;
+  alto: number;
+  peso: number;
+  declarado: number;
+}
+export interface QueryBulto {
+  Transaccion: string;
+  Ordencompra: number;
+  Cantidad: number;
+  Sticker: string;
+  Sku: string;
+  ID_BULTO: number;
+  Magnitudes: QueryMagnitudes[];
+  Usuario: string;
+}
+// export interface Butlo {
+//   ID_BULTO: number;
+//   STICKER: number;
+//   PMG_PO_NUMBER: number;
+//   BULTOS: number;
+//   ID_BULTO_DETALLE: number;
+//   BULTO: number;
+//   CANTIDAD: number;
+//   LARGO: number;
+//   ANCHO: number;
+//   PESO: number;
+//   DECLARADO: number;
+// }

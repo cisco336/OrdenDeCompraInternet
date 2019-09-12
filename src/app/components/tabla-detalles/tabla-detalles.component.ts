@@ -3,7 +3,6 @@ import {
   OnInit,
   ViewChild,
   ElementRef,
-  DoCheck,
   OnDestroy
 } from '@angular/core';
 import {
@@ -19,7 +18,6 @@ import { MatPaginator } from '@angular/material/paginator';
 import { ComponentsService } from 'src/app/services/components.service';
 import { DetalleOrdenDeCompra } from '../../interfaces/interfaces';
 import * as strings from '../../constants/constants';
-import { HostListener } from '@angular/core';
 
 @Component({
   selector: 'app-tabla-detalles',
@@ -36,7 +34,7 @@ import { HostListener } from '@angular/core';
     ])
   ]
 })
-export class TablaDetallesComponent implements OnInit, DoCheck, OnDestroy {
+export class TablaDetallesComponent implements OnInit, OnDestroy {
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   displayedNames: string[] = [
     strings.strings.sku,
@@ -47,18 +45,12 @@ export class TablaDetallesComponent implements OnInit, DoCheck, OnDestroy {
     strings.strings.deliverDate,
     strings.strings.editDate
   ];
-  displayedColumnsBackup: string[] = [
+  displayedColumns: string[] = [
     'Select',
     'PRD_LVL_NUMBER',
-    // 'PRD_UPC',
-    // 'PRD_NAME_FULL',
-    // 'ESTADO',
-    // 'PMG_SHIP_DATE',
-    // 'PMG_SHIP_DATE1',
-    // 'FECHA_MODIFICACION'
+    'guia'
   ];
-  displayedColumns: string[] = [...this.displayedColumnsBackup];
-  displayedColumnsAux: string[] = this.displayedColumns.slice(1);
+  displayedColumnsAux: string[] = this.displayedColumns.slice(1, this.displayedColumns.length - 1);
   dataSource;
   elementDetails: string[] = [
     'FECHA_CREACION',
@@ -83,32 +75,13 @@ export class TablaDetallesComponent implements OnInit, DoCheck, OnDestroy {
   screenHeight = 0;
   screenWidth = 0;
   strings = strings;
-  @HostListener('window:resize', ['$event'])
-  onResize(event?) {
-    const tableWidth = this.table['_elementRef'].nativeElement.clientWidth;
-    this.screenWidth = window.innerWidth;
-    if (tableWidth + 55 < this.screenWidth) {
-      this.displayedColumns = [...this.displayedColumnsBackup];
-    }
 
-    if (tableWidth + 30 > this.screenWidth) {
-      if (this.displayedColumns.length > 3) {
-        this.displayedColumns.pop();
-        this.elementDetails.push(this.displayedColumns.pop());
-      }
-    }
-  }
-
-  constructor(private _componentService: ComponentsService) {}
-
-  ngDoCheck() {
-    this.onResize();
-  }
+  constructor(private _componentService: ComponentsService) { }
+  
   ngOnInit() {
     this.dataSource = new MatTableDataSource<DetalleOrdenDeCompra>();
     this.dataSource.data = this._componentService.getTablaDetalles().value;
     this.selection.clear();
-    this.onResize();
     setTimeout(() => {
       this.dataSource.paginator = this.paginator;
     }, 0);
@@ -170,5 +143,9 @@ export class TablaDetallesComponent implements OnInit, DoCheck, OnDestroy {
   }
   isCost(val) {
     return val === strings.strings.cost;
+  }
+
+  openLink(element) {
+    window.open(element, '_blank');
   }
 }

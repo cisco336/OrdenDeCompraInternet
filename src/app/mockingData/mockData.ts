@@ -12,3 +12,30 @@ export const eviaData = [
     num_ordens: '01-1788508'
   }
 ];
+
+// export const bultos = [
+//   {
+//     ID_BULTO: 23,
+//     STICKER: '-1',
+//     PMG_PO_NUMBER: 6719301,
+//     ID_BULTO_DETALLE: 35,
+//     BULTOS: 1,
+//     LARGO: 10,
+//     ANCHO: 2,
+//     ALTO: 4,
+//     PESO: 44,
+//     DECLARADO: 0
+//   },
+//   {
+//     ID_BULTO: 23,
+//     STICKER: '-1',
+//     PMG_PO_NUMBER: 6719301,
+//     ID_BULTO_DETALLE: 35,
+//     BULTOS: 1,
+//     LARGO: 10,
+//     ANCHO: 2,
+//     ALTO: 4,
+//     PESO: 44,
+//     DECLARADO: 0
+//   }
+// ];

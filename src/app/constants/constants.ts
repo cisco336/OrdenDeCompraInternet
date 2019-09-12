@@ -15,7 +15,8 @@ export const tooltips = {
     'Haga clic sobre el número de orden para mostrar los detalles. ',
 
   tableFooterDblclick:
-    'Haga DOBLE clic sobre cualquier otra parte de la fila para mostrar más información sobre la orden.'
+    'Haga DOBLE clic sobre cualquier otra parte de la fila para mostrar más información sobre la orden.',
+  noGuideTooltip: 'El registro no posee guía.'
 };
 export const matFormFieldText = {};
 export const errorMessagesText = {
@@ -31,7 +32,10 @@ export const errorMessagesText = {
   noObservations: 'Sin observaciones.',
   noData: 'Sin datos',
   statesError: 'Error al obtener los estados.',
-  providersError: 'Error al obtener los proveedores.'
+  providersError: 'Error al obtener los proveedores.',
+  noGuide: 'Sin guía',
+  errorGeneratingGuide: 'Ocurrió un error al intentar generar la guía.',
+  citiesError: 'Error al intentar obtener ciudades.'
 };
 export const successMessagesText = {
   querySuccess: 'La solicitud se ejecutó de forma exitosa.'
@@ -89,6 +93,7 @@ export const strings = {
   city: 'Ciudad',
   cities: 'Ciudades',
   deliveryData: 'Datos de entrega',
+  providerData: 'Datos de proveedor',
   deliveryAddress: 'Dirección de entrega',
   deliveryCity: 'Ciudad a entregar',
   guide: 'Guía',
@@ -121,10 +126,18 @@ export const strings = {
   unities: 'Unidades',
   generatePackages: 'Generar Bultos',
   weight: 'Peso',
+  package: 'Bulto',
+  packages: 'Bultos',
   volumne: 'Volumen',
   declared: 'Declarado',
   actions: 'Acciones',
+  long: 'Largo',
+  width: 'Ancho',
   dateGuideGeneration: 'Fecha generación guía',
+  guideNumber: 'Número de guía',
+  height: 'Alto',
+  yes: 'Si',
+  no: 'No',
 };
 
 export const detailsTable = {
@@ -168,4 +181,46 @@ export const longMessages = {
   generateOrderGuideTitle: 'Generación de guía para orden de compra',
   orderDetailTitle: 'Detalles de la orden de compra',
   tableClick: 'Haga clic sobre la fila para ver los detalles.',
+  packagesUpdateConfirm: '¿Está seguro de recalcular la configuración de los bultos?',
+  generateOrderGuideAlertFinal: '¿Está seguro de querer generar la guía para la orden de compra seleccionada?',
+  generateGuideSuccess: 'La guía se generó de forma exitosa.'
+};
+
+export class Constants {
+  static readonly PATHROTULO = 'http://200.69.100.66/2IMPRESIONGUIASpruebas/ISticker_ZEA.aspx?';
+
+  // DEV
+  static readonly APIORDENDECOMPRA = 'http://10.23.14.164:9002/Servicios/ORDEN_COMPRA_1.0.0/api';
+  // QA
+  // static readonly APIORDENDECOMPRA = 'http://10.23.14.163:9002/Servicios/ORDEN_COMPRA_1.0.0/api';
+  // PROD
+  // static readonly APIORDENDECOMPRA = 'http://10.23.18.163:9002/Servicios/ORDEN_COMPRA_1.0.0/api';
+
+  // DEV & QA
+  static readonly USRPASSWD = 'EMPCAR01:EMPCAR1';
+  static readonly USR = 'EMPCAR01';
+  static readonly PASSWD = 'EMPCAR1';
+  // PROD
+  // static readonly USRPASSWD = 'EMPCAR01:EMPCAR1';
+  // static readonly USR = 'EMPCAR01';
+  // static readonly PASSWD = 'EMPCAR1';
+
+  static readonly AUTH = 'https://apim-prod-proxy.sodhc.co/logisticaSeguridadAutenticacion/authenticated';
+  static readonly GUIA = 'http://200.69.100.66/ServicioLiquidacionRESTpruebas/Service1.svc/Generacion';
+
+  // DEV
+  // static readonly APIGUIA = 'http://10.23.14.164:9001/Servicios/Transportadora_1.0.0/api';
+  // QA
+  // static readonly APIGUIA = 'http://10.23.14.163:9001/Servicios/Transportadora_1.0.0/api';
+  // PROD
+  // static readonly APIGUIA = 'http://10.23.18.163:9001/Servicios/Transportadora_1.0.0/api';
+
+  // Local
+  static readonly APIGUIA = 'http://localhost/Abastecimiento/Servicios/Transportadoras/api';
+  // DEV
+  static readonly SUBSCRIPTIONKEY = 'dfeb9e69860f45258647cc7ba45fb040';
+  // QA
+  // static readonly SUBSCRIPTIONKEY = "442c55ae313642028c9eb69dc4220dad";
+  // PROD
+  // static readonly SUBSCRIPTIONKEY = "209fa70e5b0c4b5c8bddaf0aa54b8e19";
 };
