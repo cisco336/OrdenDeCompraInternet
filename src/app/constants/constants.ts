@@ -203,10 +203,10 @@ export class Constants {
   // static readonly PATHROTULO = 'http://200.69.100.66/2IMPRESIONGUIAS/ISticker_ZEA2.aspx';
 
   // DEV
-  static readonly APIORDENDECOMPRA = 'https://apim-dev-proxy.sodhc.co/logistica-ordenescompra';
+  // static readonly APIORDENDECOMPRA = 'https://apim-dev-proxy.sodhc.co/logistica-ordenescompra';
   // QA
-  // static readonly APIORDENDECOMPRA =
-    // 'https://apim-qa-proxy.sodhc.co/logistica-ordenescompra';
+  static readonly APIORDENDECOMPRA =
+    'https://apim-qa-proxy.sodhc.co/logistica-ordenescompra';
   // PROD
   // static readonly APIORDENDECOMPRA = 'https://apim-prod-proxy.sodhc.co/logistica-ordenescompra';
 
@@ -254,9 +254,8 @@ export class Constants {
   // static readonly SUBSCRIPTIONKEY = "209fa70e5b0c4b5c8bddaf0aa54b8e19";
 
   // DEV
-  static readonly SUBSCRIPTIONKEYCONFIGURACION = '9b33c33d833340e0839653420edf6a89';
+  // static readonly SUBSCRIPTIONKEYCONFIGURACION = '9b33c33d833340e0839653420edf6a89';
   // QA
-
+  static readonly SUBSCRIPTIONKEYCONFIGURACION = '442c55ae313642028c9eb69dc4220dad';
   // PROD
 }
-

@@ -239,6 +239,7 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
           this.usr = y.split(';')[0];
           this.key = y.split(';')[1];
           this.TOKEN = y.split(';')[2];
+
           if (this.TOKEN) {
             try {
               this._dataService.setToken(this.TOKEN);
@@ -286,7 +287,8 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
       .getProveedores()
       .toPromise().then(
         getProveedoresData => {
-          console.log(getProveedoresData);
+          const proveedor = getProveedoresData['Value'].filter(s => s.ID === parseInt(this.key, 10));
+          this.proveedor = proveedor.length > 0 ? proveedor[0].DESCRIPCION : 'Proveedor no encontrado.';
           if (
             !getProveedoresData['Estado'] ||
             getProveedoresData['Value'][0]['Código']
@@ -556,53 +558,57 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
   }
 
   getOrdenDetalle(element, guiaOrden?) {
-    if (!this.aux) {
-      this.aux = true;
-      this.queryDetallesDialog.p_pmg_po_number = element;
-      this._dataService
-        .postTablaPrincipalOC(this.queryDetallesDialog)
-        .toPromise()
-        .then(
-          result => {
-            this.aux = false;
-            if (result) {
-              this._componentService.setDetalleOC(result['Value']);
-              if (guiaOrden) {
-                this.generateGuide();
-              } else {
-                this.openDialogDetalles();
+    if (element) {
+      if (!this.aux) {
+        this.aux = true;
+        this.queryDetallesDialog.p_pmg_po_number = element;
+        this._dataService
+          .postTablaPrincipalOC(this.queryDetallesDialog)
+          .toPromise()
+          .then(
+            result => {
+              this.aux = false;
+              if (result) {
+                this._componentService.setDetalleOC(result['Value']);
+                if (guiaOrden) {
+                  this.generateGuide();
+                } else {
+                  this.openDialogDetalles();
+                }
               }
+            },
+            error => {
+              this.aux = false;
+              this.errorHandling(error);
             }
-          },
-          error => {
-            this.aux = false;
-            this.errorHandling(error);
-          }
-        );
-      const form = this.mainFilterForm;
-      const queryTracking = {
-        p_transaccion: 'TR',
-        p_pmg_po_number: -1,
-        p_prd_lvl_child: -1,
-        p_vpc_tech_key: form.get('proveedorControl').value['ID'],
-        p_fecha_inicio: form
-          .get('fechaInicioControl')
-          .value.format('DD/MM/YYYY'),
-        p_fecha_fin: form.get('fechaFinControl').value.format('DD/MM/YYYY'),
-        p_fecha_real: '-1',
-        p_id_estado: form.get('estadosControl').value.ID,
-        p_origen: '-1',
-        p_usuario: this.usr
-      };
-      this._dataService
-        .postTablaPrincipalOC(queryTracking)
-        .toPromise()
-        .then(data => {
-          this._componentService.setTracking(data);
-        })
-        .catch(() => {
-          // Controlar error TODO
-        });
+          );
+        const form = this.mainFilterForm;
+        const queryTracking = {
+          p_transaccion: 'TR',
+          p_pmg_po_number: -1,
+          p_prd_lvl_child: -1,
+          p_vpc_tech_key: form.get('proveedorControl').value['ID'],
+          p_fecha_inicio: form
+            .get('fechaInicioControl')
+            .value.format('DD/MM/YYYY'),
+          p_fecha_fin: form.get('fechaFinControl').value.format('DD/MM/YYYY'),
+          p_fecha_real: '-1',
+          p_id_estado: form.get('estadosControl').value.ID,
+          p_origen: '-1',
+          p_usuario: this.usr
+        };
+        this._dataService
+          .postTablaPrincipalOC(queryTracking)
+          .toPromise()
+          .then(data => {
+            this._componentService.setTracking(data);
+          })
+          .catch(() => {
+            // Controlar error TODO
+          });
+      }
+    } else {
+      this._toastr.error('Error al obtener detalles.');
     }
   }
   openDialogDetalles() {

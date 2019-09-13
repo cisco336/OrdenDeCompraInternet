@@ -58,7 +58,9 @@ export class DataService {
 
   getProveedores() {
     return this.http.get(Constants.APIORDENDECOMPRA + this.getProveedoresCall, {
-      headers: this.proveedoresJWT()
+      headers: {
+        'Ocp-Apim-Subscription-Key': Constants.SUBSCRIPTIONKEYCONFIGURACION,
+      }
     });
   }
 
