@@ -394,7 +394,7 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
 
             this.render = true;
           }
-        }
+        },
         error => {
           this.errorHandling(error);
           this.mainFilterForm
