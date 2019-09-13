@@ -226,15 +226,48 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
     this.routeSubscription = this._route.queryParams;
     this.routeSubscription.subscribe(
       params => {
-        if (!params['token'] || !params['token'].split(';')[0]) {
+        if (!params['token']) {
           this.usr = '';
           this.isLoading = false;
           this.errorMessage = this.errorMessagesText.noPrivileges;
         } else {
-          this.errorMessage = '';
-          this.usr = params['token'].split(';')[0];
-          this._componentService.setUser(this.usr);
-          this.appStart();
+          const y = atob(params['token']);
+          if (!y.split(';')[0] || !y.split(';')[1] || !y.split(';')[2]) {
+            this.errorMessage = 'Datos de inicio de sesión incorrectos.';
+            this.usr = '';
+          }
+          this.usr = y.split(';')[0];
+          this.key = y.split(';')[1];
+          this.TOKEN = y.split(';')[2];
+          if (this.TOKEN) {
+            try {
+              this._dataService.setToken(this.TOKEN);
+            } catch (error) {
+              this._toastr.error('Error al decodificar token');
+            }
+            this._dataService.getAutorizar().subscribe(
+              data => {
+                if (data) {
+                  this._componentService.setUser(this.usr);
+                  this.appStart(this.key);
+                }
+              },
+              error => {
+                switch (error.status) {
+                  case 401:
+                    this._toastr.warning('Usuario No autorizado.');
+                    break;
+                  case 500:
+                    this._toastr.error('Error en el servicio de autorización.');
+                    break;
+                  default:
+                    this._toastr.error('Error de comunicación.');
+                    break;
+                }
+                this.isLoading = false;
+              }
+            );
+          }
         }
       },
       error => {
@@ -251,9 +284,9 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
     this.isLoading = true;
     this._dataService
       .getProveedores()
-      .toPromise()
-      .then(
+      .toPromise().then(
         getProveedoresData => {
+          console.log(getProveedoresData);
           if (
             !getProveedoresData['Estado'] ||
             getProveedoresData['Value'][0]['Código']
@@ -361,7 +394,7 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
 
             this.render = true;
           }
-        },
+        }
         error => {
           this.errorHandling(error);
           this.mainFilterForm
@@ -427,6 +460,7 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
       p_origen: '-1',
       p_usuario: this.usr
     };
+
     this._dataService
       .postTablaPrincipalOC(queryConsultar)
       .toPromise()
@@ -545,6 +579,30 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
             this.errorHandling(error);
           }
         );
+      const form = this.mainFilterForm;
+      const queryTracking = {
+        p_transaccion: 'TR',
+        p_pmg_po_number: -1,
+        p_prd_lvl_child: -1,
+        p_vpc_tech_key: form.get('proveedorControl').value['ID'],
+        p_fecha_inicio: form
+          .get('fechaInicioControl')
+          .value.format('DD/MM/YYYY'),
+        p_fecha_fin: form.get('fechaFinControl').value.format('DD/MM/YYYY'),
+        p_fecha_real: '-1',
+        p_id_estado: form.get('estadosControl').value.ID,
+        p_origen: '-1',
+        p_usuario: this.usr
+      };
+      this._dataService
+        .postTablaPrincipalOC(queryTracking)
+        .toPromise()
+        .then(data => {
+          this._componentService.setTracking(data);
+        })
+        .catch(() => {
+          // Controlar error TODO
+        });
     }
   }
   openDialogDetalles() {
@@ -569,10 +627,7 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
       .toPromise()
       .then(
         () => {
-          if (this._componentService.closeDialog().value) {
-            this.consultar();
-            this.applyFilter('');
-          }
+          this.refreshData();
         },
         error => {
           this._toastr.error(error);
@@ -627,12 +682,14 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
       .toPromise()
       .then(
         () => {
-          if (this._componentService.closeDialog().value) {
-            this.consultar();
-            this.applyFilter('');
-          }
+          this.refreshData();
         },
         error => this._toastr.error(error)
       );
+  }
+
+  refreshData() {
+    this.consultar();
+    this.applyFilter('');
   }
 }

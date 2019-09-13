@@ -124,15 +124,23 @@
       >
         <mat-list>
           <mat-list-item *ngFor="let x of jsonToBeUsed">
-            <span mat-line> {{ x.key }}: </span>
-            <span mat-line *ngIf="isNumber(x.value, x.key)">
-              {{ x.value }}
+            <span *ngIf="x.key !== strings.strings.realEventDate">
+              <span mat-line> {{ x.key }}: </span>
+              <span mat-line *ngIf="isNumber(x.value, x.key)">
+                {{ x.value }}
+              </span>
+              <span mat-line *ngIf="!isNumber(x.value)">
+                {{ x.value | titlecase }}
+              </span>
+              <span mat-line *ngIf="isCost(x.key)">
+                {{ x.value | currency: 'COP':'symbol-narrow' }}
+              </span>
             </span>
-            <span mat-line *ngIf="!isNumber(x.value)">
-              {{ x.value | titlecase }}
-            </span>
-            <span mat-line *ngIf="isCost(x.key)">
-              {{ x.value | currency: 'COP':'symbol-narrow' }}
+            <span *ngIf="x.key === strings.strings.realEventDate">
+              <span mat-line> {{ x.key }}: </span>
+              <span mat-line>
+                {{ x.value | date }}
+              </span>
             </span>
           </mat-list-item>
         </mat-list>

@@ -109,6 +109,7 @@ export class StepperDetallesComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
+    this._componentService.aux.subscribe(val => this.stepOne = val);
     this.finalMessg = strings.longMessages.generateOrderGuideAlertFinal;
     this.stepOne = false;
     this.magnitudes = this._componentService.getMagnitudes().value;
@@ -140,8 +141,22 @@ export class StepperDetallesComponent implements OnInit, OnDestroy {
     this.selectedSkuSubscription = this._componentService
       .getSelectedSku()
       .subscribe(skusSub => {
-        this.selectedSku = skusSub;
-        this.stepOne = this.selectedSku.length > 0;
+        if (skusSub.length) {
+          this.selectedSku = skusSub.filter(
+            s => s.GUIA === 'NA' || s.GUIA === '--'
+          );
+        }
+        if (this.hasDetails) {
+          if (this.selectedSku) {
+            this.stepOne = this.selectedSku && this.selectedSku.length > 0;
+          } else {
+            this.stepOne = false;
+          }
+        } else if (this.selectedSku && this.selectedSku.length > 0) {
+          this.stepOne = true;
+        } else {
+          this.stepOne = false;
+        }
       });
   }
 
@@ -155,7 +170,8 @@ export class StepperDetallesComponent implements OnInit, OnDestroy {
           sku: number['PRD_LVL_NUMBER'],
           description: number['PRD_NAME_FULL']
         })
-    );
+    ).filter(s => s.guia === '--' || s.guia === 'NA');
+    this.stepOne = this.skus.length > 0;
   }
   openBottomSheet(): void {
     const sheet = this._bottomSheet.open(BottomSheetComponent, {
@@ -200,7 +216,6 @@ export class StepperDetallesComponent implements OnInit, OnDestroy {
         .toPromise()
         .then(
           resolve => {
-            debugger
             this.showQueryResponse = true;
             this.queryResponse = resolve['Value'][0]['MENSAJE'];
             this.error = resolve['Value'][0]['ID'];
@@ -222,7 +237,7 @@ export class StepperDetallesComponent implements OnInit, OnDestroy {
       .postTablaPrincipalOC(this._componentService.getQueryDetalles().value)
       .toPromise()
       .then(data => {
-        this._componentService.setTablaDetalles(data);
+        this._componentService.setTablaDetalles(data['Value']);
       });
   }
 
@@ -266,8 +281,8 @@ export class StepperDetallesComponent implements OnInit, OnDestroy {
       CodigoInterno: x.getInfoBaseOC().value['PMG_PO_NUMBER'],
       IdBulto: x.getIdBulto().value,
       Sku: x.getClearSkus().value,
-      Direccion: x.getDireccionOrigen().value.direccion,
-      CodDane: x.getDireccionOrigen().value.ciudad['ID'],
+      Direccion: x.getDireccionOrigen().value.direccion || null,
+      CodDane: x.getDireccionOrigen().value.ciudad['ID'] || null,
       info_cubicacion: x.getMagnitudes().value
     };
     this._dataService

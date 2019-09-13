@@ -32,6 +32,14 @@ export class DataService {
     });
   }
 
+  protected proveedoresJWT(): HttpHeaders {
+    return new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Ocp-Apim-Subscription-Key': Constants.SUBSCRIPTIONKEYCONFIGURACION,
+      Authorization: 'Bearer ' + this.token.value
+    });
+  }
+
   protected generateGuideHeaders(): HttpHeaders {
     return new HttpHeaders({
       'Content-Type': 'application/json',
@@ -40,14 +48,17 @@ export class DataService {
   }
 
   getDatosProveedor(data) {
-    return this.http.get(Constants.APIORDENDECOMPRA + this.getDatosProveedorCall + '/' + data, {
-      headers: this.generateBasicHeadersJWT()
-    });
+    return this.http.get(
+      Constants.APIPROVEEDOR + this.getDatosProveedorCall + '/' + data,
+      {
+        headers: this.generateBasicHeadersJWT()
+      }
+    );
   }
 
   getProveedores() {
     return this.http.get(Constants.APIORDENDECOMPRA + this.getProveedoresCall, {
-      headers: this.generateBasicHeadersJWT()
+      headers: this.proveedoresJWT()
     });
   }
 
@@ -58,15 +69,22 @@ export class DataService {
   }
 
   postTablaPrincipalOC(data) {
-    return this.http.post(Constants.APIORDENDECOMPRA + this.postTablaPrincipalOCCall, data, {
-      headers: this.generateBasicHeadersJWT()
-    });
+    return this.http.post(
+      Constants.APIORDENDECOMPRA + this.postTablaPrincipalOCCall,
+      data,
+      {
+        headers: this.generateBasicHeadersJWT()
+      }
+    );
   }
 
   GetInfoBaseOc(data) {
-    return this.http.get(Constants.APIORDENDECOMPRA + this.getInfoBaseOcCall + data, {
-      headers: this.generateBasicHeadersJWT()
-    });
+    return this.http.get(
+      Constants.APIORDENDECOMPRA + this.getInfoBaseOcCall + data,
+      {
+        headers: this.generateBasicHeadersJWT()
+      }
+    );
   }
 
   GetGuia(data) {
@@ -105,5 +123,12 @@ export class DataService {
 
   setToken(data) {
     this.token.next(data);
+  }
+
+  getAutorizar(): Observable<HttpResponse<any>> {
+    return this.http.get(Constants.AUTH, {
+      headers: this.generateBasicHeadersJWT(),
+      observe: 'response'
+    });
   }
 }

@@ -3,7 +3,8 @@ import {
   OnInit,
   ViewChild,
   ElementRef,
-  OnDestroy
+  OnDestroy,
+  OnChanges
 } from '@angular/core';
 import {
   animate,
@@ -79,7 +80,7 @@ export class TablaDetallesComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.dataSource = new MatTableDataSource<DetalleOrdenDeCompra>();
-    this.dataSource.data = this._componentService.getTablaDetalles().value;
+    this._componentService.getTablaDetalles().subscribe(data => this.dataSource.data = data);
     this.selection.clear();
     setTimeout(() => {
       this.dataSource.paginator = this.paginator;

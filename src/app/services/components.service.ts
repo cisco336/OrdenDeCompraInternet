@@ -35,6 +35,9 @@ export class ComponentsService {
   bultos = new BehaviorSubject<any>([]);
   clearSkus = new BehaviorSubject<any>('');
   closeDialogBJ = new BehaviorSubject<boolean>(false);
+  tracking = new BehaviorSubject<any>('');
+
+  aux = new BehaviorSubject<boolean>(false);
 
   constructor() {}
 
@@ -172,5 +175,11 @@ export class ComponentsService {
   }
   closeDialog() {
     return this.closeDialogBJ;
+  }
+  setTracking(data) {
+    return this.tracking.next(data);
+  }
+  getTracking() {
+    return this.tracking;
   }
 }

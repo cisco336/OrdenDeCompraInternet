@@ -6,7 +6,7 @@
       </mat-form-field>
       <ng-template matStepLabel>{{ strings.strings.skuList }}</ng-template>
       <div *ngIf="!details" class="chips">
-        {{ strings.longMessages.generateOrderGuideAlert }}
+        {{ skus?.length ? strings.longMessages.generateOrderGuideAlert : 'La orden no tiene skus sin guía.' }}
         <mat-chip-list>
           <mat-chip
             color="accent"
@@ -25,7 +25,7 @@
           *ngIf="details"
           mat-raised-button
           color="accent"
-          [disabled]="!selectedSku.length"
+          [disabled]="!selectedSku?.length"
           (click)="openBottomSheet()"
         >
           <mat-icon>category</mat-icon>{{ strings.strings.changeState }}
