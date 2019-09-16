@@ -128,6 +128,7 @@ import { DialogService } from 'src/app/services/dialog.service';
 export class OrdenesCompraComponent implements OnInit, OnDestroy {
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
   mainFilterForm: FormGroup;
+  filter: FormControl;
   proveedores: Proveedores[] = [];
   estados: Estado[] = [];
   expandedElement: OrdenDeCompra;
@@ -156,7 +157,7 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
   dataSource;
   selection = new SelectionModel<OrdenDeCompra>(true, []);
 
-  proveedor: string;
+  proveedor;
   tableMessage = '';
   date: any;
   filteredProveedores: Observable<Proveedores[]>;
@@ -203,7 +204,6 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
   ) {
     // Validators
     this.mainFilterForm = _formBuilder.group({
-      proveedorControl: ['', [Validators.required, RequireMatch]],
       estadosControl: ['', [Validators.required, RequireMatch]],
       fechaInicioControl: [
         moment().subtract(1, 'months'),
@@ -211,6 +211,7 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
       ],
       fechaFinControl: [moment(), [Validators.required]]
     });
+    this.filter = new FormControl('');
     this.onResize();
   }
 
@@ -285,43 +286,19 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
     this.isLoading = true;
     this._dataService
       .getProveedores()
-      .toPromise().then(
+      .toPromise()
+      .then(
         getProveedoresData => {
-          const proveedor = getProveedoresData['Value'].filter(s => s.ID === parseInt(this.key, 10));
-          this.proveedor = proveedor.length > 0 ? proveedor[0].DESCRIPCION : 'Proveedor no encontrado.';
+          const x = getProveedoresData['Value'].filter(
+            s => s.ID === parseInt(key, 10)
+          );
+          this.proveedor = x;
           if (
             !getProveedoresData['Estado'] ||
             getProveedoresData['Value'][0]['Código']
           ) {
             this.errorHandling(this.errorMessagesText.providersError);
           } else {
-            this.proveedores = getProveedoresData['Value'];
-            this.filteredProveedores = this.mainFilterForm
-              .get('proveedorControl')
-              .valueChanges.pipe(
-                startWith(''),
-                map(value =>
-                  typeof value === 'string' ? value : value.DESCRIPCION
-                ),
-                map(descripcion =>
-                  descripcion
-                    ? this._filterProveedor(descripcion)
-                    : this.proveedores.slice()
-                )
-              );
-            if (this.proveedores.length === 1) {
-              this.mainFilterForm
-                .get('proveedorControl')
-                .setValue(this.proveedores[0]);
-              this.mainFilterForm.get('proveedorControl').disable();
-              this.proveedor = this.proveedores[0]['NOMBRE_PROVEEDOR'];
-            } else {
-              this.proveedoresControlSubscription = this.mainFilterForm
-                .get('proveedorControl')
-                .valueChanges.subscribe(data => {
-                  this.proveedor = data.DESCRIPCION;
-                });
-            }
             this._dataService
               .getEstados()
               .toPromise()
@@ -337,11 +314,11 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
                   } else {
                     this._componentService.setEstados(data['Value']);
                     this.estados = data['Value'];
-                    const x = this.estados[0];
-                    x.DESCRIPCION =
-                      x.DESCRIPCION.charAt(0).toUpperCase() +
-                      x.DESCRIPCION.substr(1).toLowerCase();
-                    this.mainFilterForm.get('estadosControl').setValue(x);
+                    const estd = this.estados[0];
+                    estd.DESCRIPCION =
+                      estd.DESCRIPCION.charAt(0).toUpperCase() +
+                      estd.DESCRIPCION.substr(1).toLowerCase();
+                    this.mainFilterForm.get('estadosControl').setValue(estd);
                     this.isLoading = false;
                     this._componentService.setEstados(this.estados);
                     this.filteredEstados = this.mainFilterForm
@@ -361,7 +338,9 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
                     this.queryDetallesDialog = {
                       p_transaccion: 'GD',
                       p_pmg_po_number: null,
-                      p_vpc_tech_key: form.get('proveedorControl').value['ID'],
+                      p_vpc_tech_key: this.proveedor.length
+                        ? this.proveedor[0]['ID']
+                        : null,
                       p_fecha_inicio: form
                         .get('fechaInicioControl')
                         .value.format('DD/MM/YYYY'),
@@ -399,10 +378,6 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
         },
         error => {
           this.errorHandling(error);
-          this.mainFilterForm
-            .get('proveedorControl')
-            .setErrors({ incorrect: true });
-          this.mainFilterForm.get('proveedorControl').disable();
         }
       );
   }
@@ -454,7 +429,7 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
       p_transaccion: 'GE',
       p_pmg_po_number: -1,
       p_prd_lvl_child: -1,
-      p_vpc_tech_key: form.get('proveedorControl').value['ID'],
+      p_vpc_tech_key: this.proveedor.length ? this.proveedor[0]['ID'] : null,
       p_fecha_inicio: form.get('fechaInicioControl').value.format('DD/MM/YYYY'),
       p_fecha_fin: form.get('fechaFinControl').value.format('DD/MM/YYYY'),
       p_fecha_real: '-1',
@@ -587,7 +562,9 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
           p_transaccion: 'TR',
           p_pmg_po_number: -1,
           p_prd_lvl_child: -1,
-          p_vpc_tech_key: form.get('proveedorControl').value['ID'],
+          p_vpc_tech_key: this.proveedor.length
+            ? this.proveedor[0]['ID']
+            : null,
           p_fecha_inicio: form
             .get('fechaInicioControl')
             .value.format('DD/MM/YYYY'),
@@ -695,6 +672,7 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
   }
 
   refreshData() {
+    this.filter.reset();
     this.consultar();
     this.applyFilter('');
   }

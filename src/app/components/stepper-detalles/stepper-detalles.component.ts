@@ -161,12 +161,12 @@ export class StepperDetallesComponent implements OnInit, OnDestroy {
   }
 
   noDetails() {
-    this.stepOne = true;
     const detalleOC = this._componentService.getDetalleOC().value;
     this.oc = detalleOC[0]['PMG_PO_NUMBER'];
     this.skus = detalleOC.map(
       number =>
         (number = {
+          guia: number['GUIA'],
           sku: number['PRD_LVL_NUMBER'],
           description: number['PRD_NAME_FULL']
         })
@@ -281,8 +281,8 @@ export class StepperDetallesComponent implements OnInit, OnDestroy {
       CodigoInterno: x.getInfoBaseOC().value['PMG_PO_NUMBER'],
       IdBulto: x.getIdBulto().value,
       Sku: x.getClearSkus().value,
-      Direccion: x.getDireccionOrigen().value.direccion || null,
-      CodDane: x.getDireccionOrigen().value.ciudad['ID'] || null,
+      Direccion: x.getDireccionOrigen().value ? x.getDireccionOrigen().value.direccion : null,
+      CodDane: x.getDireccionOrigen().value ? x.getDireccionOrigen().value.ciudad['ID'] : null,
       info_cubicacion: x.getMagnitudes().value
     };
     this._dataService
@@ -328,9 +328,9 @@ export class StepperDetallesComponent implements OnInit, OnDestroy {
 
   generarGuia(stepper: MatStepper) {
     this._dataService
-      .PostSolicitarGuia(this.guideQuery)
-      .toPromise()
-      .then(data => {
+    .PostSolicitarGuia(this.guideQuery)
+    .toPromise()
+    .then(data => {
         this.isLoading = true;
         const y = this._componentService;
         this.queryRotulo = {
@@ -344,7 +344,7 @@ export class StepperDetallesComponent implements OnInit, OnDestroy {
           UrlRotulo: `${Constants.PATHROTULO}Guia=${data['guia']}&Usuario=${Constants.USR}`,
           OrdenServicio: data['num_ordens'],
           IdBulto: y.getIdBulto().value,
-          Usuario: y.getUser().value
+          Usuario: y.getUser().value || 'ACEL03'
         };
         this._dataService
           .SetDatosGuia(this.queryRotulo)
@@ -354,13 +354,13 @@ export class StepperDetallesComponent implements OnInit, OnDestroy {
             this.finalMessg = strings.longMessages.generateGuideSuccess;
             this._componentService.setCloseDialog(true);
           })
-          .catch(() => {
+          .catch(error => {
             this.isLoading = false;
             this.finalMessg = strings.errorMessagesText.errorGeneratingGuide;
           });
       })
       .catch(error => {
-        this.stepThreeMessg = error['error']['respuesta'];
+        this.stepThreeMessg = error ? error['error']['respuesta'] : null;
         setTimeout(() => {
           this.stepThreeMessg = '';
           this.isLoading = false;
