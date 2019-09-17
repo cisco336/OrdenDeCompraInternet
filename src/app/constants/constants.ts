@@ -203,7 +203,7 @@ export class Constants {
     'http://200.69.100.66/2IMPRESIONGUIASpruebas/ISticker_ZEA.aspx?';
   // PROD
   // static readonly PATHROTULO =
-  //   'http://200.69.100.66/2IMPRESIONGUIAS/ISticker_ZEA2.aspx';
+  //   'https://portal.envia.co/2IMPRESIONGUIAS/ISticker_ZEA2.aspx';
 
   // DEV
   // static readonly APIORDENDECOMPRA = 'https://apim-dev-proxy.sodhc.co/logistica-ordenescompra';
@@ -229,11 +229,12 @@ export class Constants {
     'https://apim-qa-proxy.sodhc.co/logisticaSeguridadAutenticacion/authenticated';
   // PROD
   // static readonly AUTH = 'https://apim-prod-proxy.sodhc.co/logisticaSeguridadAutenticacion/authenticated';
+
   // DEV & QA
   static readonly GUIA =
   'http://200.69.100.66/ServicioLiquidacionRESTpruebas/Service1.svc/Generacion';
   // PROD
-  // static readonly GUIA = 'http://200.69.100.66/ServicioLiquidacionREST/Service1.svc/Generacion';
+  // static readonly GUIA = 'https://portal.envia.co/ServicioLiquidacionREST/Service1.svc/Generacion';
 
   // DEV
   // static readonly APIPROVEEDOR = 'https://apim-dev-proxy.sodhc.co/inventario/api';
@@ -266,4 +267,6 @@ export class Constants {
   static readonly SUBSCRIPTIONKEYCONFIGURACION =
     '442c55ae313642028c9eb69dc4220dad';
   // PROD
+  // static readonly SUBSCRIPTIONKEYCONFIGURACION =
+  //   '209fa70e5b0c4b5c8bddaf0aa54b8e19';
 }
