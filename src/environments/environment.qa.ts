@@ -5,7 +5,7 @@
 export const environment = {
   production: false,
 
-  PATHROTULO: 'http://200.69.100.66/2IMPRESIONGUIASpruebas/ISticker_ZEA.aspx?',
+  PATHROTULO: 'https://portal.envia.co/2IMPRESIONGUIASpruebas/ISticker_ZEA.aspx?',
 
   APIORDENDECOMPRA: 'https://apim-dev-proxy.sodhc.co/logistica-ordenescompra',
   USRPASSWD: 'EMPCAR01:EMPCAR1',
@@ -14,7 +14,7 @@ export const environment = {
   AUTH:
     'https://apim-dev-proxy.sodhc.co/logisticaSeguridadAutenticacion/authenticated',
   GUIA:
-    'http://200.69.100.66/ServicioLiquidacionRESTpruebas/Service1.svc/Generacion',
+    'https://portal.envia.co/ServicioLiquidacionRESTpruebas/Service1.svc/Generacion',
   APIPROVEEDOR: 'https://apim-dev-proxy.sodhc.co/inventario/api',
   APIGUIA: 'https://apim-dev-proxy.sodhc.co/logistica-transportadora',
   SUBSCRIPTIONKEY: 'dfeb9e69860f45258647cc7ba45fb040',
