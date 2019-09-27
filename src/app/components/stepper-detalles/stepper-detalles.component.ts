@@ -18,7 +18,7 @@ import { Subscription } from 'rxjs';
 import * as Interfaces from '../../interfaces/interfaces';
 import { DialogService } from 'src/app/services/dialog.service';
 import { MatStepper } from '@angular/material';
-import { Constants } from '../../constants/constants';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-stepper-detalles',
@@ -349,7 +349,7 @@ export class StepperDetallesComponent implements OnInit, OnDestroy {
           DireccionDestino: y.getInfoBaseOC().value.DIRECCION_ENTREGA,
           Guia: data['guia'],
           UrlGuia: data['urlguia'],
-          UrlRotulo: `${Constants.PATHROTULO}Guia=${data['guia']}&Usuario=${Constants.USR}`,
+          UrlRotulo: `${environment.PATHROTULO}Guia=${data['guia']}&Usuario=${environment.USR}`,
           OrdenServicio: data['num_ordens'],
           IdBulto: y.getIdBulto().value,
           Usuario: y.getUser().value
