@@ -178,7 +178,7 @@
           mat-cell
           *matCellDef="let element"
           class="position-label"
-          (dblclick)="getOrdenDetalle(element.PMG_PO_NUMBER)"
+          (dblclick)="getOrdenDetalle(element)"
           (click)="
             expandedElement = expandedElement === element ? null : element
           "
@@ -221,7 +221,7 @@
           (click)="
             expandedElement = expandedElement === element ? null : element
           "
-          (dblclick)="getOrdenDetalle(element.PMG_PO_NUMBER)"
+          (dblclick)="getOrdenDetalle(element)"
           matRipple
           [matRippleColor]="primary"
         >

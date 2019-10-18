@@ -281,7 +281,6 @@ export class StepperDetallesComponent implements OnInit, OnDestroy {
   }
 
   buildBody(stepper: MatStepper) {
-    debugger
     const x = this._componentService;
     const query = {
       Transportadora: x.infoBaseOC.value.TRANSPORTADORA,
@@ -292,7 +291,6 @@ export class StepperDetallesComponent implements OnInit, OnDestroy {
       DireccionDestino: x.direccionDestino.value.direccion || null,
       info_cubicacion: x.magnitudes.value
     };
-    console.log(JSON.stringify(query));
     this._dataService
       .PostInfoGuia(query)
       .toPromise()

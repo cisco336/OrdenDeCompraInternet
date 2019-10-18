@@ -245,37 +245,37 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
         this.key = y.split(';')[1];
         this.TOKEN = y.split(';')[2];
 
-        // this.appStart(this.key);
+        this.appStart(this.key);
 
-        if (this.TOKEN) {
-          try {
-            this._dataService.setToken(this.TOKEN);
-          } catch (error) {
-            this._toastr.error('Error al decodificar token');
-          }
-          this._dataService.getAutorizar().subscribe(
-            data => {
-              if (data) {
-                this._componentService.setUser(this.usr);
-                this.appStart(this.key);
-              }
-            },
-            error => {
-              switch (error.status) {
-                case 401:
-                  this._toastr.warning('Usuario No autorizado.');
-                  break;
-                case 500:
-                  this._toastr.error('Error en el servicio de autorización.');
-                  break;
-                default:
-                  this._toastr.error('Error de comunicación.');
-                  break;
-              }
-              this.isLoading = false;
-            }
-          );
-        }
+        // if (this.TOKEN) {
+        //   try {
+        //     this._dataService.setToken(this.TOKEN);
+        //   } catch (error) {
+        //     this._toastr.error('Error al decodificar token');
+        //   }
+        //   this._dataService.getAutorizar().subscribe(
+        //     data => {
+        //       if (data) {
+        //         this._componentService.setUser(this.usr);
+        //         this.appStart(this.key);
+        //       }
+        //     },
+        //     error => {
+        //       switch (error.status) {
+        //         case 401:
+        //           this._toastr.warning('Usuario No autorizado.');
+        //           break;
+        //         case 500:
+        //           this._toastr.error('Error en el servicio de autorización.');
+        //           break;
+        //         default:
+        //           this._toastr.error('Error de comunicación.');
+        //           break;
+        //       }
+        //       this.isLoading = false;
+        //     }
+        //   );
+        // }
       }
     });
   }
@@ -441,6 +441,8 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
       .toPromise()
       .then(
         data => {
+          console.log('data princpal');
+          console.log(data);
           this.tableMessage = '';
           this.dataSource = new MatTableDataSource();
           if (data['Value'] && data['Value'][0]['Código']) {
@@ -531,7 +533,9 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
   }
 
   getOrdenDetalle(element, guiaOrden?) {
+    debugger;
     if (element) {
+      this._componentService.setIsTracking(false);
       this._componentService.setGeneraGuia(element.GENERA_GUIA);
       if (!this.aux) {
         this.aux = true;
@@ -558,7 +562,9 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
           .postTablaPrincipalOC(this.queryDetallesDialog)
           .toPromise()
           .then(
-            result => {
+            result => {   
+              console.log('Mis datos');
+              console.log(result);       
               this.aux = false;
               if (result) {
                 this._componentService.setDetalleOC(result['Value']);
@@ -594,8 +600,11 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
         this._dataService
           .postTablaPrincipalOC(queryTracking)
           .toPromise()
-          .then(data => {
+          .then(data => { 
+            console.log('Data antes de tracking');
+            console.log(data);
             this._componentService.setTracking(data);
+            this._componentService.setIsTracking(true);
           })
           .catch(() => {
             this._toastr.error(this.errorMessagesText.trackingError);
@@ -608,7 +617,7 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
   openDialogDetalles() {
     this._componentService.setQueryDetalles(this.queryDetallesDialog);
     const dialogData = {
-      maxWidth: '900px',
+      maxWidth: '1100px',
       width: '95vw',
       maxHeight: '90vh',
       data: {

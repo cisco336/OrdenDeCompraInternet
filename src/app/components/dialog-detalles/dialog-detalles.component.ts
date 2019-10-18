@@ -26,44 +26,45 @@ import { BottomSheetImgComponent } from '../bottom-sheet-img/bottom-sheet-img.co
 import * as strings from '../../constants/constants';
 
 @Component({
-  selector: 'app-dialog-detalles',
-  templateUrl: './dialog-detalles.component.html',
-  styleUrls: ['./dialog-detalles.component.scss'],
+  selector: "app-dialog-detalles",
+  templateUrl: "./dialog-detalles.component.html",
+  styleUrls: ["./dialog-detalles.component.scss"],
   animations: [
-    trigger('cardGroup', [
-      state('true', style({ opacity: 1, height: '*' })),
-      state('false', style({ opacity: 0, height: 0 })),
-      transition('*<=>*', [
-        animate('5s ease-out'),
-        query('*', [query('@card', [animateChild()], { optional: true })], {
+    trigger("cardGroup", [
+      state("true", style({ opacity: 1, height: "*" })),
+      state("false", style({ opacity: 0, height: 0 })),
+      transition("*<=>*", [
+        animate("5s ease-out"),
+        query("*", [query("@card", [animateChild()], { optional: true })], {
           optional: true
         })
       ])
     ]),
-    trigger('card', [
+    trigger("card", [
       state(
-        'true',
+        "true",
         style({
-          position: 'relative',
-          transform: 'translateY(0)',
-          visibility: 'visible'
+          position: "relative",
+          transform: "translateY(0)",
+          visibility: "visible"
         })
       ),
       state(
-        'false',
+        "false",
         style({
-          position: 'absolute',
-          transform: 'translateY(-200px)',
-          visibility: 'hidden'
+          position: "absolute",
+          transform: "translateY(-200px)",
+          visibility: "hidden"
         })
       ),
-      transition('0 <=> 1', animate('.2s ease-out'))
+      transition("0 <=> 1", animate(".2s ease-out"))
     ])
   ]
 })
 export class DialogDetallesComponent implements OnInit, OnDestroy {
-  @ViewChild('stepper', { static: false }) stepper;
+  @ViewChild("stepper", { static: false }) stepper;
   background: string;
+  isTracking = false;
   color: string;
   ordenCompra: DetalleOrdenDeCompra[] = [];
   estados: Estado[] = [];
@@ -71,21 +72,21 @@ export class DialogDetallesComponent implements OnInit, OnDestroy {
   skus: any[] = [];
   public infoBaseOC: InfoBaseOC = {
     CEDULA: 0,
-    CLIENTE: '',
-    TELEFONOS: '',
-    DIRECCION_CTE: '',
-    CIUDAD_CTE: '',
-    DIRECCION_ENTREGA: '',
-    CIUDAD_ENTREGA: '',
+    CLIENTE: "",
+    TELEFONOS: "",
+    DIRECCION_CTE: "",
+    CIUDAD_CTE: "",
+    DIRECCION_ENTREGA: "",
+    CIUDAD_ENTREGA: "",
     PMG_PO_NUMBER: 0,
-    TIPO_ENTREGA: '',
-    STICKER: '',
-    ORIGEN: '',
-    NOTA_PEDIDO: '',
-    PROVEEDOR: '',
-    GUIA: '',
-    CUMPLIDO: '',
-    TRANSPORTADORA: ''
+    TIPO_ENTREGA: "",
+    STICKER: "",
+    ORIGEN: "",
+    NOTA_PEDIDO: "",
+    PROVEEDOR: "",
+    GUIA: "",
+    CUMPLIDO: "",
+    TRANSPORTADORA: ""
   };
   numeroOrden = 0;
   strings = strings;
@@ -95,7 +96,7 @@ export class DialogDetallesComponent implements OnInit, OnDestroy {
   GetInfoBaseOcSubscription;
   ciudad;
   direccionDestino;
-  error = '';
+  error = "";
   fechasOC;
 
   constructor(
@@ -106,6 +107,9 @@ export class DialogDetallesComponent implements OnInit, OnDestroy {
     private _bottomSheet: MatBottomSheet
   ) {}
   ngOnInit() {
+    console.log('datos tracking');
+    console.log(this._componentService.getTracking().value);
+    this.isTracking = this._componentService.getIsTracking().value;
     this.fechasOC = this._componentService.fechasOC.value;
     this._componentService.setCloseDialog(false);
     this._componentService.setSteps({
@@ -126,22 +130,22 @@ export class DialogDetallesComponent implements OnInit, OnDestroy {
       .GetInfoBaseOc(ordenNumber)
       .toPromise()
       .then(data => {
-        this.direccionDestino = data['Value'][0]['DIRECCION_ENTREGA'];
+        this.direccionDestino = data["Value"][0]["DIRECCION_ENTREGA"];
         this._dataService
-          .GetCiudades('DANESAPS')
+          .GetCiudades("DANESAPS")
           .toPromise()
           .then(ciudades => {
             this.ciudad = ciudades;
             this.ciudad = this.ciudad.filter(
-              s => s.ID === data['Value'][0]['CODIGO_DANE_DESTINO']
-            )[0]['DESCRIPCION'];
+              s => s.ID === data["Value"][0]["CODIGO_DANE_DESTINO"]
+            )[0]["DESCRIPCION"];
           })
           .catch(() => {
             this.error = strings.errorMessagesText.citiesError;
-            setTimeout(() => (this.error = ''), 3000);
+            setTimeout(() => (this.error = ""), 3000);
           });
-        this._componentService.setInfoBaseOC(data['Value'][0]);
-        this.infoBaseOC = data['Value'][0];
+        this._componentService.setInfoBaseOC(data["Value"][0]);
+        this.infoBaseOC = data["Value"][0];
         const address = this._componentService.infoBaseOC.value;
         this._componentService.setDireccionDestino({
           direccion: address.DIRECCION_ENTREGA,
@@ -151,7 +155,7 @@ export class DialogDetallesComponent implements OnInit, OnDestroy {
           direccion: address.DIRECCION_ORIGEN,
           ciudad: address.CODIGO_DANE_ORIGEN
         });
-        if (this.infoBaseOC['Código'] === '4') {
+        if (this.infoBaseOC["Código"] === "4") {
           this.cliente = false;
           this.entrega = false;
         } else {
@@ -173,8 +177,8 @@ export class DialogDetallesComponent implements OnInit, OnDestroy {
         }
       });
     this.numeroOrden = this.ordenCompra[0].PMG_PO_NUMBER;
-    this.background = this.background ? '' : 'primary';
-    this.color = this.color ? '' : 'accent';
+    this.background = this.background ? "" : "primary";
+    this.color = this.color ? "" : "accent";
     this.skus = this._componentService.getSelectedSku().value;
   }
 
@@ -196,7 +200,7 @@ export class DialogDetallesComponent implements OnInit, OnDestroy {
   }
 
   showImg(data) {
-    window.open(data, '_blank');
+    window.open(data, "_blank");
   }
 
   closeDialog() {
