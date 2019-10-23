@@ -44,6 +44,7 @@ import * as moment from 'moment';
 import * as constants from '../../constants/constants';
 import { GenerateOrderGuideComponent } from 'src/app/components/generate-order-guide/generate-order-guide.component';
 import { DialogService } from 'src/app/services/dialog.service';
+import { Helper } from 'src/app/common/helper.class';
 
 @Component({
   selector: 'app-ordenes-compra',
@@ -233,49 +234,49 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
         this.isLoading = false;
         this.errorMessage = this.errorMessagesText.noPrivileges;
       } else {
-        const y = atob(params['token']);
+        const y = Helper.decrypt(params.token.toString());
 
         // const y = params['token'];
 
-        if (!y.split(';')[0] || !y.split(';')[1] || !y.split(';')[2]) {
+        if (!y.split(';')[1] || !y.split(';')[2] || !y.split(';')[3]) {
           this.errorMessage = 'Datos de inicio de sesión incorrectos.';
           this.usr = '';
         }
-        this.usr = y.split(';')[0];
-        this.key = y.split(';')[1];
-        this.TOKEN = y.split(';')[2];
+        this.usr = y.split(';')[1];
+        this.key = y.split(';')[2];
+        this.TOKEN = y.split(';')[3];
 
-        this.appStart(this.key);
+        // this.appStart(this.key);
 
-        // if (this.TOKEN) {
-        //   try {
-        //     this._dataService.setToken(this.TOKEN);
-        //   } catch (error) {
-        //     this._toastr.error('Error al decodificar token');
-        //   }
-        //   this._dataService.getAutorizar().subscribe(
-        //     data => {
-        //       if (data) {
-        //         this._componentService.setUser(this.usr);
-        //         this.appStart(this.key);
-        //       }
-        //     },
-        //     error => {
-        //       switch (error.status) {
-        //         case 401:
-        //           this._toastr.warning('Usuario No autorizado.');
-        //           break;
-        //         case 500:
-        //           this._toastr.error('Error en el servicio de autorización.');
-        //           break;
-        //         default:
-        //           this._toastr.error('Error de comunicación.');
-        //           break;
-        //       }
-        //       this.isLoading = false;
-        //     }
-        //   );
-        // }
+        if (this.TOKEN) {
+          try {
+            this._dataService.setToken(this.TOKEN);
+          } catch (error) {
+            this._toastr.error('Error al decodificar token');
+          }
+          this._dataService.getAutorizar().subscribe(
+            data => {
+              if (data) {
+                this._componentService.setUser(this.usr);
+                this.appStart(this.key);
+              }
+            },
+            error => {
+              switch (error.status) {
+                case 401:
+                  this._toastr.warning('Usuario No autorizado.');
+                  break;
+                case 500:
+                  this._toastr.error('Error en el servicio de autorización.');
+                  break;
+                default:
+                  this._toastr.error('Error de comunicación.');
+                  break;
+              }
+              this.isLoading = false;
+            }
+          );
+        }
       }
     });
   }
@@ -441,8 +442,6 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
       .toPromise()
       .then(
         data => {
-          console.log('data princpal');
-          console.log(data);
           this.tableMessage = '';
           this.dataSource = new MatTableDataSource();
           if (data['Value'] && data['Value'][0]['Código']) {
@@ -533,7 +532,6 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
   }
 
   getOrdenDetalle(element, guiaOrden?) {
-    debugger;
     if (element) {
       this._componentService.setIsTracking(false);
       this._componentService.setGeneraGuia(element.GENERA_GUIA);
@@ -563,8 +561,6 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
           .toPromise()
           .then(
             result => {   
-              console.log('Mis datos');
-              console.log(result);       
               this.aux = false;
               if (result) {
                 this._componentService.setDetalleOC(result['Value']);
@@ -601,8 +597,6 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
           .postTablaPrincipalOC(queryTracking)
           .toPromise()
           .then(data => { 
-            console.log('Data antes de tracking');
-            console.log(data);
             this._componentService.setTracking(data);
             this._componentService.setIsTracking(true);
           })

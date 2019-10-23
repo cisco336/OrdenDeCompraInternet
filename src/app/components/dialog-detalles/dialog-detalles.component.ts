@@ -107,8 +107,6 @@ export class DialogDetallesComponent implements OnInit, OnDestroy {
     private _bottomSheet: MatBottomSheet
   ) {}
   ngOnInit() {
-    console.log('datos tracking');
-    console.log(this._componentService.getTracking().value);
     this.isTracking = this._componentService.getIsTracking().value;
     this.fechasOC = this._componentService.fechasOC.value;
     this._componentService.setCloseDialog(false);

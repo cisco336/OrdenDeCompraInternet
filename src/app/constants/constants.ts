@@ -216,3 +216,7 @@ export const longMessages = {
     '¿Está seguro de querer generar la guía para la orden de compra seleccionada?',
   generateGuideSuccess: 'La guía se generó de forma exitosa.'
 };
+
+export class Constants {
+  static readonly Secret_Key = "$G1Int3rnet*.**";
+}

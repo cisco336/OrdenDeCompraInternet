@@ -26,11 +26,8 @@ export class TrackingComponent implements OnInit {
   constructor(private _componentService: ComponentsService) {}
 
   ngOnInit() {
-    debugger;    
-    console.log("tracking");
     this.dataSource = new MatTableDataSource<any>();
     this.tracking = this._componentService.tracking.value["Value"];
-    console.log(this.tracking);
     this.show = this.tracking && this.tracking.length > 0;
     this.dataSource.data = this.tracking;
   }
