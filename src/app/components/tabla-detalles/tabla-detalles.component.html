@@ -41,7 +41,7 @@
         <li>{{ element[column] }}</li>
         <li>
           <span>{{ strings.strings.guideNumber }}:</span
-          ><span>{{ numeroGuia || strings.errorMessagesText.noGuide }}</span>
+          ><span>{{ element.GUIA || strings.errorMessagesText.noGuide }}</span>
         </li>
         <li *ngIf="element.PRD_UPC">
           <span>{{ strings.strings.barCode }}:</span
@@ -80,10 +80,33 @@
   </ng-container>
 
   <ng-container matColumnDef="guia">
-    <th mat-header-cell *matHeaderCellDef>{{ strings.strings.guide }}</th>
+    <th mat-header-cell *matHeaderCellDef>
+      {{ strings.strings.guide }} / {{ strings.strings.label }}
+    </th>
     <td mat-cell *matCellDef="let element">
-      <button color="accent" mat-icon-button [disabled]="element.GUIA === 'NA' || !element.GUIA" [matTooltipDisabled]="element.GUIA !== 'NA'" [matTooltip]="strings.tooltips.noGuideTooltip" (click)="openLink(element.URL_GUIA)">
+      <button
+        color="accent"
+        mat-icon-button
+        [disabled]="
+          element.GUIA === 'NA' || element.GUIA === '--' || !element.GUIA
+        "
+        [matTooltip]="toolTip(element.GUIA, true)"
+        (click)="openLink(element.URL_GUIA)"
+      >
         <mat-icon>receipt</mat-icon>
+      </button>
+      <button
+        color="primary"
+        mat-icon-button
+        [disabled]="
+          element.URL_ROTULO === 'NA' ||
+          element.URL_ROTULO === '--' ||
+          !element.URL_ROTULO
+        "
+        [matTooltip]="toolTip(element.URL_ROTULO, false)"
+        (click)="openLink(element.URL_ROTULO)"
+      >
+        <mat-icon>card_membership</mat-icon>
       </button>
     </td>
   </ng-container>
@@ -101,15 +124,23 @@
       >
         <mat-list>
           <mat-list-item *ngFor="let x of jsonToBeUsed">
-            <span mat-line> {{ x.key }}: </span>
-            <span mat-line *ngIf="isNumber(x.value, x.key)">
-              {{ x.value }}
+            <span *ngIf="x.key !== strings.strings.realEventDate">
+              <span mat-line class="break" > {{ x.key }}: </span>
+              <span mat-line class="break"  *ngIf="isNumber(x.value, x.key)">
+                {{ x.value }}
+              </span>
+              <span mat-line class="break"  *ngIf="!isNumber(x.value)">
+                {{ x.value | titlecase }}
+              </span>
+              <span mat-line class="break"  *ngIf="isCost(x.key)">
+                {{ x.value | currency: 'COP':'symbol-narrow' }}
+              </span>
             </span>
-            <span mat-line *ngIf="!isNumber(x.value)">
-              {{ x.value | titlecase }}
-            </span>
-            <span mat-line *ngIf="isCost(x.key)">
-              {{ x.value | currency: 'COP':'symbol-narrow' }}
+            <span *ngIf="x.key === strings.strings.realEventDate">
+              <span mat-line class="break" > {{ x.key }}: </span>
+              <span mat-line class="break" >
+                {{ x.value | date }}
+              </span>
             </span>
           </mat-list-item>
         </mat-list>

@@ -8,10 +8,10 @@
 </mat-toolbar>
 
 <div class="the-wrapper" mat-dialog-content>
+  <div *ngIf="error !== ''">
+    {{ error }}
+  </div>
   <div [@cardGroup]="ordenCompra !== null ? true : false" class="card-wrapper">
-    <div *ngIf="error === ''">
-      {{ error }}
-    </div>
     <mat-card *ngIf="cliente" class="card-first mat-elevation-z10">
       <div class="card-title">
         <mat-icon>person</mat-icon>
@@ -65,16 +65,6 @@
             <span>{{ strings.strings.city }}:</span
             ><span>{{ ciudad | titlecase }}</span>
           </li>
-          <li
-            *ngIf="
-              infoBaseOC.TRANSPORTADORA && infoBaseOC.TRANSPORTADORA !== ''
-            "
-          >
-            <span>{{ strings.strings.conveyor | titlecase }}: </span
-            ><span>
-              {{ infoBaseOC.TRANSPORTADORA | titlecase }}
-            </span>
-          </li>
         </ul>
       </div>
     </mat-card>
@@ -106,23 +96,30 @@
             <span>{{ strings.strings.orderNote }}:</span
             ><span>{{ infoBaseOC.NOTA_PEDIDO }}</span>
           </li>
+          <li *ngIf="fechasOC.FECHA_MINIMA_OC">
+            <span>{{ strings.strings.minDeliverDate }}:</span
+            ><span>{{ fechasOC.FECHA_MINIMA_OC }}</span>
+          </li>
+          <li *ngIf="fechasOC.FECHA_MAXIMA_OC">
+            <span>{{ strings.strings.maxDeliverDate }}:</span
+            ><span>{{ fechasOC.FECHA_MAXIMA_OC }}</span>
+          </li>
         </ul>
       </div>
     </mat-card>
 
-    <mat-card
-      class="card-fourth mat-elevation-z10"
-      *ngIf="ordenCompra['observaciones']"
-    >
+    <mat-card class="card-fourth mat-elevation-z10">
       <div class="card-title">
         <mat-icon>insert_comment</mat-icon>
         {{ strings.strings.observations }}:
       </div>
       <div class="card-body">
-        {{
-          ordenCompra['observaciones'] ||
-            strings.errorMessagesText.noObservations
-        }}
+        <ul>
+          <li *ngIf="infoBaseOC.observaciones !== ''">
+            <span *ngIf="observaciones">{{ strings.strings.observations }}:</span
+            ><span>{{ infoBaseOC.OBSERVACIONES }}</span>
+          </li>
+        </ul>
       </div>
     </mat-card>
   </div>
@@ -131,8 +128,8 @@
     <mat-tab label="SKU">
       <app-stepper-detalles [details]="true"></app-stepper-detalles>
     </mat-tab>
-    <mat-tab label="Tracking">
-      <app-tracking></app-tracking>
+    <mat-tab label="Tracking" [disabled]="isTracking">
+      <app-tracking *ngIf="isTracking"></app-tracking>
     </mat-tab>
   </mat-tab-group>
 </div>
