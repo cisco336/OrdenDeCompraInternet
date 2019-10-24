@@ -86,7 +86,8 @@ export class DialogDetallesComponent implements OnInit, OnDestroy {
     PROVEEDOR: "",
     GUIA: "",
     CUMPLIDO: "",
-    TRANSPORTADORA: ""
+    TRANSPORTADORA: "",
+    OBSERVACIONES: ""
   };
   numeroOrden = 0;
   strings = strings;
@@ -172,6 +173,8 @@ export class DialogDetallesComponent implements OnInit, OnDestroy {
             this.infoBaseOC.CUMPLIDO === undefined
               ? false
               : true;
+          this.observaciones =
+            this.infoBaseOC.OBSERVACIONES === undefined ? false : true;
         }
       });
     this.numeroOrden = this.ordenCompra[0].PMG_PO_NUMBER;
