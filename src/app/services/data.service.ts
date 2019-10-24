@@ -4,59 +4,59 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 
 @Injectable({
-  providedIn: "root"
+  providedIn: 'root'
 })
 export class DataService {
-  token = new BehaviorSubject<string>("");
+  token = new BehaviorSubject<string>('');
 
   // Calls
-  getDatosProveedorCall = "/Configuracion/GetDatosProveedor";
-  getProveedoresCall = "/Configuracion/GetProveedores";
-  getEstadosCall = "/Configuracion/GetEstados";
-  postTablaPrincipalOCCall = "/Configuracion/GetOc";
-  getInfoBaseOcCall = "/Configuracion/GetInfoBaseOc?id=";
-  getGuiaCall = "/Guia/GetGuia?transportadora=";
-  getCiudadesCall = "/Guia/GetCursor?tag=";
-  postInfoGuiaCall = "/Guia/GetInfoGuia";
-  putSetDatosGuiaCall = "/Guia/SetDatosGuia";
+  getDatosProveedorCall = '/Configuracion/GetDatosProveedor';
+  getProveedoresCall = '/Configuracion/GetProveedores';
+  getEstadosCall = '/Configuracion/GetEstados';
+  postTablaPrincipalOCCall = '/Configuracion/GetOc';
+  getInfoBaseOcCall = '/Configuracion/GetInfoBaseOc?id=';
+  getGuiaCall = '/Guia/GetGuia?transportadora=';
+  getCiudadesCall = '/Guia/GetCursor?tag=';
+  postInfoGuiaCall = '/Guia/GetInfoGuia';
+  putSetDatosGuiaCall = '/Guia/SetDatosGuia';
 
-  postBultosCall = "/Guia/ConfiguracionBultos";
+  postBultosCall = '/Guia/ConfiguracionBultos';
 
   constructor(private http: HttpClient) {}
 
   protected generateBasicHeadersJWT(): HttpHeaders {
     return new HttpHeaders({
-      "Content-Type": "application/json",
-      "Ocp-Apim-Subscription-Key": environment.SUBSCRIPTIONKEY,
-      Authorization: "Bearer " + this.token.value
+      'Content-Type': 'application/json',
+      'Ocp-Apim-Subscription-Key': environment.SUBSCRIPTIONKEY,
+      Authorization: 'Bearer ' + this.token.value
     });
   }
 
   protected generateBasicHeaders(): HttpHeaders {
     return new HttpHeaders({
-      "Content-Type": "application/json",
-      "Ocp-Apim-Subscription-Key": environment.SUBSCRIPTIONKEYCONFIGURACION
+      'Content-Type': 'application/json',
+      'Ocp-Apim-Subscription-Key': environment.SUBSCRIPTIONKEYCONFIGURACION
     });
   }
 
   protected proveedoresJWT(): HttpHeaders {
     return new HttpHeaders({
-      "Content-Type": "application/json",
-      "Ocp-Apim-Subscription-Key": environment.SUBSCRIPTIONKEYCONFIGURACION,
-      Authorization: "Bearer " + this.token.value
+      'Content-Type': 'application/json',
+      'Ocp-Apim-Subscription-Key': environment.SUBSCRIPTIONKEYCONFIGURACION,
+      Authorization: 'Bearer ' + this.token.value
     });
   }
 
   protected generateGuideHeaders(): HttpHeaders {
     return new HttpHeaders({
-      "Content-Type": "application/json",
-      Authorization: "Basic " + btoa(environment.USRPASSWD)
+      'Content-Type': 'application/json',
+      Authorization: 'Basic ' + btoa(environment.USRPASSWD)
     });
   }
 
   getDatosProveedor(data) {
     return this.http.get(
-      environment.APIPROVEEDOR + this.getDatosProveedorCall + "/" + data,
+      environment.APIPROVEEDOR + this.getDatosProveedorCall + '/' + data,
       {
         headers: this.generateBasicHeadersJWT()
       }
@@ -138,7 +138,7 @@ export class DataService {
   getAutorizar(): Observable<HttpResponse<any>> {
     return this.http.get(environment.AUTH, {
       headers: this.generateBasicHeadersJWT(),
-      observe: "response"
+      observe: 'response'
     });
   }
 }

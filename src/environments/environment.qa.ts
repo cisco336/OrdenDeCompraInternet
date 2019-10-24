@@ -6,20 +6,20 @@ export const environment = {
   production: false,
 
   PATHROTULO:
-    "https://portal.envia.co/2IMPRESIONGUIASpruebas/ISticker_ZEA.aspx",
+    'https://portal.envia.co/2IMPRESIONGUIASpruebas/ISticker_ZEA.aspx?',
 
-  APIORDENDECOMPRA: "https://apim-qa-proxy.sodhc.co/logistica-ordenescompra",
-  USRPASSWD: "EMPCAR01:EMPCAR1",
-  USR: "EMPCAR01",
-  PASSWD: "EMPCAR1",
+  APIORDENDECOMPRA: 'https://apim-qa-proxy.sodhc.co/logistica-ordenescompra',
+  USRPASSWD: 'EMPCAR01:EMPCAR1',
+  USR: 'EMPCAR01',
+  PASSWD: 'EMPCAR1',
   AUTH:
-    "https://apim-qa-proxy.sodhc.co/logisticaSeguridadAutenticacion/authenticated",
+    'https://apim-qa-proxy.sodhc.co/logisticaSeguridadAutenticacion/authenticated',
   GUIA:
-    "https://portal.envia.co/ServicioLiquidacionRESTpruebas/Service1.svc/Generacion",
-  APIPROVEEDOR: "https://apim-qa-proxy.sodhc.co/inventario/api",
-  APIGUIA: "https://apim-qa-proxy.sodhc.co/logistica-transportadora",
-  SUBSCRIPTIONKEY: "442c55ae313642028c9eb69dc4220dad",
-  SUBSCRIPTIONKEYCONFIGURACION: "442c55ae313642028c9eb69dc4220dad"
+    'https://portal.envia.co/ServicioLiquidacionRESTpruebas/Service1.svc/Generacion',
+  APIPROVEEDOR: 'https://apim-qa-proxy.sodhc.co/inventario/api',
+  APIGUIA: 'https://apim-qa-proxy.sodhc.co/logistica-transportadora',
+  SUBSCRIPTIONKEY: '442c55ae313642028c9eb69dc4220dad',
+  SUBSCRIPTIONKEYCONFIGURACION: '442c55ae313642028c9eb69dc4220dad'
 };
 
 /*
