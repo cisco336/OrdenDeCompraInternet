@@ -234,9 +234,9 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
         this.isLoading = false;
         this.errorMessage = this.errorMessagesText.noPrivileges;
       } else {
-        // const y = Helper.decrypt(params.token.toString());
+        const y = Helper.decrypt(params.token.toString());
 
-        const y = params['token'];
+        // const y = params['token'];
 
         if (!y.split(';')[1] || !y.split(';')[2] || !y.split(';')[3]) {
           this.errorMessage = 'Datos de inicio de sesión incorrectos.';
@@ -246,38 +246,39 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
         this.key = y.split(';')[2];
         this.TOKEN = y.split(';')[3];
 
-        this.appStart(this.key);
+        // this.appStart(this.key);
         this._componentService.setUser(this.usr);
+        localStorage.setItem('user', this.usr);
 
-        // if (this.TOKEN) {
-        //   try {
-        //     this._dataService.setToken(this.TOKEN);
-        //   } catch (error) {
-        //     this._toastr.error('Error al decodificar token');
-        //   }
-        //   this._dataService.getAutorizar().subscribe(
-        //     data => {
-        //       if (data) {
-        //         this._componentService.setUser(this.usr);
-        //         this.appStart(this.key);
-        //       }
-        //     },
-        //     error => {
-        //       switch (error.status) {
-        //         case 401:
-        //           this._toastr.warning('Usuario No autorizado.');
-        //           break;
-        //         case 500:
-        //           this._toastr.error('Error en el servicio de autorización.');
-        //           break;
-        //         default:
-        //           this._toastr.error('Error de comunicación.');
-        //           break;
-        //       }
-        //       this.isLoading = false;
-        //     }
-        //   );
-        // }
+        if (this.TOKEN) {
+          try {
+            this._dataService.setToken(this.TOKEN);
+          } catch (error) {
+            this._toastr.error('Error al decodificar token');
+          }
+          this._dataService.getAutorizar().subscribe(
+            data => {
+              if (data) {
+                this._componentService.setUser(this.usr);
+                this.appStart(this.key);
+              }
+            },
+            error => {
+              switch (error.status) {
+                case 401:
+                  this._toastr.warning('Usuario No autorizado.');
+                  break;
+                case 500:
+                  this._toastr.error('Error en el servicio de autorización.');
+                  break;
+                default:
+                  this._toastr.error('Error de comunicación.');
+                  break;
+              }
+              this.isLoading = false;
+            }
+          );
+        }
       }
     });
   }
@@ -350,7 +351,7 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
                       p_fecha_real: '-1',
                       p_id_estado: form.get('estadosControl').value.ID,
                       p_origen: '-1',
-                      p_usuario: this.usr
+                      p_usuario: this._componentService.user.value
                     };
                   }
                 },
@@ -435,7 +436,7 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
       p_fecha_real: '-1',
       p_id_estado: form.get('estadosControl').value.ID,
       p_origen: '-1',
-      p_usuario: this.usr
+      p_usuario: this._componentService.user.value
     };
 
     this._dataService
@@ -592,7 +593,7 @@ export class OrdenesCompraComponent implements OnInit, OnDestroy {
           p_fecha_real: '-1',
           p_id_estado: form.get('estadosControl').value.ID,
           p_origen: '-1',
-          p_usuario: this.usr
+          p_usuario: this._componentService.user.value
         };
         this._dataService
           .postTablaPrincipalOC(queryTracking)
