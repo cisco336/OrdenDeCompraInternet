@@ -21,7 +21,7 @@
     </button>
   </div>
   <mat-card class="mat-elevation-z4 first" *ngIf="render">
-    <div [formGroup]="mainFilterForm">
+    <div [formGroup]="mainFilterForm">      
       <mat-form-field>
         <input
           type="text"
@@ -309,11 +309,25 @@
               </mat-list-item> -->
               <mat-list-item>
                 <mat-icon mat-list-icon>today</mat-icon>
+                <span mat-line class="break">{{ strings.orderDate }}:</span>
+                <span mat-line class="break">
+                  {{ element['PMG_RELEASE_DATE'] | date: 'medium' }}
+                </span>
+              </mat-list-item>
+              <mat-list-item>
+                <mat-icon mat-list-icon>today</mat-icon>
                 <span mat-line class="break"
                   >{{ strings.realDeliverDate }}:</span
                 >
                 <span mat-line class="break">
                   {{ element['FECHA_REAL_ENTREGA'] | date: 'medium' }}
+                </span>
+              </mat-list-item>
+              <mat-list-item>
+                <mat-icon mat-list-icon>language</mat-icon>
+                <span mat-line class="break">{{ strings.red }}:</span>
+                <span mat-line class="break">
+                  {{ element['RED'] }}
                 </span>
               </mat-list-item>
               <mat-list-item>
@@ -377,6 +391,13 @@
                     element.TRANSPORTADORA || errorMessagesText.noData
                       | titlecase
                   }}
+                </span>
+              </mat-list-item>
+              <mat-list-item>
+                <mat-icon mat-list-icon>pan_tool</mat-icon>
+                <span mat-line class="break">{{ strings.promise }}:</span>
+                <span mat-line class="break">
+                  {{ element['PROMESA'] }}
                 </span>
               </mat-list-item>
               <!-- <mat-list-item>
