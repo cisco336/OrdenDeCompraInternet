@@ -80,8 +80,8 @@ export class OriginDeliverAddressComponent implements OnInit, OnDestroy {
           this.error = strings.errorMessagesText.citiesError;
           setTimeout(() => (this.error = ''), 3000);
         } else {
-          this.ciudades = ciudades;
-          this.destinos = ciudades;
+          this.ciudades = ciudades["Value"];
+          this.destinos = ciudades["Value"];
           this.filteredOrigen = this.addresses
             .get('originCity')
             .valueChanges.pipe(
@@ -116,25 +116,47 @@ export class OriginDeliverAddressComponent implements OnInit, OnDestroy {
           const ciudadOrigen = this.ciudades.filter(s => s.ID === origen);
           const ciudadDestino = this.ciudades.filter(s => s.ID === destino);
           form
-            .get('originAddress')
+            .get("originAddress")
             .setValue(component.direccionOrigen.value.direccion);
           form
-            .get('destinyAddress')
+            .get("destinyAddress")
             .setValue(component.direccionDestino.value.direccion);
-          form.get('originCity').setValue(ciudadOrigen[0]);
-          form.get('destinyCity').setValue(ciudadDestino[0]);
-          form.get('originAddress').valueChanges.subscribe(a =>
+          form.get("originCity").setValue(ciudadOrigen[0]);
+          form.get("destinyCity").setValue(ciudadDestino[0]);
+          /* Direcciones */
+          form.get("originAddress").valueChanges.subscribe(a => {
+            let ciudad = form.get("originCity").value;
             this._componentService.direccionOrigen.next({
               direccion: a,
-              ciudad: form.get('originCity').value
-            })
-          );
-          form.get('destinyAddress').valueChanges.subscribe(b =>
+              ciudad: ciudad.ID
+            });
+          });
+          form.get("destinyAddress").valueChanges.subscribe(b => {
+            let ciudad = form.get("destinyCity").value;
             this._componentService.direccionDestino.next({
               direccion: b,
-              ciudad: form.get('destinyCity').value
+              ciudad: ciudad.ID
+            });
+          });
+
+          /* Ciudades */
+          form.get("originCity").valueChanges.subscribe(a => {
+            this._componentService.direccionOrigen.next({
+              direccion: form.get("originAddress").value,
+              ciudad: a.ID
+            });
+          });
+
+          form.get("destinyCity").valueChanges.subscribe(b =>
+            this._componentService.direccionDestino.next({
+              direccion: form.get("destinyAddress").value,
+              ciudad: b.ID
             })
           );
+
+          this.addresses.valueChanges.subscribe(value => {
+            this._componentService.setIsValidAddress(this.addresses.valid);
+          });
         }
       },
       () => {}

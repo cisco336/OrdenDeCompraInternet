@@ -41,6 +41,10 @@
             <span>{{ strings.strings.city }}:</span
             ><span>{{ infoBaseOC.CIUDAD_CTE | titlecase }}</span>
           </li>
+          <li *ngIf="infoBaseOC.TELEFONOS && infoBaseOC.TELEFONOS !== ''">
+            <span>{{ strings.strings.phone }}:</span
+            ><span>{{ infoBaseOC.TELEFONOS | titlecase }}</span>
+          </li>
         </ul>
       </div>
     </mat-card>
@@ -64,6 +68,22 @@
           <li *ngIf="ciudad">
             <span>{{ strings.strings.city }}:</span
             ><span>{{ ciudad | titlecase }}</span>
+          </li>
+        </ul>
+      </div>
+      <div class="card-title"  *ngIf="infoBaseOC.DIRECCION_FACTURACION && infoBaseOC.DIRECCION_FACTURACION !== ''">
+        <mat-icon>attach_money</mat-icon>
+        {{ strings.strings.billingData }}:
+      </div>
+      <div class="card-body">
+        <ul>
+          <li *ngIf="infoBaseOC.DIRECCION_FACTURACION && infoBaseOC.DIRECCION_FACTURACION !== ''">
+            <span>{{ strings.strings.address }}:</span
+            ><span>{{ infoBaseOC.DIRECCION_FACTURACION | titlecase }}</span>
+          </li>
+          <li *ngIf="infoBaseOC.CIUDAD_FACTURACION && infoBaseOC.CIUDAD_FACTURACION !== ''">
+            <span>{{ strings.strings.city }}:</span
+            ><span>{{ infoBaseOC.CIUDAD_FACTURACION | titlecase }}</span>
           </li>
         </ul>
       </div>
@@ -115,7 +135,7 @@
       </div>
       <div class="card-body">
         <ul>
-          <li *ngIf="infoBaseOC.OBSERVACIONES !== ''">
+          <li class="lstObservations" *ngIf="infoBaseOC.OBSERVACIONES !== ''">
             <span *ngIf="observaciones">{{ strings.strings.observations }}:</span
             ><span>{{ infoBaseOC.OBSERVACIONES }}</span>
           </li>
