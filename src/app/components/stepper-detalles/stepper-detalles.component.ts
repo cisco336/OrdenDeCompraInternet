@@ -71,7 +71,7 @@ export class StepperDetallesComponent implements OnInit, OnDestroy {
   queryBulto: Interfaces.QueryBulto = {
     Transaccion: "",
     Sticker: "",
-    ID_BULTO: 0,
+    IdBulto: 0,
     Ordencompra: this.oc,
     Cantidad: -1,
     Sku: "-1",
